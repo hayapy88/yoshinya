@@ -1,0 +1,13 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "file-renamer",
+	"compatibility_date": "2026-07-14",
+	// 完全クライアントサイドSPA: Workerスクリプトなしの静的アセット配信のみ
+	"assets": {
+		"not_found_handling": "single-page-application"
+	}
+}
