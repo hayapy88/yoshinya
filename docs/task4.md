@@ -40,7 +40,8 @@ Disable the button and show the reason when any of the following applies:
 - Add a one-or-two-sentence description of the tool at the top of the page.
   It must include the privacy sentence: "Files are never sent to a server;
   everything is processed inside your browser."
-- Tidy up index.html's title / meta description (in Japanese)
+- Tidy up index.html's title / meta description (in English, matching the
+  default language task5 introduces)
 - Verify the main flow: upload → reorder → build the rule → preview →
   download → unzip and confirm the file names inside are correct
 - Confirm `npm run build` / `npm run lint` / `npm run test` all pass
