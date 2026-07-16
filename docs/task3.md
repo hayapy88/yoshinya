@@ -1,105 +1,124 @@
-# task3: UI実装（アップロード → 規則ビルダー → プレビュー）
+# task3: UI implementation (upload → rule builder → preview)
 
-> **着手前の注意**: task2完了後、実際に実装された型・関数のインターフェースを確認し、
-> このファイルの記述とズレがあればまずこのファイルを更新してから実装を始めること。
+> **Before starting**: After task2 is complete, review the actually implemented
+> types and function interfaces; if this file differs from them, update this
+> file first, then start implementing.
 
-## 目的
+## Goal
 
-以下の3ステップからなる1画面SPAのUIを実装する。zipダウンロードはtask4で行うため、
-この段階では「確認」ボタンは配置のみ（disabled または console.log まで）でよい。
+Implement a single-page UI consisting of the three steps below. The zip
+download happens in task4, so at this stage the "confirm" button only needs to
+be placed (disabled, or up to a console.log).
 
 ```
-① ファイルのアップロード
-② リネーム規則の組み立て（トークンのD&D + 各トークンの設定UI）
-③ 新ファイル名のプレビュー
+(1) Upload files
+(2) Build the rename rule (token D&D + per-token settings UI)
+(3) Preview the new file names
 ```
 
-## ① ファイルアップロード
+## (1) File upload
 
-- ドロップゾーン + クリックでファイル選択ダイアログ（`<input type="file" multiple>`）
-- 対象は画像を想定するが、MIMEタイプでの拒否はしない（全ファイル受け入れでよい）
-- ファイルは **ブラウザ内メモリに保持するだけ**。外部送信は絶対にしない
-- File.lastModified を保持し、task2の RenameInput に渡せるようにする
-- 読み込んだファイルは一覧表示し、以下ができること:
-  - dnd-kitによるドラッグ&ドロップでの並べ替え（この順序がindexの順序になる）
-  - 個別削除
-  - 追加アップロード（既存リストの末尾に追加）
+- Drop zone + click to open the file picker dialog
+  (`<input type="file" multiple>`)
+- Images are the expected use case, but do not reject by MIME type (accepting
+  all files is fine)
+- Files are **kept in browser memory only**. Never send them anywhere
+- Keep File.lastModified so it can be passed to task2's RenameInput
+- Show the loaded files in a list, supporting:
+  - Reordering via drag & drop with dnd-kit (this order becomes the index
+    order)
+  - Removing individual files
+  - Uploading more files (appended to the end of the existing list)
 
-## ② リネーム規則ビルダー（このアプリの中核）
+## (2) Rename rule builder (the core of this app)
 
-### トークンパレット
+### Token palette
 
-利用可能なトークンを並べたパレットを表示する:
+Show a palette listing the available tokens:
 
-- 任意文字列
-- 区切り文字（初期値 `_`）
-- 日付
-- 時間
-- index
+- Text
+- Separator (default `_`)
+- Date
+- Time
+- Index
 
-### 規則エリア
+### Rule area
 
-- パレットからトークンをドラッグして規則エリアに配置する（dnd-kit）
-- 規則エリア内のトークンはD&Dで並べ替え可能、削除も可能
-- 同じ種類のトークンを複数配置できる（任意文字列を2つ等）
-- 規則エリアの末尾に常に `.拡張子` の固定表示を置き、拡張子が自動維持されることを示す
+- Drag tokens from the palette into the rule area (dnd-kit)
+- Tokens inside the rule area can be reordered via D&D and removed
+- Multiple tokens of the same kind can be placed (e.g. two text tokens)
+- Always show a fixed `.ext` indicator at the end of the rule area to convey
+  that the extension is preserved automatically
 
-### トークンごとの設定UI
+### Per-token settings UI
 
-- **任意文字列**: 規則エリアに置かれた任意文字列トークンの数だけ、規則エリアの下に
-  入力フィールドを表示する（`任意文字列1`, `任意文字列2`, ... とラベル付け）。
-  置かれていなければ入力欄は表示しない。
-  task2の `validateTextValue` でバリデーションし、エラーはフィールド下に表示する
-- **日付**: 日付トークンを規則エリアに置く/選択すると、設定パネルを表示する:
-  - フォーマット選択（task2のDateFormat全種）
-  - ソース選択:「日付を指定」（初期値・当日）/「ファイルの更新日時を使う」
-  - 「日付を指定」のときは **`<input type="date">` によるカレンダーUI** で日付を選択。
-    ネイティブのdate inputで実装し、カレンダーライブラリは追加しないこと
-  - 「ファイルの更新日時」のときはカレンダーを表示しない
-- **時間**: 日付と同じ構成の設定パネル:
-  - フォーマット選択（task2のTimeFormat全種）
-  - ソース選択:「時刻を指定」（初期値・現在時刻）/「ファイルの更新日時を使う」
-  - 「時刻を指定」のときは **`<input type="time">` による時刻ピッカーUI** で選択。
-    フォーマットに秒が含まれる場合は `step="1"` を指定して秒まで選べるようにする
-- **index**: 設定パネルでスタイルを選択:
-  - 数字1桁（1, 2, 3...）/ 数字2桁（01, 02...）/ 数字3桁（001, 002...）
-  - アルファベット小文字（a, b, c...）/ アルファベット大文字（A, B, C...）
+- **Text**: below the rule area, show as many input fields as there are text
+  tokens placed in the rule area (labeled `Text 1`, `Text 2`, ...). Show no
+  input fields when none are placed.
+  Validate with task2's `validateTextValue` and show errors under the field
+- **Date**: placing/selecting a date token in the rule area shows a settings
+  panel:
+  - Format selection (all DateFormat variants from task2)
+  - Source selection: "Pick a date" (default: today) / "Use file modified
+    time"
+  - When "Pick a date" is selected, choose the date with a **calendar UI via
+    `<input type="date">`**. Use the native date input; do not add a calendar
+    library
+  - When "Use file modified time" is selected, show no calendar
+- **Time**: a settings panel with the same structure as Date:
+  - Format selection (all TimeFormat variants from task2)
+  - Source selection: "Pick a time" (default: current time) / "Use file
+    modified time"
+  - When "Pick a time" is selected, choose the time with a **time picker UI
+    via `<input type="time">`**. When the format includes seconds, set
+    `step="1"` so seconds can be selected
+- **Index**: choose the style in a settings panel:
+  - Numeric 1 digit (1, 2, 3...) / numeric 2 digits (01, 02...) / numeric 3
+    digits (001, 002...)
+  - Alphabetic lowercase (a, b, c...) / alphabetic uppercase (A, B, C...)
 
-### 状態管理
+### State management
 
-- `RenameToken[]` を単一のステートとして保持し、これをtask2の `applyRename` に
-  そのまま渡せる形を維持する
-- 状態管理はReactのuseState / useReducerのみ。外部状態管理ライブラリは入れない
+- Keep `RenameToken[]` as a single piece of state, in a shape that can be
+  passed directly to task2's `applyRename`
+- Use only React's useState / useReducer for state management. Do not add an
+  external state management library
 
-## ③ プレビュー
+## (3) Preview
 
-- ファイルリストと規則（トークン列 + 各設定値）が変わるたびに、
-  `applyRename` を呼んで「元ファイル名 → 新ファイル名」の対応リストを即時表示する
-- ソースが「ファイルの更新日時」の場合、ファイルごとに異なる日付/時刻が
-  正しくプレビューに反映されること
-- `isDuplicate: true` の行は警告スタイル（色 + アイコン等）で示し、
-  リスト上部に「同名のファイルが発生します」の注意文を出す
-- ファイル未選択、または規則が空の場合はプレビューを出さず、案内文を表示する
+- Whenever the file list or the rule (token sequence + each setting) changes,
+  call `applyRename` and immediately show the "original name → new name"
+  mapping list
+- When the source is "file modified time", each file's distinct date/time must
+  be reflected correctly in the preview
+- Style rows with `isDuplicate: true` as warnings (color + icon etc.) and show
+  a notice above the list saying duplicate file names will occur
+- When no files are selected or the rule is empty, show guidance text instead
+  of the preview
 
-## デザイン方針
+## Design policy
 
-- 日本語UI。シンプルで清潔なスタイルでよい（CSSはプレーンCSS or CSS Modules。
-  Tailwind等の追加はしない）
-- ①→②→③が縦に並ぶ1カラム構成。モバイルでも崩れない程度のレスポンシブ対応
+- Japanese UI. A simple, clean style is fine (plain CSS or CSS Modules; do not
+  add Tailwind etc.)
+- Single-column layout with (1)→(2)→(3) stacked vertically. Responsive enough
+  not to break on mobile
 
-## 完了条件
+## Completion criteria
 
-- ファイルを複数選択 → 並べ替え → トークンを組み立て → 各トークンを設定すると、
-  プレビューが仕様どおりリアルタイム更新される
-- 任意文字列トークンの数と入力フィールドの数が常に一致する
-- 日付トークンでカレンダーから日付を選ぶと、その日付がプレビューに反映される
-- 時間トークンで時刻を選ぶと、その時刻がプレビューに反映される（秒ありフォーマット含む）
-- ソースを「ファイルの更新日時」に切り替えると、ファイルごとの日時が反映される
-- `npm run build` / `npm run lint` / `npm run test` がすべて通る
+- Selecting multiple files → reordering → assembling tokens → configuring each
+  token updates the preview in real time as specified
+- The number of text tokens and the number of input fields always match
+- Picking a date from the calendar on a date token is reflected in the preview
+- Picking a time on a time token is reflected in the preview (including
+  formats with seconds)
+- Switching the source to "file modified time" reflects each file's own
+  date/time
+- `npm run build` / `npm run lint` / `npm run test` all pass
 
-## やらないこと
+## Out of scope
 
-- zip生成・ダウンロード処理 → task4
-- リネームロジックの変更（必要が生じた場合は変更内容を報告して確認を取ること）
-- 追加ライブラリのインストール（dnd-kitは導入済みのものを使う。
-  カレンダー/時間ピッカーはネイティブの input type="date" / "time" を使う）
+- zip generation/download → task4
+- Changing the rename logic (if a change becomes necessary, report it and get
+  confirmation first)
+- Installing additional libraries (use the already-installed dnd-kit; use the
+  native input type="date" / "time" for the calendar/time pickers)

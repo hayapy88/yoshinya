@@ -1,65 +1,71 @@
-# task1: プロジェクト土台構築（scaffold・設定・認証）
+# task1: Project foundation (scaffold, configuration, authentication)
 
-> **注**: このタスクは実施済み。docs/ に記録として残すために後から整備したもの。
-> 実施時の補足は末尾の「実施記録」を参照。
+> **Note**: This task has already been completed. This file was written afterwards
+> as a record kept in docs/. See "Execution notes" at the end for details from the
+> actual run.
 
-## 目的
+## Goal
 
-完全クライアントサイドのファイル名一括変更ツールのプロジェクト土台を構築する。
-機能実装（リネーム関数・UI・zip）はこのタスクでは行わない。
+Build the project foundation for a fully client-side batch file renaming tool.
+Feature implementation (rename functions, UI, zip) is out of scope for this task.
 
-## プロジェクト概要
+## Project overview
 
-- 完全クライアントサイドのSPA。サーバー・DB・外部へのファイル送信は一切なし
-  （プライバシーが売り）
-- 機能: 複数ファイルを読み込み → D&Dで並べ替え → トークンベースのリネーム規則を
-  組み立て → プレビュー確認 → zipでダウンロード
-- 技術: Vite + React + TypeScript + dnd-kit + JSZip + Vitest
-- デプロイ先: Cloudflare Workers（静的アセット配信。Pagesではない）
+- Fully client-side SPA. No server, no database, and no file transfer to any
+  external service (privacy is the selling point)
+- Features: load multiple files → reorder via drag & drop → build a token-based
+  rename rule → check the preview → download as a zip
+- Stack: Vite + React + TypeScript + dnd-kit + JSZip + Vitest
+- Deployment target: Cloudflare Workers (static asset serving; not Pages)
 
-## 実施内容
+## Work items
 
-1. `npm create cloudflare@latest` を非対話モードで実行し、
-   React + Vite + @cloudflare/vite-plugin 構成のプロジェクトを作成する
-2. SPAのため wrangler.jsonc に `assets.not_found_handling: "single-page-application"`
-   が設定されていることを確認する
-3. 完全クライアントサイド化: テンプレート付属のデモWorker（worker/index.ts）と
-   関連設定（wrangler.jsonc の main / nodejs_compat 等)を削除し、
-   Workerスクリプトなしの静的アセット配信のみの構成にする
-4. 依存関係を追加する: @dnd-kit/core / @dnd-kit/sortable / @dnd-kit/utilities /
-   jszip / vitest（devDependencies）
-5. CLAUDE.md を作成し、以下の方針を明記する:
-   - 完全クライアントサイドのSPA。サーバー・DB・外部へのファイル送信は追加しない
-   - デプロイ先はCloudflare Workers静的アセット（Workerスクリプトなしの構成を維持）
-   - リネームロジックは src/lib/ 配下に純粋関数として実装し、必ずVitestでテストを書く
-   - Next.js・API Routes・バックエンドは導入しない
-6. `npm run dev` でローカル起動できることを確認する
-7. `wrangler login` で認証する（ブラウザでの許可操作はユーザー本人が行う）。
-   完了後 `wrangler whoami` で確認する
-8. `git init` し、.gitignore を確認のうえ初回コミットを作成する
+1. Run `npm create cloudflare@latest` in non-interactive mode to create a project
+   with the React + Vite + @cloudflare/vite-plugin setup
+2. Since this is an SPA, confirm that wrangler.jsonc has
+   `assets.not_found_handling: "single-page-application"`
+3. Make it fully client-side: delete the demo Worker bundled with the template
+   (worker/index.ts) and its related configuration (`main`, `nodejs_compat`, etc.
+   in wrangler.jsonc), leaving a static-assets-only setup with no Worker script
+4. Add dependencies: @dnd-kit/core / @dnd-kit/sortable / @dnd-kit/utilities /
+   jszip / vitest (devDependencies)
+5. Create CLAUDE.md and state the following policies:
+   - Fully client-side SPA. Never add a server, database, or any transfer of
+     files to external services
+   - Deployment target is Cloudflare Workers static assets (keep the
+     no-Worker-script setup)
+   - Implement rename logic as pure functions under src/lib/ and always write
+     Vitest tests for it
+   - Do not introduce Next.js, API Routes, or any backend
+6. Confirm the app starts locally with `npm run dev`
+7. Authenticate with `wrangler login` (the user performs the browser approval
+   step themselves). Verify with `wrangler whoami` afterwards
+8. Run `git init`, review .gitignore, and create the initial commit
 
-## 完了条件
+## Completion criteria
 
-- `npm run dev` でローカル起動し HTTP 200 が返る
-- `npm run build` / `npm run lint` が通る
-- wrangler がユーザーのCloudflareアカウントで認証済み
-- 初回コミットが存在する
+- `npm run dev` starts locally and returns HTTP 200
+- `npm run build` / `npm run lint` pass
+- wrangler is authenticated with the user's Cloudflare account
+- The initial commit exists
 
-## やらないこと
+## Out of scope
 
-- 機能実装（リネーム関数・UI・zip生成）→ task2〜4
-- 本番デプロイ（`npm run deploy`）→ task4の最後に実施
+- Feature implementation (rename functions, UI, zip generation) → task2–4
+- Production deploy (`npm run deploy`) → done at the end of task4
 
-## 実施記録（2026-07-14）
+## Execution notes (2026-07-14)
 
-- scaffoldは `--framework=react --platform=workers --variant=react-ts --no-deploy
-  --git=false` の組み合わせで成功（TS指定は `--lang=ts` ではなく `--variant=react-ts`）
-- 既存の `.claude/` ディレクトリがscaffoldと衝突するため、一時退避してから実行し復元した
-  （settings.local.json の存在を確認済み）
-- `assets.not_found_handling: "single-page-application"` はテンプレートに最初から
-  含まれていた
-- package.json に `"deploy": "npm run build && wrangler deploy"` スクリプトを追加し、
-  未使用の `cf-typegen` を削除した
-- 構成: Vite 8 + React 19 + TypeScript + @cloudflare/vite-plugin（wrangler 4）。
-  lint は oxlint（テンプレート標準）
-- index.html を日本語ロケール + タイトル「File Renamer」に変更した
+- The scaffold succeeded with the combination `--framework=react
+  --platform=workers --variant=react-ts --no-deploy --git=false`
+  (TypeScript is selected via `--variant=react-ts`, not `--lang=ts`)
+- The existing `.claude/` directory conflicted with the scaffold, so it was
+  temporarily moved out and restored afterwards (settings.local.json confirmed
+  present)
+- `assets.not_found_handling: "single-page-application"` was already included
+  in the template
+- Added the `"deploy": "npm run build && wrangler deploy"` script to
+  package.json and removed the unused `cf-typegen` script
+- Setup: Vite 8 + React 19 + TypeScript + @cloudflare/vite-plugin (wrangler 4).
+  Linting is oxlint (template default)
+- Changed index.html to the Japanese locale with the title "File Renamer"

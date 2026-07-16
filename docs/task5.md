@@ -1,66 +1,76 @@
-# task5: 多言語対応（英語デフォルト / 日本語切替）
+# task5: Internationalization (English default / Japanese toggle)
 
-> **着手前の注意**: task3・task4完了後に実施する。実際のコンポーネント構成と
-> UI文言を確認し、このファイルの記述とズレがあれば更新してから着手すること。
+> **Before starting**: Do this after task3 and task4 are complete. Review the
+> actual component structure and UI copy; if this file differs from them,
+> update this file before starting.
 
-## 目的
+## Goal
 
-UIを多言語対応にする。デフォルトは英語とし、ヘッダーの言語スイッチャーで
-日本語に切り替えられるようにする。
+Make the UI multilingual. English is the default, and a language switcher in
+the header toggles to Japanese.
 
-## 実装方針
+## Implementation policy
 
-- **追加ライブラリは入れない**（react-i18next等は不要）。1画面SPAで文言数も
-  限られるため、自前の辞書 + React Context で実装する
-- 構成の目安:
-  - `src/i18n/en.ts` / `src/i18n/ja.ts`: 文言辞書（同一のキー構造。TypeScriptの
-    型で両辞書のキー一致を保証すること。例: `ja` の型を `typeof en` にする）
-  - `src/i18n/LocaleContext.tsx`: 現在の言語と切替関数を提供するContext + Provider
-  - `useLocale()` フック: `t('some.key')` または `t.someKey` の形で文言を取得
-- コンポーネント内のハードコードされた文言（日本語）をすべて辞書参照に置き換える。
-  バリデーションエラーメッセージ、プレビューの警告文、ボタンのローディング表示、
-  disabled理由の表示など、**動的に出る文言も漏れなく対象にする**こと
-- `src/lib/`（純粋関数）に文言を持ち込まない。エラーは種別（enum的な値）で返し、
-  表示文言への変換はUI層で行う形にリファクタリングする
-  （task2の `validateTextValue` がメッセージ文字列を返す実装になっている場合、
-  エラーコードを返す形に変更し、テストも合わせて更新する）
+- **Do not add libraries** (react-i18next etc. are unnecessary). It is a
+  single-page SPA with a limited amount of copy, so implement it with our own
+  dictionaries + React Context
+- Suggested structure:
+  - `src/i18n/en.ts` / `src/i18n/ja.ts`: copy dictionaries (identical key
+    structure; guarantee key parity between the two dictionaries with
+    TypeScript types, e.g. type `ja` as `typeof en`)
+  - `src/i18n/LocaleContext.tsx`: Context + Provider exposing the current
+    language and a switch function
+  - `useLocale()` hook: retrieve copy as `t('some.key')` or `t.someKey`
+- Replace all hard-coded (Japanese) copy in components with dictionary
+  lookups. **Dynamic copy must be covered too, without exception**: validation
+  error messages, the preview's duplicate warning, the button's loading state,
+  disabled-reason text, and so on
+- Keep copy out of `src/lib/` (pure functions). Return errors as kinds
+  (enum-like values) and convert them to display text in the UI layer
+  (if task2's `validateTextValue` was implemented to return message strings,
+  refactor it to return error codes and update the tests accordingly)
 
-## 言語の初期値と保持
+## Initial language and persistence
 
-- 初期値は **英語**（ブラウザ言語の自動判定はしない。シンプルに保つ）
-- 言語スイッチャーはヘッダー右上に配置（`EN / 日本語` のトグルまたはselect）
-- 選択した言語は localStorage に保存し、次回訪問時に復元する
-  （キー例: `file-renamer:locale`）
+- The initial value is **English** (no automatic browser-language detection;
+  keep it simple)
+- Place the language switcher at the top right of the header (an `EN / 日本語`
+  toggle or select)
+- Persist the selected language to localStorage and restore it on the next
+  visit (key example: `file-renamer:locale`)
 
-## HTMLメタ情報
+## HTML meta information
 
-- `<html lang>` を言語切替に合わせて動的に変更する（en / ja）
-- `document.title` と meta description も言語に応じて切り替える
-- index.html の静的な初期値は英語にする（デフォルト言語と一致させる）
+- Change `<html lang>` dynamically with the language toggle (en / ja)
+- Switch `document.title` and the meta description with the language as well
+- Make index.html's static initial values English (matching the default
+  language)
 
-## 翻訳の注意点
+## Translation notes
 
-- トークン名の英語表記の目安: 任意文字列 → Text, 区切り文字 → Separator,
-  日付 → Date, 時間 → Time, index → Index
-- 日付・時間の**フォーマット自体**（yyyy-mm-dd等）は言語によって変えない。
-  これはロケール表示ではなくユーザーが選ぶ出力仕様のため
-- プライバシーの説明文（「ファイルはサーバーに送信されず、すべてブラウザ内で
-  処理されます」）は両言語で必ず表示すること。英語例:
+- Suggested English names for tokens: 任意文字列 → Text, 区切り文字 →
+  Separator, 日付 → Date, 時間 → Time, index → Index
+- Do not vary the date/time **formats themselves** (yyyy-mm-dd etc.) by
+  language. They are output specs the user chooses, not locale display
+- The privacy statement must be shown in both languages. English example:
   "Your files never leave your browser. All processing happens locally."
+  Japanese: 「ファイルはサーバーに送信されず、すべてブラウザ内で処理されます」
 
-## 完了条件
+## Completion criteria
 
-- 初回アクセス時に英語UIで表示される
-- スイッチャーで日本語に切り替えると、静的文言・動的文言（エラー、警告、
-  ローディング等）がすべて切り替わる
-- リロード後も選択した言語が維持される
-- `<html lang>` / title / meta description が言語に追従する
-- ハードコードされた表示文言がコンポーネント内に残っていない
-- `npm run build` / `npm run lint` / `npm run test` がすべて通る
+- The UI is shown in English on first visit
+- Switching to Japanese switches all copy, both static and dynamic (errors,
+  warnings, loading, etc.)
+- The selected language persists across reloads
+- `<html lang>` / title / meta description follow the language
+- No hard-coded display copy remains in components
+- `npm run build` / `npm run lint` / `npm run test` all pass
 
-## やらないこと
+## Out of scope
 
-- 3言語目以降の追加（辞書ファイルを足せば増やせる構造にはしておく)
-- URLパスによる言語分岐（/en/ など）。SPAなので言語はクライアント状態で持つ
-- 日付・時間フォーマットのロケール化
-- 追加ライブラリのインストール
+- Adding a third language (but keep a structure where adding a dictionary
+  file is enough)
+- Language switching via URL path (/en/ etc.). It is an SPA, so language is
+  client state
+- Localizing date/time formats
+- Installing additional libraries

@@ -1,62 +1,68 @@
-# task4: zip生成・ダウンロード + 仕上げ
+# task4: zip generation/download + polish
 
-> **着手前の注意**: task3完了後、実際のコンポーネント構成・状態の持ち方を確認し、
-> このファイルの記述とズレがあれば更新してから着手すること。
+> **Before starting**: After task3 is complete, review the actual component
+> structure and state layout; if this file differs from them, update this file
+> before starting.
 
-## 目的
+## Goal
 
-プレビュー確認後の「確認してダウンロード」ボタンを実装し、リネーム済みファイルを
-zipとしてダウンロードできるようにする。合わせてリリース前の仕上げを行う。
+Implement the "confirm and download" button shown after the preview, so the
+renamed files can be downloaded as a zip. Also do the pre-release polish.
 
-## zip生成（JSZip）
+## zip generation (JSZip)
 
-- task3で配置済みの「確認」ボタンを有効化する
-- 押下時の流れ:
-  1. 現在の `RenameResult[]` を確定値として使用する
-  2. JSZipで、保持している各Fileオブジェクトを新ファイル名で追加する
-  3. `isDuplicate` が1件でもある場合はボタンを押せない（disabled + 理由の表示）
-  4. `zip.generateAsync({ type: 'blob' })` でBlobを生成し、
-     `URL.createObjectURL` + アンカークリックでダウンロードさせる
-  5. 使用後は `URL.revokeObjectURL` でクリーンアップする
-- zipファイル名は `renamed_yyyy-mm-dd.zip`（当日日付）とする
-- 生成中はボタンをローディング表示にし、二重クリックを防ぐ
-- ファイル数・容量が多い場合を考慮し、生成失敗時は try-catch でエラーメッセージを表示する
+- Enable the "confirm" button placed in task3
+- Flow on click:
+  1. Use the current `RenameResult[]` as the final values
+  2. With JSZip, add each held File object under its new file name
+  3. If there is even one `isDuplicate`, the button must not be clickable
+     (disabled + show the reason)
+  4. Generate a Blob with `zip.generateAsync({ type: 'blob' })` and trigger
+     the download via `URL.createObjectURL` + an anchor click
+  5. Clean up with `URL.revokeObjectURL` afterwards
+- The zip file name is `renamed_yyyy-mm-dd.zip` (today's date)
+- Show a loading state on the button while generating and prevent double
+  clicks
+- Considering large file counts/sizes, wrap generation in try-catch and show
+  an error message on failure
 
-## バリデーション（ダウンロード前の最終チェック）
+## Validation (final checks before download)
 
-以下のいずれかに該当する場合、ボタンを disabled にして理由を表示する:
+Disable the button and show the reason when any of the following applies:
 
-- ファイルが0件
-- 規則（トークン）が空
-- 任意文字列フィールドにバリデーションエラーがある
-- プレビューに重複ファイル名がある
+- No files
+- The rule (tokens) is empty
+- A text field has a validation error
+- The preview contains duplicate file names
 
-## 仕上げ
+## Polish
 
-- ページ上部にツールの説明を1〜2文追加する。
-  「ファイルはサーバーに送信されず、すべてブラウザ内で処理されます」という
-  プライバシーの一文を必ず含める
-- index.html の title / meta description を整える（日本語）
-- 主要フローの動作確認: アップロード → 並べ替え → 規則組み立て → プレビュー →
-  ダウンロード → zipを解凍して中身のファイル名が正しいことまで確認する
-- `npm run build` / `npm run lint` / `npm run test` がすべて通ることを確認する
+- Add a one-or-two-sentence description of the tool at the top of the page.
+  It must include the privacy sentence: "Files are never sent to a server;
+  everything is processed inside your browser."
+- Tidy up index.html's title / meta description (in Japanese)
+- Verify the main flow: upload → reorder → build the rule → preview →
+  download → unzip and confirm the file names inside are correct
+- Confirm `npm run build` / `npm run lint` / `npm run test` all pass
 
-## デプロイ（このタスクの最後に実施）
+## Deploy (done at the end of this task)
 
-1. `npm run preview` でWorkersランタイム上の挙動を確認する
-2. 問題なければ `npm run deploy` の実行を**提案し、承認を得てから**実行する
-   （勝手にデプロイしない）
-3. デプロイ後、`*.workers.dev` のURLを報告する
+1. Check behavior on the Workers runtime with `npm run preview`
+2. If all is well, **propose running `npm run deploy` and get approval before
+   executing** (never deploy on your own)
+3. After deploying, report the `*.workers.dev` URL
 
-## 完了条件
+## Completion criteria
 
-- 実ファイルでzipダウンロードまでの一連の流れが動作する
-- 解凍したzip内のファイル名がプレビューと完全に一致し、中身のデータが元ファイルと同一
-- 重複名・未入力などの異常系でダウンロードが適切にブロックされる
-- 本番URLで動作確認できる
+- The full flow through zip download works with real files
+- File names inside the extracted zip match the preview exactly, and the file
+  contents are identical to the originals
+- Downloads are properly blocked in abnormal cases (duplicate names, missing
+  input, etc.)
+- Behavior is verified on the production URL
 
-## やらないこと
+## Out of scope
 
-- 新機能の追加（日付フォーマットの追加等は今後の別タスク）
-- 追加ライブラリのインストール
-- カスタムドメイン設定（必要になったら別途）
+- New features (additional date formats etc. are separate future tasks)
+- Installing additional libraries
+- Custom domain setup (separately, if it becomes necessary)
