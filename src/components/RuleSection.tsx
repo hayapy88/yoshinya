@@ -308,6 +308,7 @@ function TokenSettings({
           >
             <option value="_">_（アンダースコア）</option>
             <option value="-">-（ハイフン）</option>
+            <option value=".">.（ドット）</option>
           </select>
         </div>
       )

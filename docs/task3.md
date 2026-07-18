@@ -57,7 +57,8 @@ Show a palette listing the available tokens:
   input fields when none are placed.
   Validate with task2's `validateTextValue` and show errors under the field
 - **Separator**: a settings panel lets the user choose the character: `_`
-  (underscore) or `-` (hyphen)
+  (underscore), `-` (hyphen), or `.` (dot; e.g. for language suffixes like
+  `intro.ja.md`)
 - **Date**: placing/selecting a date token in the rule area shows a settings
   panel:
   - Format selection (all DateFormat variants from task2)
