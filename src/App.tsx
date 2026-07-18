@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { applyRename, formatDate } from './lib/rename'
+import { applyRename, formatDate, formatTime } from './lib/rename'
 import { validateTextValue } from './lib/validate'
 import { createZipBlob } from './lib/zip'
 import type { RenameToken } from './lib/types'
@@ -65,7 +65,8 @@ function App() {
       const url = URL.createObjectURL(blob)
       const anchor = document.createElement('a')
       anchor.href = url
-      anchor.download = `renamed_${formatDate(new Date(), 'yyyy-mm-dd')}.zip`
+      const now = new Date()
+      anchor.download = `renamed_${formatDate(now, 'yyyy-mm-dd')}-${formatTime(now, 'hh-mm-ss')}.zip`
       anchor.click()
       URL.revokeObjectURL(url)
     } catch (error) {

@@ -18,7 +18,8 @@ zipとしてダウンロードできるようにする。合わせてリリー�
   4. `zip.generateAsync({ type: 'blob' })` でBlobを生成し、
      `URL.createObjectURL` + アンカークリックでダウンロードさせる
   5. 使用後は `URL.revokeObjectURL` でクリーンアップする
-- zipファイル名は `renamed_yyyy-mm-dd.zip`（当日日付）とする
+- zipファイル名は `renamed_yyyy-mm-dd-hh-mm-ss.zip`（現在日時）とする
+  （当初は `renamed_yyyy-mm-dd.zip`。後の要望で時分秒を追加）
 - 生成中はボタンをローディング表示にし、二重クリックを防ぐ
 - ファイル数・容量が多い場合を考慮し、生成失敗時は try-catch でエラーメッセージを表示する
 

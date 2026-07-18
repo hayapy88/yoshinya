@@ -20,7 +20,8 @@ renamed files can be downloaded as a zip. Also do the pre-release polish.
   4. Generate a Blob with `zip.generateAsync({ type: 'blob' })` and trigger
      the download via `URL.createObjectURL` + an anchor click
   5. Clean up with `URL.revokeObjectURL` afterwards
-- The zip file name is `renamed_yyyy-mm-dd.zip` (today's date)
+- The zip file name is `renamed_yyyy-mm-dd-hh-mm-ss.zip` (current date and
+  time; originally `renamed_yyyy-mm-dd.zip`, seconds added by a later request)
 - Show a loading state on the button while generating and prevent double
   clicks
 - Considering large file counts/sizes, wrap generation in try-catch and show
