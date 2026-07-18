@@ -104,6 +104,122 @@ main {
   overflow-wrap: anywhere;
 }
 
+.thumb {
+  width: var(--thumb-size, 44px);
+  height: var(--thumb-size, 44px);
+  flex: none;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.thumb-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--thumb-size, 44px) * 0.4);
+}
+
+.thumb-button {
+  padding: 0;
+  border: none;
+  background: none;
+  flex: none;
+  display: inline-flex;
+  border-radius: 6px;
+  cursor: zoom-in;
+}
+
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-content {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Natural image size, capped so it always fits the viewport */
+.lightbox-content img {
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 3rem);
+  max-height: calc(100vh - 6rem);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.lightbox-content figcaption {
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: calc(100vw - 3rem);
+  overflow-wrap: anywhere;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.thumb-cell {
+  width: var(--thumb-size, 44px);
+}
+
+.thumb-size-control {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.thumb-size-button {
+  font: inherit;
+  line-height: 1;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: inherit;
+  cursor: pointer;
+}
+
+.thumb-size-button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.thumb-size-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .remove-button {
   border: none;
   background: none;

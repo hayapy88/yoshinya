@@ -1,13 +1,14 @@
 import type { RenameResult } from '../lib/types'
+import { FileThumb, type LoadedFile } from './FilesSection'
 
 type Props = {
-  hasFiles: boolean
+  files: LoadedFile[]
   hasTokens: boolean
   results: RenameResult[] | null
 }
 
-export function PreviewSection({ hasFiles, hasTokens, results }: Props) {
-  if (!hasFiles) {
+export function PreviewSection({ files, hasTokens, results }: Props) {
+  if (files.length === 0) {
     return <p className="hint">ファイルを追加するとプレビューが表示されます</p>
   }
   if (!hasTokens || !results) {
@@ -26,6 +27,7 @@ export function PreviewSection({ hasFiles, hasTokens, results }: Props) {
       <table className="preview-table">
         <thead>
           <tr>
+            <th aria-hidden="true"></th>
             <th>元のファイル名</th>
             <th aria-hidden="true"></th>
             <th>新しいファイル名</th>
@@ -34,6 +36,9 @@ export function PreviewSection({ hasFiles, hasTokens, results }: Props) {
         <tbody>
           {results.map((r, i) => (
             <tr key={i} className={r.isDuplicate ? 'duplicate-row' : undefined}>
+              <td className="thumb-cell">
+                {files[i] && <FileThumb file={files[i]} />}
+              </td>
               <td>{r.originalName}</td>
               <td className="arrow">→</td>
               <td>

@@ -11,6 +11,7 @@ import './App.css'
 function App() {
   const [files, setFiles] = useState<LoadedFile[]>([])
   const [tokens, setTokens] = useState<RenameToken[]>([])
+  const [thumbSize, setThumbSize] = useState(44)
   const [isZipping, setIsZipping] = useState(false)
   const [zipError, setZipError] = useState<string | null>(null)
 
@@ -70,7 +71,7 @@ function App() {
   }
 
   return (
-    <main>
+    <main style={{ '--thumb-size': `${thumbSize}px` } as React.CSSProperties}>
       <header className="app-header">
         <h1>File Renamer</h1>
         <p>
@@ -81,7 +82,12 @@ function App() {
 
       <section className="step">
         <h2>① ファイルのアップロード</h2>
-        <FilesSection files={files} onChange={setFiles} />
+        <FilesSection
+          files={files}
+          onChange={setFiles}
+          thumbSize={thumbSize}
+          onThumbSizeChange={setThumbSize}
+        />
       </section>
 
       <section className="step">
@@ -92,7 +98,7 @@ function App() {
       <section className="step">
         <h2>③ 新ファイル名のプレビュー</h2>
         <PreviewSection
-          hasFiles={files.length > 0}
+          files={files}
           hasTokens={tokens.length > 0}
           results={results}
         />
