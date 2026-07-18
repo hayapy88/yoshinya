@@ -17,6 +17,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { formatAlphaIndex, formatNumericIndex } from '../lib/rename'
 import { validateTextValue } from '../lib/validate'
+import { useLocale, type Dictionary } from '../i18n/locale'
 import type {
   DateFormat,
   IndexStyle,
@@ -31,23 +32,32 @@ type Props = {
 
 type TokenKind = RenameToken['kind']
 
-const PALETTE: { kind: TokenKind; label: string }[] = [
-  { kind: 'text', label: '任意文字列' },
-  { kind: 'separator', label: '区切り文字' },
-  { kind: 'date', label: '日付' },
-  { kind: 'time', label: '時間' },
-  { kind: 'index', label: 'index' },
+const PALETTE_KINDS: TokenKind[] = [
+  'text',
+  'separator',
+  'date',
+  'time',
+  'index',
 ]
 
 const DATE_FORMATS: DateFormat[] = ['yyyy-mm-dd', 'yyyy-m-d', 'm-d', 'd-m-yyyy']
 const TIME_FORMATS: TimeFormat[] = ['hh-mm-ss', 'hh-mm']
 
-const INDEX_STYLES: { value: string; label: string; style: IndexStyle }[] = [
-  { value: 'num1', label: '数字1桁（1, 2, 3...）', style: { type: 'numeric', padding: 1 } },
-  { value: 'num2', label: '数字2桁（01, 02...）', style: { type: 'numeric', padding: 2 } },
-  { value: 'num3', label: '数字3桁（001, 002...）', style: { type: 'numeric', padding: 3 } },
-  { value: 'alphaLower', label: 'アルファベット小文字（a, b, c...）', style: { type: 'alpha', letterCase: 'lower' } },
-  { value: 'alphaUpper', label: 'アルファベット大文字（A, B, C...）', style: { type: 'alpha', letterCase: 'upper' } },
+const SEPARATOR_CHARS: { value: string; labelKey: 'underscore' | 'hyphen' | 'dot' }[] = [
+  { value: '_', labelKey: 'underscore' },
+  { value: '-', labelKey: 'hyphen' },
+  { value: '.', labelKey: 'dot' },
+]
+
+const INDEX_STYLES: {
+  value: keyof Dictionary['rule']['indexStyles']
+  style: IndexStyle
+}[] = [
+  { value: 'num1', style: { type: 'numeric', padding: 1 } },
+  { value: 'num2', style: { type: 'numeric', padding: 2 } },
+  { value: 'num3', style: { type: 'numeric', padding: 3 } },
+  { value: 'alphaLower', style: { type: 'alpha', letterCase: 'lower' } },
+  { value: 'alphaUpper', style: { type: 'alpha', letterCase: 'upper' } },
 ]
 
 function pad2(n: number): string {
@@ -80,7 +90,7 @@ function createToken(kind: TokenKind): RenameToken {
   }
 }
 
-function indexStyleValue(style: IndexStyle): string {
+function indexStyleValue(style: IndexStyle): keyof Dictionary['rule']['indexStyles'] {
   if (style.type === 'numeric') {
     return `num${style.padding}`
   }
@@ -93,7 +103,7 @@ function indexSample(style: IndexStyle): string {
     : formatAlphaIndex(1, style.letterCase)
 }
 
-// Tokens of a kind are numbered by their order in the rule (任意文字列1, 任意文字列2, ...).
+// Tokens of a kind are numbered by their order in the rule (Text 1, Text 2, ...).
 function kindNumbers(tokens: RenameToken[], kind: TokenKind): Map<string, number> {
   const numbers = new Map<string, number>()
   let n = 0
@@ -106,22 +116,27 @@ function kindNumbers(tokens: RenameToken[], kind: TokenKind): Map<string, number
   return numbers
 }
 
-function tokenChipLabel(token: RenameToken, textNumber?: number): string {
+function tokenChipLabel(
+  token: RenameToken,
+  t: Dictionary,
+  textNumber?: number,
+): string {
   switch (token.kind) {
     case 'text':
-      return `任意文字列${textNumber ?? ''}`
+      return t.tokens.textNumbered(textNumber ?? 1)
     case 'separator':
       return token.char
     case 'date':
-      return `日付(${token.format})`
+      return `${t.tokens.date}(${token.format})`
     case 'time':
-      return `時間(${token.format})`
+      return `${t.tokens.time}(${token.format})`
     case 'index':
-      return `index(${indexSample(token.style)})`
+      return `${t.tokens.index}(${indexSample(token.style)})`
   }
 }
 
 export function RuleSection({ tokens, onChange }: Props) {
+  const { t } = useLocale()
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   )
@@ -130,7 +145,9 @@ export function RuleSection({ tokens, onChange }: Props) {
 
   const updateToken = (id: string, patch: Partial<RenameToken>) => {
     onChange(
-      tokens.map((t) => (t.id === id ? ({ ...t, ...patch } as RenameToken) : t)),
+      tokens.map((token) =>
+        token.id === id ? ({ ...token, ...patch } as RenameToken) : token,
+      ),
     )
   }
 
@@ -166,17 +183,17 @@ export function RuleSection({ tokens, onChange }: Props) {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <p className="hint">トークンを下の規則エリアにドラッグして、ファイル名の形を組み立てます</p>
+        <p className="hint">{t.rule.hint}</p>
         <div className="palette">
-          {PALETTE.map(({ kind, label }) => (
-            <PaletteToken key={kind} kind={kind} label={label} />
+          {PALETTE_KINDS.map((kind) => (
+            <PaletteToken key={kind} kind={kind} label={t.tokens[kind]} />
           ))}
         </div>
 
         <RuleArea
           tokens={tokens}
           numbers={numbers}
-          onRemove={(id) => onChange(tokens.filter((t) => t.id !== id))}
+          onRemove={(id) => onChange(tokens.filter((token) => token.id !== id))}
         />
       </DndContext>
 
@@ -222,6 +239,7 @@ function RuleArea({
   numbers: Map<string, number>
   onRemove: (id: string) => void
 }) {
+  const { t } = useLocale()
   const { setNodeRef, isOver } = useDroppable({ id: 'rule-area' })
 
   return (
@@ -230,11 +248,11 @@ function RuleArea({
       className={`rule-area${isOver ? ' rule-area-over' : ''}`}
     >
       <SortableContext
-        items={tokens.map((t) => t.id)}
+        items={tokens.map((token) => token.id)}
         strategy={horizontalListSortingStrategy}
       >
         {tokens.length === 0 && (
-          <span className="rule-placeholder">ここにトークンをドロップ</span>
+          <span className="rule-placeholder">{t.rule.placeholder}</span>
         )}
         {tokens.map((token) => (
           <SortableRuleToken
@@ -245,7 +263,7 @@ function RuleArea({
           />
         ))}
       </SortableContext>
-      <span className="token-chip ext-chip">.拡張子</span>
+      <span className="token-chip ext-chip">{t.rule.extChip}</span>
     </div>
   )
 }
@@ -259,8 +277,10 @@ function SortableRuleToken({
   textNumber?: number
   onRemove: (id: string) => void
 }) {
+  const { t } = useLocale()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: token.id, data: { from: 'rule' } })
+  const label = tokenChipLabel(token, t, textNumber)
 
   return (
     <span
@@ -270,11 +290,11 @@ function SortableRuleToken({
       {...attributes}
       {...listeners}
     >
-      {tokenChipLabel(token, textNumber)}
+      {label}
       <button
         type="button"
         className="remove-button"
-        aria-label={`${tokenChipLabel(token, textNumber)} を削除`}
+        aria-label={t.rule.removeToken(label)}
         onClick={() => onRemove(token.id)}
       >
         ✕
@@ -294,21 +314,25 @@ function TokenSettings({
   separatorNumber?: number
   onUpdate: (id: string, patch: Partial<RenameToken>) => void
 }) {
+  const { t } = useLocale()
+
   switch (token.kind) {
     case 'separator':
       return (
         <div className="settings-panel">
           <label className="settings-label" htmlFor={`separator-${token.id}`}>
-            区切り文字{separatorNumber}
+            {t.tokens.separatorNumbered(separatorNumber ?? 1)}
           </label>
           <select
             id={`separator-${token.id}`}
             value={token.char}
             onChange={(e) => onUpdate(token.id, { char: e.target.value })}
           >
-            <option value="_">_（アンダースコア）</option>
-            <option value="-">-（ハイフン）</option>
-            <option value=".">.（ドット）</option>
+            {SEPARATOR_CHARS.map(({ value, labelKey }) => (
+              <option key={value} value={value}>
+                {t.rule.separatorOptions[labelKey]}
+              </option>
+            ))}
           </select>
         </div>
       )
@@ -317,26 +341,28 @@ function TokenSettings({
       return (
         <div className="settings-panel">
           <label className="settings-label" htmlFor={`text-${token.id}`}>
-            任意文字列{textNumber}
+            {t.tokens.textNumbered(textNumber ?? 1)}
           </label>
           <input
             id={`text-${token.id}`}
             type="text"
             value={token.value}
-            placeholder="例: 旅行"
+            placeholder={t.rule.textPlaceholder}
             onChange={(e) => onUpdate(token.id, { value: e.target.value })}
           />
-          {error && <p className="field-error">{error}</p>}
+          {error && (
+            <p className="field-error">{t.rule.textError(error.chars)}</p>
+          )}
         </div>
       )
     }
     case 'date':
       return (
         <div className="settings-panel">
-          <span className="settings-label">日付</span>
+          <span className="settings-label">{t.tokens.date}</span>
           <div className="settings-row">
             <label>
-              フォーマット
+              {t.rule.formatLabel}
               <select
                 value={token.format}
                 onChange={(e) =>
@@ -350,7 +376,11 @@ function TokenSettings({
                 ))}
               </select>
             </label>
-            <div className="source-choice" role="radiogroup" aria-label="日付のソース">
+            <div
+              className="source-choice"
+              role="radiogroup"
+              aria-label={t.rule.dateSourceLabel}
+            >
               <label>
                 <input
                   type="radio"
@@ -363,7 +393,7 @@ function TokenSettings({
                     })
                   }
                 />
-                日付を指定
+                {t.rule.pickDate}
               </label>
               <label>
                 <input
@@ -372,13 +402,13 @@ function TokenSettings({
                   checked={token.source === 'fileModified'}
                   onChange={() => onUpdate(token.id, { source: 'fileModified' })}
                 />
-                ファイルの更新日時を使う
+                {t.rule.useFileModified}
               </label>
             </div>
             {token.source === 'fixed' && (
               <input
                 type="date"
-                aria-label="日付を選択"
+                aria-label={t.rule.chooseDate}
                 value={token.fixedDate ?? ''}
                 onChange={(e) => onUpdate(token.id, { fixedDate: e.target.value })}
               />
@@ -389,10 +419,10 @@ function TokenSettings({
     case 'time':
       return (
         <div className="settings-panel">
-          <span className="settings-label">時間</span>
+          <span className="settings-label">{t.tokens.time}</span>
           <div className="settings-row">
             <label>
-              フォーマット
+              {t.rule.formatLabel}
               <select
                 value={token.format}
                 onChange={(e) =>
@@ -406,7 +436,11 @@ function TokenSettings({
                 ))}
               </select>
             </label>
-            <div className="source-choice" role="radiogroup" aria-label="時間のソース">
+            <div
+              className="source-choice"
+              role="radiogroup"
+              aria-label={t.rule.timeSourceLabel}
+            >
               <label>
                 <input
                   type="radio"
@@ -419,7 +453,7 @@ function TokenSettings({
                     })
                   }
                 />
-                時刻を指定
+                {t.rule.pickTime}
               </label>
               <label>
                 <input
@@ -428,13 +462,13 @@ function TokenSettings({
                   checked={token.source === 'fileModified'}
                   onChange={() => onUpdate(token.id, { source: 'fileModified' })}
                 />
-                ファイルの更新日時を使う
+                {t.rule.useFileModified}
               </label>
             </div>
             {token.source === 'fixed' && (
               <input
                 type="time"
-                aria-label="時刻を選択"
+                aria-label={t.rule.chooseTime}
                 step={token.format === 'hh-mm-ss' ? 1 : undefined}
                 value={token.fixedTime ?? ''}
                 onChange={(e) => onUpdate(token.id, { fixedTime: e.target.value })}
@@ -447,7 +481,7 @@ function TokenSettings({
       return (
         <div className="settings-panel">
           <label className="settings-label" htmlFor={`index-${token.id}`}>
-            index
+            {t.tokens.index}
           </label>
           <select
             id={`index-${token.id}`}
@@ -461,7 +495,7 @@ function TokenSettings({
           >
             {INDEX_STYLES.map((s) => (
               <option key={s.value} value={s.value}>
-                {s.label}
+                {t.rule.indexStyles[s.value]}
               </option>
             ))}
           </select>

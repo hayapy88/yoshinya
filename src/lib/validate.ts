@@ -1,10 +1,14 @@
-const INVALID_FILENAME_CHARS = /[/\\:*?"<>|]/g;
+export type TextValueError = {
+  code: 'invalidChars'
+  chars: string // space-separated unique offending characters
+}
 
-export function validateTextValue(value: string): string | null {
-  const matches = value.match(INVALID_FILENAME_CHARS);
+// Returns an error kind rather than a display message:
+// converting to user-facing copy is the UI layer's job (see src/i18n/).
+export function validateTextValue(value: string): TextValueError | null {
+  const matches = value.match(/[/\\:*?"<>|]/g)
   if (!matches) {
-    return null;
+    return null
   }
-  const unique = [...new Set(matches)].join(' ');
-  return `ファイル名に使えない文字が含まれています: ${unique}`;
+  return { code: 'invalidChars', chars: [...new Set(matches)].join(' ') }
 }

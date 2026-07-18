@@ -15,6 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useLocale } from '../i18n/locale'
 
 export type LoadedFile = {
   id: string
@@ -39,6 +40,7 @@ export function FilesSection({
   thumbSize,
   onThumbSizeChange,
 }: Props) {
+  const { t } = useLocale()
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragOver, setIsDragOver] = useState(false)
   const sensors = useSensors(
@@ -102,7 +104,7 @@ export function FilesSection({
           addFiles(e.dataTransfer.files)
         }}
       >
-        ここにファイルをドロップ、またはクリックして選択
+        {t.upload.dropzone}
         <input
           ref={inputRef}
           type="file"
@@ -117,14 +119,14 @@ export function FilesSection({
 
       {files.length > 0 && (
         <>
-          <p className="hint">ドラッグ&ドロップで並べ替えできます（この順序が連番の順になります）</p>
+          <p className="hint">{t.upload.reorderHint}</p>
           <div className="thumb-size-control">
-            <span id="thumb-size-label">画像サイズ</span>
+            <span id="thumb-size-label">{t.upload.thumbSizeLabel}</span>
             <button
               type="button"
               className="thumb-size-button"
               aria-describedby="thumb-size-label"
-              aria-label="プレビュー画像を小さくする"
+              aria-label={t.upload.thumbSmaller}
               disabled={thumbSize <= THUMB_MIN}
               onClick={() =>
                 onThumbSizeChange(Math.max(THUMB_MIN, thumbSize - THUMB_STEP))
@@ -136,7 +138,7 @@ export function FilesSection({
               type="button"
               className="thumb-size-button"
               aria-describedby="thumb-size-label"
-              aria-label="プレビュー画像を大きくする"
+              aria-label={t.upload.thumbLarger}
               disabled={thumbSize >= THUMB_MAX}
               onClick={() =>
                 onThumbSizeChange(Math.min(THUMB_MAX, thumbSize + THUMB_STEP))
@@ -173,6 +175,7 @@ export function FilesSection({
 }
 
 export function FileThumb({ file }: { file: LoadedFile }) {
+  const { t } = useLocale()
   const [isOpen, setIsOpen] = useState(false)
 
   if (!file.previewUrl) {
@@ -187,7 +190,7 @@ export function FileThumb({ file }: { file: LoadedFile }) {
       <button
         type="button"
         className="thumb-button"
-        aria-label={`${file.file.name} のプレビューを大きく表示`}
+        aria-label={t.upload.openPreview(file.file.name)}
         onClick={() => setIsOpen(true)}
       >
         <img className="thumb" src={file.previewUrl} alt="" />
@@ -198,6 +201,8 @@ export function FileThumb({ file }: { file: LoadedFile }) {
 }
 
 function Lightbox({ file, onClose }: { file: LoadedFile; onClose: () => void }) {
+  const { t } = useLocale()
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -223,7 +228,7 @@ function Lightbox({ file, onClose }: { file: LoadedFile; onClose: () => void }) 
       <button
         type="button"
         className="lightbox-close"
-        aria-label="プレビューを閉じる"
+        aria-label={t.upload.closePreview}
         onClick={onClose}
         autoFocus
       >
@@ -243,6 +248,7 @@ function SortableFileItem({
   position: number
   onRemove: (id: string) => void
 }) {
+  const { t } = useLocale()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: item.id })
 
@@ -260,7 +266,7 @@ function SortableFileItem({
       <button
         type="button"
         className="remove-button"
-        aria-label={`${item.file.name} を削除`}
+        aria-label={t.upload.removeFile(item.file.name)}
         onClick={() => onRemove(item.id)}
       >
         ✕

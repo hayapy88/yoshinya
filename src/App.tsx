@@ -3,12 +3,19 @@ import { applyRename, formatDate } from './lib/rename'
 import { validateTextValue } from './lib/validate'
 import { createZipBlob } from './lib/zip'
 import type { RenameToken } from './lib/types'
+import { useLocale, type Locale } from './i18n/locale'
 import { FilesSection, type LoadedFile } from './components/FilesSection'
 import { RuleSection } from './components/RuleSection'
 import { PreviewSection } from './components/PreviewSection'
 import './App.css'
 
+const LOCALES: { value: Locale; label: string }[] = [
+  { value: 'en', label: 'EN' },
+  { value: 'ja', label: '日本語' },
+]
+
 function App() {
+  const { locale, setLocale, t } = useLocale()
   const [files, setFiles] = useState<LoadedFile[]>([])
   const [tokens, setTokens] = useState<RenameToken[]>([])
   const [thumbSize, setThumbSize] = useState(44)
@@ -30,19 +37,19 @@ function App() {
   }, [files, tokens])
 
   const hasTextError = tokens.some(
-    (t) => t.kind === 'text' && validateTextValue(t.value) !== null,
+    (token) => token.kind === 'text' && validateTextValue(token.value) !== null,
   )
   const hasDuplicates = results?.some((r) => r.isDuplicate) ?? false
 
   const disabledReason =
     files.length === 0
-      ? 'ファイルを追加するとダウンロードできます'
+      ? t.download.needFiles
       : tokens.length === 0
-        ? 'リネーム規則を組み立てるとダウンロードできます'
+        ? t.download.needRule
         : hasTextError
-          ? '任意文字列のエラーを解消してください'
+          ? t.download.fixTextErrors
           : hasDuplicates
-            ? '同名のファイルが発生するためダウンロードできません'
+            ? t.download.duplicatesBlock
             : null
 
   const handleDownload = async () => {
@@ -63,7 +70,9 @@ function App() {
       URL.revokeObjectURL(url)
     } catch (error) {
       setZipError(
-        `zipの生成に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+        t.download.zipFailed(
+          error instanceof Error ? error.message : String(error),
+        ),
       )
     } finally {
       setIsZipping(false)
@@ -73,15 +82,31 @@ function App() {
   return (
     <main style={{ '--thumb-size': `${thumbSize}px` } as React.CSSProperties}>
       <header className="app-header">
-        <h1>File Renamer</h1>
-        <p>
-          複数ファイルの名前をルールに沿って一括変更し、zipでダウンロードできるツールです。
-          ファイルはサーバーに送信されず、すべてブラウザ内で処理されます。
-        </p>
+        <div className="app-header-row">
+          <h1>File Renamer</h1>
+          <div
+            className="lang-switch"
+            role="group"
+            aria-label={t.header.languageLabel}
+          >
+            {LOCALES.map(({ value, label }) => (
+              <button
+                key={value}
+                type="button"
+                className={`lang-button${locale === value ? ' active' : ''}`}
+                aria-pressed={locale === value}
+                onClick={() => setLocale(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p>{t.header.tagline}</p>
       </header>
 
       <section className="step">
-        <h2>① ファイルのアップロード</h2>
+        <h2>{t.steps.upload}</h2>
         <FilesSection
           files={files}
           onChange={setFiles}
@@ -91,12 +116,12 @@ function App() {
       </section>
 
       <section className="step">
-        <h2>② リネーム規則の組み立て</h2>
+        <h2>{t.steps.rule}</h2>
         <RuleSection tokens={tokens} onChange={setTokens} />
       </section>
 
       <section className="step">
-        <h2>③ 新ファイル名のプレビュー</h2>
+        <h2>{t.steps.preview}</h2>
         <PreviewSection
           files={files}
           hasTokens={tokens.length > 0}
@@ -109,7 +134,7 @@ function App() {
             disabled={disabledReason !== null || isZipping}
             onClick={handleDownload}
           >
-            {isZipping ? 'zipを生成中…' : '確認してダウンロード'}
+            {isZipping ? t.download.zipping : t.download.confirm}
           </button>
           {disabledReason && <p className="confirm-note">{disabledReason}</p>}
           {zipError && (

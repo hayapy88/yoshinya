@@ -1,4 +1,5 @@
 import type { RenameResult } from '../lib/types'
+import { useLocale } from '../i18n/locale'
 import { FileThumb, type LoadedFile } from './FilesSection'
 
 type Props = {
@@ -8,11 +9,13 @@ type Props = {
 }
 
 export function PreviewSection({ files, hasTokens, results }: Props) {
+  const { t } = useLocale()
+
   if (files.length === 0) {
-    return <p className="hint">ファイルを追加するとプレビューが表示されます</p>
+    return <p className="hint">{t.preview.addFilesGuide}</p>
   }
   if (!hasTokens || !results) {
-    return <p className="hint">リネーム規則を組み立てるとプレビューが表示されます</p>
+    return <p className="hint">{t.preview.buildRuleGuide}</p>
   }
 
   const hasDuplicates = results.some((r) => r.isDuplicate)
@@ -21,16 +24,16 @@ export function PreviewSection({ files, hasTokens, results }: Props) {
     <div>
       {hasDuplicates && (
         <p className="duplicate-notice" role="alert">
-          ⚠ 同名のファイルが発生します。indexトークンの追加などで名前が重複しないようにしてください。
+          {t.preview.duplicateNotice}
         </p>
       )}
       <table className="preview-table">
         <thead>
           <tr>
             <th aria-hidden="true"></th>
-            <th>元のファイル名</th>
+            <th>{t.preview.originalName}</th>
             <th aria-hidden="true"></th>
-            <th>新しいファイル名</th>
+            <th>{t.preview.newName}</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +45,9 @@ export function PreviewSection({ files, hasTokens, results }: Props) {
               <td>{r.originalName}</td>
               <td className="arrow">→</td>
               <td>
-                {r.isDuplicate && <span aria-label="重複">⚠ </span>}
+                {r.isDuplicate && (
+                  <span aria-label={t.preview.duplicate}>⚠ </span>
+                )}
                 {r.newName}
               </td>
             </tr>
