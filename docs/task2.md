@@ -29,7 +29,7 @@ Use the following as the baseline. It may be adjusted for implementation
 convenience, but keep it a discriminated union.
 
 ```ts
-export type DateFormat = 'yyyy-mm-dd' | 'yyyy-m-d' | 'm-d' | 'd-m-yyyy';
+export type DateFormat = 'yyyy-mm-dd' | 'yyyymmdd' | 'yyyy-mm' | 'yyyymm';
 export type TimeFormat = 'hh-mm-ss' | 'hh-mm';
 // Both must be structured so new literals can be added easily later.
 // Do not use ':' as the time separator (it is not allowed in Windows file

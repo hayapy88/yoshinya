@@ -23,7 +23,7 @@
 以下を基本とする。実装の都合で調整してよいが、判別可能なユニオン型を維持すること。
 
 ```ts
-export type DateFormat = 'yyyy-mm-dd' | 'yyyy-m-d' | 'm-d' | 'd-m-yyyy';
+export type DateFormat = 'yyyy-mm-dd' | 'yyyymmdd' | 'yyyy-mm' | 'yyyymm';
 export type TimeFormat = 'hh-mm-ss' | 'hh-mm';
 // いずれも後からリテラルを追加しやすい構造にすること
 // 時間の区切りに ':' は使わない（Windowsのファイル名で使用不可のため '-' 区切り）

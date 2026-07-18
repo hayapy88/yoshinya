@@ -12,17 +12,17 @@ function pad2(n: number): string {
 
 export function formatDate(date: Date, format: DateFormat): string {
   const yyyy = String(date.getFullYear());
-  const m = date.getMonth() + 1;
-  const d = date.getDate();
+  const mm = pad2(date.getMonth() + 1);
+  const dd = pad2(date.getDate());
   switch (format) {
     case 'yyyy-mm-dd':
-      return `${yyyy}-${pad2(m)}-${pad2(d)}`;
-    case 'yyyy-m-d':
-      return `${yyyy}-${m}-${d}`;
-    case 'm-d':
-      return `${m}-${d}`;
-    case 'd-m-yyyy':
-      return `${d}-${m}-${yyyy}`;
+      return `${yyyy}-${mm}-${dd}`;
+    case 'yyyymmdd':
+      return `${yyyy}${mm}${dd}`;
+    case 'yyyy-mm':
+      return `${yyyy}-${mm}`;
+    case 'yyyymm':
+      return `${yyyy}${mm}`;
   }
 }
 

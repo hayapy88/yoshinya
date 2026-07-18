@@ -1,4 +1,4 @@
-export type DateFormat = 'yyyy-mm-dd' | 'yyyy-m-d' | 'm-d' | 'd-m-yyyy';
+export type DateFormat = 'yyyy-mm-dd' | 'yyyymmdd' | 'yyyy-mm' | 'yyyymm';
 export type TimeFormat = 'hh-mm-ss' | 'hh-mm';
 // Time separators use '-' instead of ':' (':' is not allowed in Windows file names).
 

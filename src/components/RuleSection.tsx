@@ -40,7 +40,7 @@ const PALETTE_KINDS: TokenKind[] = [
   'index',
 ]
 
-const DATE_FORMATS: DateFormat[] = ['yyyy-mm-dd', 'yyyy-m-d', 'm-d', 'd-m-yyyy']
+const DATE_FORMATS: DateFormat[] = ['yyyy-mm-dd', 'yyyymmdd', 'yyyy-mm', 'yyyymm']
 const TIME_FORMATS: TimeFormat[] = ['hh-mm-ss', 'hh-mm']
 
 const SEPARATOR_CHARS: { value: string; labelKey: 'underscore' | 'hyphen' | 'dot' }[] = [

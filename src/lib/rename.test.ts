@@ -19,16 +19,16 @@ describe('formatDate', () => {
     expect(formatDate(sampleDate, 'yyyy-mm-dd')).toBe('2026-07-05');
   });
 
-  it('formats yyyy-m-d without padding', () => {
-    expect(formatDate(sampleDate, 'yyyy-m-d')).toBe('2026-7-5');
+  it('formats yyyymmdd with zero padding', () => {
+    expect(formatDate(sampleDate, 'yyyymmdd')).toBe('20260705');
   });
 
-  it('formats m-d without padding', () => {
-    expect(formatDate(sampleDate, 'm-d')).toBe('7-5');
+  it('formats yyyy-mm with zero padding', () => {
+    expect(formatDate(sampleDate, 'yyyy-mm')).toBe('2026-07');
   });
 
-  it('formats d-m-yyyy without padding', () => {
-    expect(formatDate(sampleDate, 'd-m-yyyy')).toBe('5-7-2026');
+  it('formats yyyymm with zero padding', () => {
+    expect(formatDate(sampleDate, 'yyyymm')).toBe('202607');
   });
 });
 
