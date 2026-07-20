@@ -28,7 +28,7 @@ export default function Home() {
       >
         <div className="min-w-[16rem] flex-1">
           <p className="text-sm font-semibold tracking-[0.25em] text-navy uppercase dark:text-brand">
-            {t.site.brand}
+            {t.home.kicker}
           </p>
           <h1 id="hero-heading" className="mt-3 text-3xl font-bold sm:text-4xl">
             {t.home.primary}

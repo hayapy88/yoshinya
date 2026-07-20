@@ -10,15 +10,17 @@ export const en = {
     switchLocaleTitle: 'このページを日本語で表示',
   },
   home: {
-    metaTitle: 'YOSHINYA | Handy Browser Tools',
+    metaTitle: 'YOSHINYA | A New Handy Tool Every Week',
     metaDescription:
-      'Let Yoshinya handle the little hassles. YOSHINYA releases a new handy browser tool every week — free, private, and running entirely in your browser.',
-    primary: 'Let Yoshinya handle the little hassles.',
-    supporting: 'A new handy browser tool, every week.',
+      'Leave your everyday hassles to Yoshinya. A handy tool that solves a small everyday hassle, released every week — free, private, and processed entirely on your device.',
+    kicker: 'A new handy tool every week',
+    primary: 'Leave your everyday hassles to Yoshinya.',
+    supporting:
+      'A handy tool that solves a small everyday hassle, released every week.',
     toolsHeading: 'Tools',
     cta: 'Try it for free',
     privacyNote:
-      'Every tool runs entirely in your browser — your files are never uploaded.',
+      'Every tool runs right in your browser. Files are processed on your device and never sent to an external server.',
   },
   fileRenamerPage: {
     metaTitle: 'Free Bulk File Renamer Online | YOSHINYA',
