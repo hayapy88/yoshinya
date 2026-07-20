@@ -24,7 +24,14 @@ export function SiteHeader() {
             alt={t.site.brand}
             width={1745}
             height={422}
-            className="h-8 w-auto"
+            className="h-8 w-auto dark:hidden"
+          />
+          <img
+            src="/brand/logo-yoshinya-dark.png"
+            alt={t.site.brand}
+            width={1745}
+            height={422}
+            className="hidden h-8 w-auto dark:block"
           />
         </Link>
         <Link

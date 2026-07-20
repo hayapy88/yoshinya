@@ -86,7 +86,14 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
           alt="よしにゃ / YOSHINYA"
           width={1745}
           height={422}
-          className="h-auto w-64 sm:w-80"
+          className="h-auto w-64 dark:hidden sm:w-80"
+        />
+        <img
+          src="/brand/logo-yoshinya-dark.png"
+          alt="よしにゃ / YOSHINYA"
+          width={1745}
+          height={422}
+          className="hidden h-auto w-64 dark:block sm:w-80"
         />
       </h1>
       <div className="grid w-full gap-4 sm:grid-cols-2">
