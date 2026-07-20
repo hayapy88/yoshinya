@@ -29,7 +29,7 @@ export function loader({ request }: Route.LoaderArgs) {
 export function meta({ matches }: Route.MetaArgs) {
   const rootData = matches[0]?.loaderData
   const description =
-    'よしにゃ — 面倒なことは、よしにゃに。 / YOSHINYA — handy browser tools, a new one every week.'
+    'よしにゃ — 日々の面倒は、よしにゃにおまかせ。 / YOSHINYA — Leave your everyday hassles to Yoshinya. A new handy browser tool every week.'
   return [
     { title: 'YOSHINYA｜よしにゃ' },
     { name: 'description', content: description },
@@ -64,13 +64,13 @@ const OPTIONS: {
   {
     locale: 'ja',
     brand: 'よしにゃ',
-    message: '面倒なことは、よしにゃに。',
+    message: '日々の面倒は、よしにゃにおまかせ。',
     action: '日本語で続ける',
   },
   {
     locale: 'en',
     brand: 'YOSHINYA',
-    message: 'Let Yoshinya handle the little hassles.',
+    message: 'Leave your everyday hassles to Yoshinya.',
     action: 'Continue in English',
   },
 ]
