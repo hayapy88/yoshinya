@@ -41,7 +41,7 @@ export default function Home() {
           </p>
         </div>
         <img
-          src="/brand/img_yoshinyan-eyes-open.png"
+          src="/brand/yoshinyan-eyes-open.png"
           alt={t.site.mascotAlt}
           width={902}
           height={1155}

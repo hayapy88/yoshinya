@@ -4,8 +4,8 @@ import type { Locale } from '~/i18n/locale'
 export const SITE_ORIGIN = 'https://yoshinya.com'
 export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com']
 export const X_HANDLE = '@yoshinya_com'
-export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp_1200x630.png`
-export const BRAND_ICON = `${SITE_ORIGIN}/brand/img_yoshinyan-structured-data-512.png`
+export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp-default.png`
+export const BRAND_ICON = `${SITE_ORIGIN}/brand/yoshinyan-face-512.png`
 
 export function isProductionHost(host: string | undefined): boolean {
   return host !== undefined && PRODUCTION_HOSTS.includes(host)

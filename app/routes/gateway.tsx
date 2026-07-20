@@ -81,7 +81,7 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-4 py-16">
       <img
-        src="/brand/img_yoshinyan-structured-data-512.png"
+        src="/brand/yoshinyan-face-512.png"
         alt="よしにゃん / Yoshinyan"
         width={512}
         height={512}

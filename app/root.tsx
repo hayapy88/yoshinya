@@ -17,21 +17,21 @@ export const links: Route.LinksFunction = () => [
     rel: 'icon',
     type: 'image/png',
     sizes: '32x32',
-    href: '/brand/favicon-32x32.png',
+    href: '/favicon-32x32.png',
   },
   {
     rel: 'icon',
     type: 'image/png',
     sizes: '16x16',
-    href: '/brand/favicon-16x16.png',
+    href: '/favicon-16x16.png',
   },
   {
     rel: 'icon',
     type: 'image/png',
     sizes: '192x192',
-    href: '/brand/favicon-192.png',
+    href: '/icons/icon-192.png',
   },
-  { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' },
+  { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
 ]
 
 // Exposes the request host so page meta functions can mark non-production
