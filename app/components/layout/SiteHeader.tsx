@@ -17,9 +17,15 @@ export function SiteHeader() {
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-4 py-3">
         <Link
           to={`/${locale}`}
-          className="text-lg font-bold tracking-wide text-[color:var(--text)] no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
+          className="no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
         >
-          {t.site.brand}
+          <img
+            src="/brand/logo-yoshinya.png"
+            alt={t.site.brand}
+            width={1585}
+            height={520}
+            className="h-8 w-auto"
+          />
         </Link>
         <Link
           to={switchPath}

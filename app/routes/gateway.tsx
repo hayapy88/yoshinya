@@ -80,18 +80,14 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-4 py-16">
-      <img
-        src="/brand/yoshinyan-face-512.png"
-        alt="よしにゃん / Yoshinyan"
-        width={512}
-        height={512}
-        className="h-24 w-24"
-      />
-      <h1 className="text-center">
-        <span className="block text-4xl font-bold tracking-wide">よしにゃ</span>
-        <span className="mt-2 block text-lg font-semibold tracking-[0.3em] text-[color:var(--muted,#6f6b78)]">
-          YOSHINYA
-        </span>
+      <h1>
+        <img
+          src="/brand/logo-yoshinya.png"
+          alt="よしにゃ / YOSHINYA"
+          width={1585}
+          height={520}
+          className="h-auto w-64 sm:w-80"
+        />
       </h1>
       <div className="grid w-full gap-4 sm:grid-cols-2">
         {OPTIONS.map((option) => (
