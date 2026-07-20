@@ -7,8 +7,9 @@ import {
   useDroppable,
   useSensor,
   useSensors,
+  type CollisionDetection,
   type DragEndEvent,
-  type DragOverEvent,
+  type DragMoveEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
 import {
@@ -138,15 +139,61 @@ function tokenChipLabel(
   }
 }
 
+// The current pointer x, derived from where the drag started plus how far the
+// pointer has moved. This is used instead of the dragged chip's rect because
+// that rect lags behind the pointer at the start of a drag (it briefly still
+// reports the token's original spot in the palette), which skewed the left/
+// right decision for every palette token except the leftmost one.
+function pointerX(event: DragMoveEvent | DragEndEvent): number | null {
+  const activator = event.activatorEvent
+  if (activator && 'clientX' in activator) {
+    return (activator as PointerEvent).clientX + event.delta.x
+  }
+  return null
+}
+
+// When dragging a token in from the palette, pick the rule token nearest the
+// pointer as the drop target. dnd-kit's default collision uses the dragged
+// chip's rect, which lags at the start of a drag and made non-leftmost palette
+// tokens resolve to the wrong target (usually the end). Reordering existing
+// tokens keeps the default closestCenter behavior.
+const collisionDetection: CollisionDetection = (args) => {
+  const fromPalette = args.active?.data.current?.from === 'palette'
+  const pointer = args.pointerCoordinates
+  if (!fromPalette || !pointer) {
+    return closestCenter(args)
+  }
+  const chips = args.droppableContainers.filter((c) => c.id !== 'rule-area')
+  if (chips.length === 0) {
+    return closestCenter(args)
+  }
+  let nearest = chips[0]
+  let nearestDistance = Infinity
+  for (const chip of chips) {
+    const rect = args.droppableRects.get(chip.id)
+    if (!rect) {
+      continue
+    }
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const distance = Math.hypot(pointer.x - cx, pointer.y - cy)
+    if (distance < nearestDistance) {
+      nearestDistance = distance
+      nearest = chip
+    }
+  }
+  return [{ id: nearest.id }]
+}
+
 // Decides where a token dragged from the palette should land, using the left/
 // right half of whichever rule token the pointer is over so the drop matches
 // what the user sees. Returns an index in 0..tokens.length; null means the
 // pointer is not over the rule area.
 function computeInsertIndex(
   tokens: RenameToken[],
-  event: DragOverEvent | DragEndEvent,
+  event: DragMoveEvent | DragEndEvent,
 ): number | null {
-  const { active, over } = event
+  const { over } = event
   if (!over) {
     return null
   }
@@ -155,11 +202,10 @@ function computeInsertIndex(
     // Over the rule area itself (e.g. empty space): append to the end.
     return over.id === 'rule-area' ? tokens.length : null
   }
-  const activeRect = active.rect.current.translated
-  if (activeRect) {
-    const activeCenter = activeRect.left + activeRect.width / 2
+  const x = pointerX(event)
+  if (x !== null) {
     const overCenter = over.rect.left + over.rect.width / 2
-    return activeCenter > overCenter ? overIndex + 1 : overIndex
+    return x > overCenter ? overIndex + 1 : overIndex
   }
   return overIndex
 }
@@ -193,7 +239,11 @@ export function RuleSection({ tokens, onChange }: Props) {
     }
   }
 
-  const handleDragOver = (event: DragOverEvent) => {
+  // Uses onDragMove (fires on every pointer move) rather than onDragOver (fires
+  // only when the hovered container changes). The custom collision always
+  // resolves to a single chip, so onDragOver would fire once and never refine
+  // the left/right insertion point as the pointer moves within that chip.
+  const handleDragMove = (event: DragMoveEvent) => {
     if (!isFromPalette(event)) {
       return
     }
@@ -229,9 +279,9 @@ export function RuleSection({ tokens, onChange }: Props) {
     <div>
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={collisionDetection}
         onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
+        onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}
         onDragCancel={clearDrag}
       >
