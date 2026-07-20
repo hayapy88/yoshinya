@@ -68,6 +68,7 @@ export const en = {
   rule: {
     hint: 'Drag tokens into the rule area below to build the file name',
     placeholder: 'Drop tokens here',
+    dropSlotLabel: 'Insertion point',
     extChip: '.ext',
     removeToken: (label: string) => `Remove ${label}`,
     textPlaceholder: 'e.g. trip',

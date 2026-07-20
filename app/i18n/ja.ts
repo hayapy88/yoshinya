@@ -69,6 +69,7 @@ export const ja: typeof en = {
   rule: {
     hint: 'トークンを下の規則エリアにドラッグして、ファイル名の形を組み立てます',
     placeholder: 'ここにトークンをドロップ',
+    dropSlotLabel: '挿入位置',
     extChip: '.拡張子',
     removeToken: (label: string) => `${label} を削除`,
     textPlaceholder: '例: 旅行',

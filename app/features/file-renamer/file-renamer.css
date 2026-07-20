@@ -292,6 +292,35 @@ main {
   font-size: 0.9rem;
 }
 
+/* Opens a gap where a palette token will be inserted, mirroring the visual
+   feedback of reordering existing tokens. */
+.drop-slot {
+  align-self: center;
+  width: 2.75rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 2px dashed var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  animation: drop-slot-in 130ms ease-out;
+}
+
+@keyframes drop-slot-in {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 2.75rem;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop-slot {
+    animation: none;
+  }
+}
+
 .rule-chip {
   cursor: grab;
   touch-action: none;

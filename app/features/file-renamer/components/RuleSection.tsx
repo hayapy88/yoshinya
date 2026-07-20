@@ -1,3 +1,4 @@
+import { Fragment, useState } from 'react'
 import {
   DndContext,
   PointerSensor,
@@ -7,6 +8,8 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core'
 import {
   SortableContext,
@@ -135,6 +138,32 @@ function tokenChipLabel(
   }
 }
 
+// Decides where a token dragged from the palette should land, using the left/
+// right half of whichever rule token the pointer is over so the drop matches
+// what the user sees. Returns an index in 0..tokens.length; null means the
+// pointer is not over the rule area.
+function computeInsertIndex(
+  tokens: RenameToken[],
+  event: DragOverEvent | DragEndEvent,
+): number | null {
+  const { active, over } = event
+  if (!over) {
+    return null
+  }
+  const overIndex = tokens.findIndex((token) => token.id === over.id)
+  if (overIndex < 0) {
+    // Over the rule area itself (e.g. empty space): append to the end.
+    return over.id === 'rule-area' ? tokens.length : null
+  }
+  const activeRect = active.rect.current.translated
+  if (activeRect) {
+    const activeCenter = activeRect.left + activeRect.width / 2
+    const overCenter = over.rect.left + over.rect.width / 2
+    return activeCenter > overCenter ? overIndex + 1 : overIndex
+  }
+  return overIndex
+}
+
 export function RuleSection({ tokens, onChange }: Props) {
   const { t } = useLocale()
   const sensors = useSensors(
@@ -142,6 +171,13 @@ export function RuleSection({ tokens, onChange }: Props) {
   )
   const numbers = kindNumbers(tokens, 'text')
   const separatorNumbers = kindNumbers(tokens, 'separator')
+
+  // While a palette token is being dragged, this is the index the new token
+  // will be inserted at; null when not dragging from the palette (reordering
+  // existing tokens is handled by the sortable strategy instead).
+  const [insertIndex, setInsertIndex] = useState<number | null>(null)
+  const isFromPalette = (event: { active: DragStartEvent['active'] }) =>
+    event.active.data.current?.from === 'palette'
 
   const updateToken = (id: string, patch: Partial<RenameToken>) => {
     onChange(
@@ -151,22 +187,35 @@ export function RuleSection({ tokens, onChange }: Props) {
     )
   }
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (!over) {
+  const handleDragStart = (event: DragStartEvent) => {
+    if (isFromPalette(event)) {
+      setInsertIndex(tokens.length)
+    }
+  }
+
+  const handleDragOver = (event: DragOverEvent) => {
+    if (!isFromPalette(event)) {
       return
     }
-    const fromPalette = active.data.current?.from === 'palette'
-    if (fromPalette) {
-      const token = createToken(active.data.current?.kind as TokenKind)
-      const overIndex = tokens.findIndex((t) => t.id === over.id)
-      if (overIndex >= 0) {
-        onChange([...tokens.slice(0, overIndex), token, ...tokens.slice(overIndex)])
-      } else if (over.id === 'rule-area') {
-        onChange([...tokens, token])
+    setInsertIndex(computeInsertIndex(tokens, event) ?? tokens.length)
+  }
+
+  const clearDrag = () => setInsertIndex(null)
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (isFromPalette(event)) {
+      const index = computeInsertIndex(tokens, event) ?? insertIndex
+      clearDrag()
+      if (index === null) {
+        return
       }
+      const token = createToken(active.data.current?.kind as TokenKind)
+      onChange([...tokens.slice(0, index), token, ...tokens.slice(index)])
       return
     }
-    if (active.id === over.id) {
+    clearDrag()
+    if (!over || active.id === over.id) {
       return
     }
     const oldIndex = tokens.findIndex((t) => t.id === active.id)
@@ -181,7 +230,10 @@ export function RuleSection({ tokens, onChange }: Props) {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
+        onDragCancel={clearDrag}
       >
         <p className="hint">{t.rule.hint}</p>
         <div className="palette">
@@ -193,6 +245,7 @@ export function RuleSection({ tokens, onChange }: Props) {
         <RuleArea
           tokens={tokens}
           numbers={numbers}
+          insertIndex={insertIndex}
           onRemove={(id) => onChange(tokens.filter((token) => token.id !== id))}
         />
       </DndContext>
@@ -233,14 +286,25 @@ function PaletteToken({ kind, label }: { kind: TokenKind; label: string }) {
 function RuleArea({
   tokens,
   numbers,
+  insertIndex,
   onRemove,
 }: {
   tokens: RenameToken[]
   numbers: Map<string, number>
+  insertIndex: number | null
   onRemove: (id: string) => void
 }) {
   const { t } = useLocale()
   const { setNodeRef, isOver } = useDroppable({ id: 'rule-area' })
+  const isDraggingFromPalette = insertIndex !== null
+
+  const dropSlot = (
+    <span
+      className="drop-slot"
+      role="presentation"
+      aria-label={t.rule.dropSlotLabel}
+    />
+  )
 
   return (
     <div
@@ -251,17 +315,20 @@ function RuleArea({
         items={tokens.map((token) => token.id)}
         strategy={horizontalListSortingStrategy}
       >
-        {tokens.length === 0 && (
+        {tokens.length === 0 && !isDraggingFromPalette && (
           <span className="rule-placeholder">{t.rule.placeholder}</span>
         )}
-        {tokens.map((token) => (
-          <SortableRuleToken
-            key={token.id}
-            token={token}
-            textNumber={numbers.get(token.id)}
-            onRemove={onRemove}
-          />
+        {tokens.map((token, index) => (
+          <Fragment key={token.id}>
+            {insertIndex === index && dropSlot}
+            <SortableRuleToken
+              token={token}
+              textNumber={numbers.get(token.id)}
+              onRemove={onRemove}
+            />
+          </Fragment>
         ))}
+        {insertIndex === tokens.length && dropSlot}
       </SortableContext>
       <span className="token-chip ext-chip">{t.rule.extChip}</span>
     </div>
