@@ -1,5 +1,5 @@
 import type { MetaDescriptor } from 'react-router'
-import { otherLocale, type Locale } from '~/i18n/locale'
+import type { Locale } from '~/i18n/locale'
 
 export const SITE_ORIGIN = 'https://yoshinya.com'
 export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com']

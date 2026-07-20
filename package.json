@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "test": "vitest run",
     "typecheck": "wrangler types && react-router typegen && tsc -b",
+    "e2e": "playwright test",
     "preview": "npm run build && vite preview",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.44.0",
+    "@playwright/test": "^1.61.1",
     "@react-router/dev": "^8.2.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.1",

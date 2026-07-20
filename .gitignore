@@ -20,6 +20,10 @@ build
 # Cloudflare
 worker-configuration.d.ts
 
+# Playwright
+playwright-report
+test-results
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
