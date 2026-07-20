@@ -22,8 +22,8 @@ export function SiteHeader() {
           <img
             src="/brand/logo-yoshinya.png"
             alt={t.site.brand}
-            width={1585}
-            height={520}
+            width={1745}
+            height={422}
             className="h-8 w-auto"
           />
         </Link>
