@@ -5,6 +5,8 @@ export default [
   route(':locale', 'routes/locale-layout.tsx', [
     index('routes/home.tsx'),
     route('file-renamer', 'routes/file-renamer.tsx'),
+    route('privacy', 'routes/privacy.tsx'),
+    route('terms', 'routes/terms.tsx'),
   ]),
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig
