@@ -1,9 +1,13 @@
+/* Aligned with the official Yoshinya palette: navy accent on light,
+   orange accent on dark (with navy text on accent surfaces there,
+   because white on orange fails WCAG AA). */
 :root {
   --border: #d9d7de;
   --panel: #f5f4f7;
-  --chip-bg: #eceafd;
-  --chip-border: #b9b2f0;
-  --accent: #5b4dd1;
+  --chip-bg: #fdf2d0;
+  --chip-border: #e7caaa;
+  --accent: #162e64;
+  --accent-contrast: #fff;
   --muted: #6f6b78;
   --warn-text: #9a3b12;
   --warn-bg: #fdeee5;
@@ -14,9 +18,10 @@
   :root {
     --border: #3a3841;
     --panel: #201f24;
-    --chip-bg: #2c2843;
-    --chip-border: #57509a;
-    --accent: #948aee;
+    --chip-bg: #3b2d1e;
+    --chip-border: #7a5f45;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
     --muted: #a09caa;
     --warn-text: #f2b28c;
     --warn-bg: #3a2417;
@@ -32,36 +37,6 @@ main {
 
 .app-header p {
   color: var(--muted);
-}
-
-.app-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.lang-switch {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  flex: none;
-}
-
-.lang-button {
-  font: inherit;
-  font-size: 0.85rem;
-  padding: 0.3rem 0.7rem;
-  border: none;
-  background: none;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.lang-button.active {
-  background: var(--accent);
-  color: #fff;
 }
 
 .step {
@@ -452,7 +427,7 @@ main {
   border-radius: 8px;
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   cursor: pointer;
 }
 

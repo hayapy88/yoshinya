@@ -17,7 +17,7 @@ export function SiteHeader() {
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-4 py-3">
         <Link
           to={`/${locale}`}
-          className="text-lg font-bold tracking-wide text-[color:var(--text)] no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="text-lg font-bold tracking-wide text-[color:var(--text)] no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
         >
           {t.site.brand}
         </Link>
@@ -31,7 +31,7 @@ export function SiteHeader() {
             storeLocaleChoice(target)
             track('language_changed', { to: target })
           }}
-          className="rounded-lg border border-[#d9d7de] px-3 py-1.5 text-sm text-[color:var(--text)] no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:border-[#3a3841]"
+          className="rounded-lg border border-[#d9d7de] px-3 py-1.5 text-sm text-[color:var(--text)] no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
         >
           {t.nav.switchLocale}
         </Link>

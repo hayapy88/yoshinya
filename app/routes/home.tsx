@@ -22,19 +22,32 @@ export default function Home() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-12">
-      <section aria-labelledby="hero-heading">
-        <p className="text-sm font-semibold tracking-[0.25em] text-brand uppercase">
-          {t.site.brand}
-        </p>
-        <h1 id="hero-heading" className="mt-3 text-3xl font-bold sm:text-4xl">
-          {t.home.primary}
-        </h1>
-        <p className="mt-4 text-[color:var(--muted,#6f6b78)]">
-          {t.home.supporting}
-        </p>
-        <p className="mt-2 text-sm text-[color:var(--muted,#6f6b78)]">
-          {t.home.privacyNote}
-        </p>
+      <section
+        aria-labelledby="hero-heading"
+        className="flex flex-wrap items-center gap-8"
+      >
+        <div className="min-w-[16rem] flex-1">
+          <p className="text-sm font-semibold tracking-[0.25em] text-navy uppercase dark:text-brand">
+            {t.site.brand}
+          </p>
+          <h1 id="hero-heading" className="mt-3 text-3xl font-bold sm:text-4xl">
+            {t.home.primary}
+          </h1>
+          <p className="mt-4 text-[color:var(--muted,#6f6b78)]">
+            {t.home.supporting}
+          </p>
+          <p className="mt-2 text-sm text-[color:var(--muted,#6f6b78)]">
+            {t.home.privacyNote}
+          </p>
+        </div>
+        <img
+          src="/brand/img_yoshinyan-eyes-open.png"
+          alt={t.site.mascotAlt}
+          width={902}
+          height={1155}
+          decoding="async"
+          className="mx-auto w-32 h-auto sm:w-40"
+        />
       </section>
 
       <section aria-labelledby="tools-heading" className="mt-12">
@@ -43,7 +56,7 @@ export default function Home() {
         </h2>
         <Link
           to={`/${locale}/file-renamer`}
-          className="mt-4 block rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:border-[#3a3841]"
+          className="mt-4 block rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
         >
           <span className="block text-lg font-bold text-[color:var(--text)]">
             {t.fileRenamerPage.toolName}
@@ -51,7 +64,7 @@ export default function Home() {
           <span className="mt-1 block text-sm text-[color:var(--muted,#6f6b78)]">
             {t.fileRenamerPage.toolDescription}
           </span>
-          <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white">
+          <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-navy-strong">
             {t.home.cta}
           </span>
         </Link>

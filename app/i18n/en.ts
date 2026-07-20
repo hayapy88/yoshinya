@@ -2,6 +2,7 @@ export const en = {
   site: {
     brand: 'YOSHINYA',
     xUrl: 'https://x.com/yoshinya_com',
+    mascotAlt: 'Yoshinyan, the Yoshinya mascot',
   },
   nav: {
     languageLabel: 'Language',

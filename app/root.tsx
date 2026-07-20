@@ -12,7 +12,26 @@ import type { Route } from './+types/root'
 import './app.css'
 
 export const links: Route.LinksFunction = () => [
-  { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+  { rel: 'icon', href: '/favicon.ico' },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '32x32',
+    href: '/brand/favicon-32x32.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '16x16',
+    href: '/brand/favicon-16x16.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '192x192',
+    href: '/brand/favicon-192.png',
+  },
+  { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' },
 ]
 
 // Exposes the request host so page meta functions can mark non-production

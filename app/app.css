@@ -6,12 +6,29 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
+/* Official Yoshinya brand palette.
+   Primary: coral orange #FB713C — secondary: navy #162E64.
+   Small orange-on-white text fails WCAG AA, so orange surfaces pair with
+   dark navy text and orange text is reserved for dark backgrounds. */
 @theme {
-  --color-brand: #5b4dd1;
-  --color-brand-strong: #4638b8;
-  --color-brand-soft: #eceafd;
+  --color-brand: #fb713c;
+  --color-brand-strong: #f95727;
+  --color-navy: #162e64;
+  --color-navy-strong: #041b55;
+  --color-cream: #fdf2d0;
   --font-sans:
     system-ui, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+}
+
+:root {
+  --yoshinyan-cream: #fdf2d0;
+  --yoshinyan-orange: #fb713c;
+  --yoshinyan-orange-dark: #f95727;
+  --yoshinyan-navy: #162e64;
+  --yoshinyan-navy-dark: #041b55;
+  --yoshinyan-navy-deep: #07225b;
+  --yoshinyan-white: #f8f6ed;
+  --yoshinyan-shadow: #e7caaa;
 }
 
 :root {

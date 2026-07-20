@@ -11,13 +11,13 @@ export function SiteFooter() {
         <nav className="flex flex-wrap gap-4">
           <Link
             to={`/${locale}/privacy`}
-            className="text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
           >
             {t.footer.privacy}
           </Link>
           <Link
             to={`/${locale}/terms`}
-            className="text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
           >
             {t.footer.terms}
           </Link>
@@ -25,7 +25,7 @@ export function SiteFooter() {
             href={t.site.xUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
           >
             {t.footer.followX}
           </a>

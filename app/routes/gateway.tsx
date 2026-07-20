@@ -6,7 +6,7 @@ import {
   storeLocaleChoice,
   type Locale,
 } from '~/i18n/locale'
-import { SITE_ORIGIN, X_HANDLE, isProductionHost } from '~/lib/seo'
+import { OGP_IMAGE, SITE_ORIGIN, X_HANDLE, isProductionHost } from '~/lib/seo'
 
 // Language gateway. Visitors who already made an explicit choice (cookie) are
 // sent straight to their language. Everyone else sees both options, with the
@@ -42,8 +42,13 @@ export function meta({ matches }: Route.MetaArgs) {
     { property: 'og:title', content: 'YOSHINYA｜よしにゃ' },
     { property: 'og:description', content: description },
     { property: 'og:url', content: `${SITE_ORIGIN}/` },
-    { name: 'twitter:card', content: 'summary' },
+    { property: 'og:image', content: OGP_IMAGE },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:image:alt', content: 'よしにゃ YOSHINYA' },
+    { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:site', content: X_HANDLE },
+    { name: 'twitter:image', content: OGP_IMAGE },
     ...(isProductionHost(rootData?.host)
       ? []
       : [{ name: 'robots', content: 'noindex, nofollow' }]),
@@ -75,6 +80,13 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-4 py-16">
+      <img
+        src="/brand/img_yoshinyan-structured-data-512.png"
+        alt="よしにゃん / Yoshinyan"
+        width={512}
+        height={512}
+        className="h-24 w-24"
+      />
       <h1 className="text-center">
         <span className="block text-4xl font-bold tracking-wide">よしにゃ</span>
         <span className="mt-2 block text-lg font-semibold tracking-[0.3em] text-[color:var(--muted,#6f6b78)]">
@@ -89,10 +101,10 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
             lang={option.locale}
             hrefLang={option.locale}
             onClick={() => storeLocaleChoice(option.locale)}
-            className="group relative block rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:border-[#3a3841]"
+            className="group relative block rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
           >
             {option.locale === recommended && (
-              <span className="absolute -top-3 right-4 rounded-full bg-brand px-3 py-0.5 text-xs font-semibold text-white">
+              <span className="absolute -top-3 right-4 rounded-full bg-navy px-3 py-0.5 text-xs font-semibold text-white">
                 {option.locale === 'ja' ? 'おすすめ' : 'Recommended'}
               </span>
             )}
@@ -102,7 +114,7 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
             <span className="mt-1 block text-sm text-[color:var(--muted,#6f6b78)]">
               {option.message}
             </span>
-            <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-brand-strong">
+            <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-navy-strong transition-colors group-hover:bg-brand-strong">
               {option.action}
             </span>
           </Link>

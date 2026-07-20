@@ -4,6 +4,7 @@ export const ja: typeof en = {
   site: {
     brand: 'よしにゃ',
     xUrl: 'https://x.com/yoshinya_com',
+    mascotAlt: 'よしにゃのマスコット「よしにゃん」',
   },
   nav: {
     languageLabel: '言語',

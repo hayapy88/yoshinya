@@ -4,6 +4,8 @@ import type { Locale } from '~/i18n/locale'
 export const SITE_ORIGIN = 'https://yoshinya.com'
 export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com']
 export const X_HANDLE = '@yoshinya_com'
+export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp_1200x630.png`
+export const BRAND_ICON = `${SITE_ORIGIN}/brand/img_yoshinyan-structured-data-512.png`
 
 export function isProductionHost(host: string | undefined): boolean {
   return host !== undefined && PRODUCTION_HOSTS.includes(host)
@@ -50,10 +52,15 @@ export function pageMeta({
       property: 'og:locale:alternate',
       content: locale === 'ja' ? 'en_US' : 'ja_JP',
     },
-    { name: 'twitter:card', content: 'summary' },
+    { property: 'og:image', content: OGP_IMAGE },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:image:alt', content: 'よしにゃ YOSHINYA' },
+    { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:site', content: X_HANDLE },
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description },
+    { name: 'twitter:image', content: OGP_IMAGE },
     ...(noindex ? [{ name: 'robots', content: 'noindex, nofollow' }] : []),
     ...jsonLd.map((data) => ({ 'script:ld+json': data })),
   ]
@@ -67,6 +74,7 @@ export function websiteJsonLd(locale: Locale): Record<string, unknown> {
     alternateName: locale === 'ja' ? 'YOSHINYA' : 'よしにゃ',
     url: `${SITE_ORIGIN}/${locale}`,
     inLanguage: locale,
+    image: BRAND_ICON,
   }
 }
 
@@ -81,6 +89,7 @@ export function fileRenamerJsonLd(locale: Locale): Record<string, unknown> {
     operatingSystem: 'Any',
     browserRequirements: 'Requires JavaScript',
     inLanguage: locale,
+    image: BRAND_ICON,
     offers: {
       '@type': 'Offer',
       price: '0',
