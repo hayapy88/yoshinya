@@ -8,5 +8,7 @@ export default [
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
+  route('sitemap.xml', 'routes/sitemap.ts'),
+  route('robots.txt', 'routes/robots.ts'),
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig
