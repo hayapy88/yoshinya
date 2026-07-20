@@ -1,5 +1,21 @@
 import { Link } from 'react-router'
-import { useLocale } from '~/i18n/locale'
+import type { Route } from './+types/home'
+import { dictionaries, isLocale, useLocale } from '~/i18n/locale'
+import { isProductionHost, pageMeta, websiteJsonLd } from '~/lib/seo'
+
+export function meta({ params, matches }: Route.MetaArgs) {
+  const locale = isLocale(params.locale) ? params.locale : 'en'
+  const t = dictionaries[locale]
+  const rootData = matches[0]?.loaderData
+  return pageMeta({
+    locale,
+    path: '',
+    title: t.home.metaTitle,
+    description: t.home.metaDescription,
+    noindex: !isProductionHost(rootData?.host),
+    jsonLd: [websiteJsonLd(locale)],
+  })
+}
 
 export default function Home() {
   const { locale, t } = useLocale()

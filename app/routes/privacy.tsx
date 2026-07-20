@@ -1,5 +1,22 @@
+import type { Route } from './+types/privacy'
 import { LegalPage } from '~/components/layout/LegalPage'
 import { privacyContent } from '~/legal/privacy-content'
+import { isLocale } from '~/i18n/locale'
+import { isProductionHost, pageMeta } from '~/lib/seo'
+
+export function meta({ params, matches }: Route.MetaArgs) {
+  const locale = isLocale(params.locale) ? params.locale : 'en'
+  const doc = privacyContent[locale]
+  const rootData = matches[0]?.loaderData
+  return pageMeta({
+    locale,
+    path: '/privacy',
+    title:
+      locale === 'ja' ? `${doc.title}｜よしにゃ` : `${doc.title} | YOSHINYA`,
+    description: doc.intro[0],
+    noindex: !isProductionHost(rootData?.host),
+  })
+}
 
 export default function PrivacyPage() {
   return <LegalPage content={privacyContent} />

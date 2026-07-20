@@ -6,6 +6,7 @@ import {
   storeLocaleChoice,
   type Locale,
 } from '~/i18n/locale'
+import { SITE_ORIGIN, X_HANDLE, isProductionHost } from '~/lib/seo'
 
 // Language gateway. Visitors who already made an explicit choice (cookie) are
 // sent straight to their language. Everyone else sees both options, with the
@@ -25,14 +26,27 @@ export function loader({ request }: Route.LoaderArgs) {
   return { recommended }
 }
 
-export function meta(_: Route.MetaArgs) {
+export function meta({ matches }: Route.MetaArgs) {
+  const rootData = matches[0]?.loaderData
+  const description =
+    'よしにゃ — 面倒なことは、よしにゃに。 / YOSHINYA — handy browser tools, a new one every week.'
   return [
     { title: 'YOSHINYA｜よしにゃ' },
-    {
-      name: 'description',
-      content:
-        'よしにゃ — 面倒なことは、よしにゃに。 / YOSHINYA — handy browser tools, a new one every week.',
-    },
+    { name: 'description', content: description },
+    { tagName: 'link', rel: 'canonical', href: `${SITE_ORIGIN}/` },
+    { tagName: 'link', rel: 'alternate', hrefLang: 'ja', href: `${SITE_ORIGIN}/ja` },
+    { tagName: 'link', rel: 'alternate', hrefLang: 'en', href: `${SITE_ORIGIN}/en` },
+    { tagName: 'link', rel: 'alternate', hrefLang: 'x-default', href: `${SITE_ORIGIN}/` },
+    { property: 'og:site_name', content: 'YOSHINYA' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: 'YOSHINYA｜よしにゃ' },
+    { property: 'og:description', content: description },
+    { property: 'og:url', content: `${SITE_ORIGIN}/` },
+    { name: 'twitter:card', content: 'summary' },
+    { name: 'twitter:site', content: X_HANDLE },
+    ...(isProductionHost(rootData?.host)
+      ? []
+      : [{ name: 'robots', content: 'noindex, nofollow' }]),
   ]
 }
 

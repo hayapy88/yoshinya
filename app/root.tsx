@@ -15,6 +15,12 @@ export const links: Route.LinksFunction = () => [
   { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
 ]
 
+// Exposes the request host so page meta functions can mark non-production
+// deployments (workers.dev previews, local dev) as noindex.
+export function loader({ request }: Route.LoaderArgs) {
+  return { host: new URL(request.url).host }
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   // Routes under /:locale expose their locale via handle so the html lang
   // attribute always matches the page language. The gateway defaults to "en".
