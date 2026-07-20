@@ -6,12 +6,25 @@ export default function Home() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-12">
-      <h1 className="text-3xl font-bold">{t.home.primary}</h1>
-      <p className="mt-3 text-[color:var(--muted,#6f6b78)]">
-        {t.home.supporting}
-      </p>
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold">{t.home.toolsHeading}</h2>
+      <section aria-labelledby="hero-heading">
+        <p className="text-sm font-semibold tracking-[0.25em] text-brand uppercase">
+          {t.site.brand}
+        </p>
+        <h1 id="hero-heading" className="mt-3 text-3xl font-bold sm:text-4xl">
+          {t.home.primary}
+        </h1>
+        <p className="mt-4 text-[color:var(--muted,#6f6b78)]">
+          {t.home.supporting}
+        </p>
+        <p className="mt-2 text-sm text-[color:var(--muted,#6f6b78)]">
+          {t.home.privacyNote}
+        </p>
+      </section>
+
+      <section aria-labelledby="tools-heading" className="mt-12">
+        <h2 id="tools-heading" className="text-xl font-semibold">
+          {t.home.toolsHeading}
+        </h2>
         <Link
           to={`/${locale}/file-renamer`}
           className="mt-4 block rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:border-[#3a3841]"
