@@ -6,7 +6,7 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-[#d9d7de] dark:border-[#3a3841]">
-      <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[color:var(--muted,#6f6b78)]">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[color:var(--muted,#6f6b78)]">
         <p className="m-0">{t.footer.copyright(new Date().getFullYear())}</p>
         <nav className="flex flex-wrap gap-4">
           <Link

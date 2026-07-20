@@ -38,7 +38,7 @@ test.describe('language gateway', () => {
     await page.getByRole('link', { name: /日本語で続ける/ }).click()
     await expect(page).toHaveURL('/ja')
     await expect(
-      page.getByRole('heading', { name: '面倒なことは、よしにゃに。' }),
+      page.getByRole('heading', { name: '日々の面倒は、よしにゃにおまかせ。' }),
     ).toBeVisible()
 
     // The stored choice now redirects the gateway.

@@ -21,7 +21,7 @@ export default function Home() {
   const { locale, t } = useLocale()
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-12">
+    <main className="mx-auto w-full max-w-6xl px-4 py-12">
       <section
         aria-labelledby="hero-heading"
         className="flex flex-wrap items-center gap-8"

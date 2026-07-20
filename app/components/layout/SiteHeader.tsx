@@ -14,7 +14,7 @@ export function SiteHeader() {
 
   return (
     <header className="border-b border-[#d9d7de] dark:border-[#3a3841]">
-      <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-4 py-3">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link
           to={`/${locale}`}
           className="no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"

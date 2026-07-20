@@ -79,7 +79,7 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
   const { recommended } = loaderData
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-4 py-16">
+    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center gap-10 px-4 py-16">
       <h1>
         <img
           src="/brand/logo-yoshinya.png"
