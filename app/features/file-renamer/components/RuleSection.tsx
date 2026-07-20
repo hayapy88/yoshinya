@@ -17,7 +17,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { formatAlphaIndex, formatNumericIndex } from '../lib/rename'
 import { validateTextValue } from '../lib/validate'
-import { useLocale, type Dictionary } from '../i18n/locale'
+import { useLocale, type Dictionary } from '~/i18n/locale'
 import type {
   DateFormat,
   IndexStyle,

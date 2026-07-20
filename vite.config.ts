@@ -1,9 +1,15 @@
+import { reactRouter } from '@react-router/dev/vite'
+import { cloudflare } from '@cloudflare/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 
-import { cloudflare } from "@cloudflare/vite-plugin";
-
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), cloudflare()],
+  plugins: [
+    cloudflare({ viteEnvironment: { name: 'ssr' } }),
+    tailwindcss(),
+    reactRouter(),
+  ],
+  resolve: {
+    tsconfigPaths: true,
+  },
 })

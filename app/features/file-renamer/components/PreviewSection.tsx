@@ -1,5 +1,5 @@
 import type { RenameResult } from '../lib/types'
-import { useLocale } from '../i18n/locale'
+import { useLocale } from '~/i18n/locale'
 import { FileThumb, type LoadedFile } from './FilesSection'
 
 type Props = {

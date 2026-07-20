@@ -11,6 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
+*.tsbuildinfo
+
+# React Router
+.react-router
+build
+
+# Cloudflare
+worker-configuration.d.ts
 
 # Editor directories and files
 .vscode/*

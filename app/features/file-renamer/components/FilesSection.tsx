@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useLocale } from '../i18n/locale'
+import { useLocale } from '~/i18n/locale'
 
 export type LoadedFile = {
   id: string

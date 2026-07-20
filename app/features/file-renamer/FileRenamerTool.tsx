@@ -3,18 +3,18 @@ import { applyRename, formatDate, formatTime } from './lib/rename'
 import { validateTextValue } from './lib/validate'
 import { createZipBlob } from './lib/zip'
 import type { RenameToken } from './lib/types'
-import { useLocale, type Locale } from './i18n/locale'
+import { useLocale, type Locale } from '~/i18n/locale'
 import { FilesSection, type LoadedFile } from './components/FilesSection'
 import { RuleSection } from './components/RuleSection'
 import { PreviewSection } from './components/PreviewSection'
-import './App.css'
+import './file-renamer.css'
 
 const LOCALES: { value: Locale; label: string }[] = [
   { value: 'en', label: 'EN' },
   { value: 'ja', label: '日本語' },
 ]
 
-function App() {
+function FileRenamerTool() {
   const { locale, setLocale, t } = useLocale()
   const [files, setFiles] = useState<LoadedFile[]>([])
   const [tokens, setTokens] = useState<RenameToken[]>([])
@@ -149,4 +149,4 @@ function App() {
   )
 }
 
-export default App
+export default FileRenamerTool
