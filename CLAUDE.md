@@ -1,22 +1,47 @@
-# File Renamer
+# Yoshinya (よしにゃ)
 
-ブラウザ内で完結するファイル名一括変更ツール。複数ファイルを読み込み、ドラッグ&ドロップで並べ替え、リネーム規則（プレフィックス + 連番 + 日付フォーマット）を適用して zip でダウンロードする SPA。
+A collection of free browser-based utility tools, released one per week.
+Japanese and English are first-class languages. The first tool is the File
+Renamer (よしにゃにファイルリネーム / File Renamer by Yoshinya).
 
-## 絶対に守る方針
+## Non-negotiable rules
 
-- **完全クライアントサイド**: サーバー・DB・外部へのファイル送信は追加しない。プライバシー（ファイルが端末外に出ないこと）がこのツールの売り。
-- **デプロイ先は Cloudflare Workers の静的アセット配信**（Pages ではない）。wrangler.jsonc に `main` を持たない Worker スクリプトなしの構成を維持する。
-- **Next.js・API Routes・バックエンドは導入しない。**
+- **Tool processing is fully client-side.** Users' files and file names must
+  never be sent to the Worker or any server. SSR renders pages only.
+- **Deploy target is Cloudflare Workers** (SSR via React Router v8 framework
+  mode; static assets via Workers Static Assets). Do not migrate to another
+  framework or platform casually.
+- **Both locales stay in sync.** Every public Japanese page has an English
+  equivalent (and vice versa). Dictionaries are typed: a missing key in
+  `app/i18n/ja.ts` fails `npm run typecheck`.
+- **English for code, comments, commits, and docs.** Japanese belongs in the
+  Japanese UI copy, Japanese metadata, and translation files.
+- **Do not activate analytics.** The scaffolding in `app/lib/analytics.ts`
+  stays inactive until a GA4 ID is provided via `VITE_GA4_ID` and a real
+  consent flow exists. Events must never contain file names or contents.
 
-## 実装ルール
+## Architecture
 
-- リネームロジックは `src/lib/` 配下に**純粋関数**として実装し、**必ず Vitest でテストを書く**。
-- UI は React + dnd-kit（並べ替え）、zip 生成は JSZip。
+- `app/routes.ts` — route table: `/` (language gateway), `/:locale` layout
+  with home, `file-renamer`, `privacy`, `terms`, plus `sitemap.xml`,
+  `robots.txt`, and a catch-all 404.
+- `app/features/file-renamer/` — the tool: components, pure logic in `lib/`
+  (always Vitest-tested), and its stylesheet.
+- `app/i18n/` — typed dictionaries (`en.ts` is the source of truth).
+- `app/lib/seo.ts` — canonical/hreflang/OGP/JSON-LD helpers; non-production
+  hosts get noindex automatically.
+- `workers/app.ts` — Worker entry (SSR request handler).
+- New tools: add a feature folder, a route file per the existing pattern,
+  dictionary entries, and a sitemap path in `app/routes/sitemap.ts`.
 
-## コマンド
+## Commands
 
-- `npm run dev` — 開発サーバー起動
-- `npm run test` — Vitest 実行
-- `npm run lint` — oxlint 実行
-- `npm run build` — 型チェック + 本番ビルド
-- `npm run deploy` — ビルドして Cloudflare Workers へデプロイ
+- `npm run dev` — dev server
+- `npm test` — Vitest (unit + component)
+- `npm run e2e` — Playwright smoke tests (desktop + mobile)
+- `npm run lint` — oxlint
+- `npm run typecheck` — wrangler types + react-router typegen + tsc
+- `npm run build` — production build
+- `npm run deploy` — build and deploy to Cloudflare Workers
+
+Node >= 22.22 is required (react-router v8).
