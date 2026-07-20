@@ -3,19 +3,14 @@ import { applyRename, formatDate, formatTime } from './lib/rename'
 import { validateTextValue } from './lib/validate'
 import { createZipBlob } from './lib/zip'
 import type { RenameToken } from './lib/types'
-import { useLocale, type Locale } from '~/i18n/locale'
+import { useLocale } from '~/i18n/locale'
 import { FilesSection, type LoadedFile } from './components/FilesSection'
 import { RuleSection } from './components/RuleSection'
 import { PreviewSection } from './components/PreviewSection'
 import './file-renamer.css'
 
-const LOCALES: { value: Locale; label: string }[] = [
-  { value: 'en', label: 'EN' },
-  { value: 'ja', label: '日本語' },
-]
-
 function FileRenamerTool() {
-  const { locale, setLocale, t } = useLocale()
+  const { t } = useLocale()
   const [files, setFiles] = useState<LoadedFile[]>([])
   const [tokens, setTokens] = useState<RenameToken[]>([])
   const [thumbSize, setThumbSize] = useState(44)
@@ -83,26 +78,7 @@ function FileRenamerTool() {
   return (
     <main style={{ '--thumb-size': `${thumbSize}px` } as React.CSSProperties}>
       <header className="app-header">
-        <div className="app-header-row">
-          <h1>File Renamer</h1>
-          <div
-            className="lang-switch"
-            role="group"
-            aria-label={t.header.languageLabel}
-          >
-            {LOCALES.map(({ value, label }) => (
-              <button
-                key={value}
-                type="button"
-                className={`lang-button${locale === value ? ' active' : ''}`}
-                aria-pressed={locale === value}
-                onClick={() => setLocale(value)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <h1>{t.fileRenamerPage.heading}</h1>
         <p>{t.header.tagline}</p>
       </header>
 

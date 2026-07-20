@@ -1,10 +1,39 @@
 import type { en } from './en'
 
 export const ja: typeof en = {
-  meta: {
-    title: 'File Renamer — ブラウザ内ファイル名一括変更',
-    description:
+  site: {
+    brand: 'よしにゃ',
+    xUrl: 'https://x.com/yoshinya_com',
+  },
+  nav: {
+    languageLabel: '言語',
+    switchLocale: 'English',
+    switchLocaleTitle: 'View this page in English',
+  },
+  home: {
+    metaTitle: 'よしにゃ｜面倒なことは、よしにゃに。',
+    metaDescription:
+      '面倒なことは、よしにゃに。毎週ひとつ、日々の小さな面倒を解決する便利ツールを公開します。無料で、ファイルはブラウザの外に出ません。',
+    primary: '面倒なことは、よしにゃに。',
+    supporting: '毎週ひとつ、日々の小さな面倒を解決する便利ツールを公開します。',
+    toolsHeading: 'ツール一覧',
+    cta: '無料で使う',
+    privacyNote:
+      'すべてのツールはブラウザ内で動作します。ファイルがアップロードされることはありません。',
+  },
+  fileRenamerPage: {
+    metaTitle: 'ファイル名を一括変更｜よしにゃにファイルリネーム',
+    metaDescription:
       'ブラウザ内で完結するファイル名一括変更ツール。並べ替え、プレフィックス・日付・連番トークンによる規則の組み立て、zipダウンロードに対応。ファイルはサーバーに送信されません。',
+    heading: 'よしにゃにファイルリネーム',
+    toolName: 'よしにゃにファイルリネーム',
+    toolDescription: '複数のファイル名を、ブラウザ上でまとめて変更できます。',
+  },
+  footer: {
+    privacy: 'プライバシーポリシー',
+    terms: '利用規約',
+    followX: 'Xをフォロー',
+    copyright: (year: number) => `© ${year} よしにゃ`,
   },
   header: {
     tagline:

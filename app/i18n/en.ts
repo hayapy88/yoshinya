@@ -1,8 +1,37 @@
 export const en = {
-  meta: {
-    title: 'File Renamer — Batch rename files in your browser',
-    description:
+  site: {
+    brand: 'YOSHINYA',
+    xUrl: 'https://x.com/yoshinya_com',
+  },
+  nav: {
+    languageLabel: 'Language',
+    switchLocale: '日本語',
+    switchLocaleTitle: 'このページを日本語で表示',
+  },
+  home: {
+    metaTitle: 'YOSHINYA | Handy Browser Tools',
+    metaDescription:
+      'Let Yoshinya handle the little hassles. YOSHINYA releases a new handy browser tool every week — free, private, and running entirely in your browser.',
+    primary: 'Let Yoshinya handle the little hassles.',
+    supporting: 'A new handy browser tool, every week.',
+    toolsHeading: 'Tools',
+    cta: 'Try it for free',
+    privacyNote:
+      'Every tool runs entirely in your browser — your files are never uploaded.',
+  },
+  fileRenamerPage: {
+    metaTitle: 'Free Bulk File Renamer Online | YOSHINYA',
+    metaDescription:
       'Batch-rename files entirely in your browser: reorder them, build a naming rule with prefix, date, and index tokens, then download as a zip. Your files never leave your browser.',
+    heading: 'File Renamer by Yoshinya',
+    toolName: 'File Renamer by Yoshinya',
+    toolDescription: 'Rename multiple files directly in your browser.',
+  },
+  footer: {
+    privacy: 'Privacy Policy',
+    terms: 'Terms of Use',
+    followX: 'Follow on X',
+    copyright: (year: number) => `© ${year} YOSHINYA`,
   },
   header: {
     tagline:
