@@ -32,7 +32,6 @@ export function pageMeta({
   jsonLd = [],
 }: PageMetaArgs): MetaDescriptor[] {
   const canonical = `${SITE_ORIGIN}/${locale}${path}`
-  const alternate = `${SITE_ORIGIN}/${otherLocale(locale)}${path}`
 
   return [
     { title },

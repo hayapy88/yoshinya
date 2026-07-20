@@ -11,5 +11,7 @@ export default defineConfig({
   },
   test: {
     include: ['app/**/*.test.{ts,tsx}'],
+    // Globals let Testing Library register its automatic DOM cleanup.
+    globals: true,
   },
 })
