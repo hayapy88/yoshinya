@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import type { Route } from './+types/file-renamer'
 import { dictionaries, isLocale } from '~/i18n/locale'
 import { fileRenamerJsonLd, isProductionHost, pageMeta } from '~/lib/seo'
+import { track } from '~/lib/analytics'
 import FileRenamerTool from '~/features/file-renamer/FileRenamerTool'
 
 export function meta({ params, matches }: Route.MetaArgs) {
@@ -18,5 +20,9 @@ export function meta({ params, matches }: Route.MetaArgs) {
 }
 
 export default function FileRenamerPage() {
+  useEffect(() => {
+    track('tool_opened', { tool: 'file-renamer' })
+  }, [])
+
   return <FileRenamerTool />
 }

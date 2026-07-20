@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router'
 import { otherLocale, storeLocaleChoice, useLocale } from '~/i18n/locale'
+import { track } from '~/lib/analytics'
 
 export function SiteHeader() {
   const { locale, t } = useLocale()
@@ -26,7 +27,10 @@ export function SiteHeader() {
           hrefLang={target}
           title={t.nav.switchLocaleTitle}
           aria-label={t.nav.switchLocaleTitle}
-          onClick={() => storeLocaleChoice(target)}
+          onClick={() => {
+            storeLocaleChoice(target)
+            track('language_changed', { to: target })
+          }}
           className="rounded-lg border border-[#d9d7de] px-3 py-1.5 text-sm text-[color:var(--text)] no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:border-[#3a3841]"
         >
           {t.nav.switchLocale}

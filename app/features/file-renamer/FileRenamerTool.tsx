@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { track } from '~/lib/analytics'
 import { applyRename, formatDate, formatTime } from './lib/rename'
 import { validateTextValue } from './lib/validate'
 import { createZipBlob } from './lib/zip'
@@ -30,6 +31,28 @@ function FileRenamerTool() {
       { now: new Date() },
     )
   }, [files, tokens])
+
+  // Analytics events carry only counts — never file names or contents.
+  const handleFilesChange = (next: LoadedFile[]) => {
+    if (next.length > files.length) {
+      track('files_added', {
+        added: next.length - files.length,
+        total: next.length,
+      })
+    }
+    setFiles(next)
+  }
+
+  const hadPreview = useRef(false)
+  useEffect(() => {
+    if (results && !hadPreview.current) {
+      hadPreview.current = true
+      track('rename_preview_generated', { files: results.length })
+    }
+    if (!results) {
+      hadPreview.current = false
+    }
+  }, [results])
 
   const hasTextError = tokens.some(
     (token) => token.kind === 'text' && validateTextValue(token.value) !== null,
@@ -64,6 +87,7 @@ function FileRenamerTool() {
       anchor.download = `renamed_${formatDate(now, 'yyyy-mm-dd')}-${formatTime(now, 'hh-mm-ss')}.zip`
       anchor.click()
       URL.revokeObjectURL(url)
+      track('download_completed', { files: results.length })
     } catch (error) {
       setZipError(
         t.download.zipFailed(
@@ -86,7 +110,7 @@ function FileRenamerTool() {
         <h2>{t.steps.upload}</h2>
         <FilesSection
           files={files}
-          onChange={setFiles}
+          onChange={handleFilesChange}
           thumbSize={thumbSize}
           onThumbSizeChange={setThumbSize}
         />
