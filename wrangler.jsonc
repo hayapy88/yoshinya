@@ -11,5 +11,9 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	"routes": [
+		{ "pattern": "yoshinya.com", "custom_domain": true },
+		{ "pattern": "www.yoshinya.com", "custom_domain": true }
+	]
 }
