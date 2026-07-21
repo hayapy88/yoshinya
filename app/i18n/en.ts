@@ -12,9 +12,9 @@ export const en = {
   home: {
     metaTitle: 'YOSHINYA | A New Handy Tool Every Week',
     metaDescription:
-      'Leave your everyday hassles to Yoshinya. A handy tool that solves a small everyday hassle, released every week — free, private, and processed entirely on your device.',
+      'A little hassle? Leave it to Yoshinya! A handy tool that solves a small everyday hassle, released every week — free, private, and processed entirely on your device.',
     kicker: 'A new handy tool every week',
-    primary: 'Leave your everyday hassles to Yoshinya.',
+    primary: 'A little hassle? Leave it to Yoshinya!',
     supporting:
       'A handy tool that solves a small everyday hassle, released every week.',
     toolsHeading: 'Tools',
