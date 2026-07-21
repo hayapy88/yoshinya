@@ -6,10 +6,47 @@ import {
   Scripts,
   ScrollRestoration,
   useMatches,
+  useRouteLoaderData,
 } from 'react-router'
 
 import type { Route } from './+types/root'
+import { isProductionHost } from '~/lib/seo'
 import './app.css'
+
+// Google Tag Manager container id. Overridable via VITE_GTM_ID (build-time);
+// defaults to the site container. GTM only loads on the production domain so
+// preview deployments and local development never pollute the measurement data.
+const GTM_ID = (import.meta.env.VITE_GTM_ID as string | undefined) ?? 'GTM-KGRKPV2B'
+
+function gtmEnabled(host: string | undefined): boolean {
+  return GTM_ID.length > 0 && isProductionHost(host)
+}
+
+function GtmHeadScript() {
+  // The standard GTM loader snippet, injected server-side so it runs on the
+  // initial page load.
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
+      }}
+    />
+  )
+}
+
+function GtmNoScript() {
+  return (
+    <noscript>
+      <iframe
+        title="Google Tag Manager"
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style={{ display: 'none', visibility: 'hidden' }}
+      />
+    </noscript>
+  )
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.ico' },
@@ -55,15 +92,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
       ? localeMatch.params.locale
       : 'en'
 
+  const rootData = useRouteLoaderData('root') as { host?: string } | undefined
+  const showGtm = gtmEnabled(rootData?.host)
+
   return (
     <html lang={lang}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {showGtm && <GtmHeadScript />}
         <Meta />
         <Links />
       </head>
       <body>
+        {showGtm && <GtmNoScript />}
         {children}
         <ScrollRestoration />
         <Scripts />

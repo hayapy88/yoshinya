@@ -1,14 +1,14 @@
 import type { LocalizedLegalDocument } from './types'
 
-// Initial concise privacy policy for a free browser-based utility service.
-// The wording deliberately reflects the actual implementation: tools process
-// files inside the browser, the only cookie is the language preference, and
-// no analytics are active. Update this document before changing any of that.
+// Concise privacy policy for a free browser-based utility service. The wording
+// reflects the actual implementation: tools process files inside the browser,
+// a language cookie is set, and Google Tag Manager loads measurement tags on
+// the production site. Update this document before changing any of that.
 export const privacyContent: LocalizedLegalDocument = {
   en: {
     title: 'Privacy Policy',
-    updated: '2026-07-20',
-    updatedLabel: 'Last updated: July 20, 2026',
+    updated: '2026-07-21',
+    updatedLabel: 'Last updated: July 21, 2026',
     intro: [
       'YOSHINYA ("we") provides free browser-based tools at yoshinya.com. This policy explains what information is — and is not — handled when you use the site.',
     ],
@@ -22,7 +22,7 @@ export const privacyContent: LocalizedLegalDocument = {
       {
         heading: 'Cookies',
         body: [
-          'The site uses a single cookie ("yoshinya_locale") to remember the language you chose. It contains only "ja" or "en" and is not used for tracking or advertising.',
+          'The site sets a cookie ("yoshinya_locale") to remember the language you chose; it contains only "ja" or "en". In addition, Google Tag Manager and the measurement tags it loads (see Analytics) may set their own cookies.',
         ],
       },
       {
@@ -34,7 +34,8 @@ export const privacyContent: LocalizedLegalDocument = {
       {
         heading: 'Analytics',
         body: [
-          'No analytics or advertising services are currently active on this site. If we introduce analytics in the future, this policy will be updated before it is enabled, and it will never collect the names or contents of your local files.',
+          'On the production site (yoshinya.com) we use Google Tag Manager to load measurement tags such as website analytics. These tags may set cookies and collect standard usage data — for example the pages you visit, referring page, browser and device type, and an approximate location derived from your IP address. This data is processed by Google; please refer to Google’s privacy policy for details.',
+          'Analytics never receives the names or contents of the files you process. All file processing stays in your browser and is never sent to us or to Google.',
         ],
       },
       {
@@ -53,8 +54,8 @@ export const privacyContent: LocalizedLegalDocument = {
   },
   ja: {
     title: 'プライバシーポリシー',
-    updated: '2026-07-20',
-    updatedLabel: '最終更新日: 2026年7月20日',
+    updated: '2026-07-21',
+    updatedLabel: '最終更新日: 2026年7月21日',
     intro: [
       'よしにゃ（以下「当サイト」）は、yoshinya.com において無料のブラウザツールを提供しています。本ポリシーでは、当サイトの利用にあたって、どのような情報が扱われるか（および扱われないか）を説明します。',
     ],
@@ -68,7 +69,7 @@ export const privacyContent: LocalizedLegalDocument = {
       {
         heading: 'Cookieについて',
         body: [
-          '当サイトは、選択された言語を記憶するためのCookie（yoshinya_locale）を1つだけ使用します。内容は「ja」または「en」のみで、トラッキングや広告には使用しません。',
+          '当サイトは、選択された言語を記憶するためのCookie（yoshinya_locale）を使用します。内容は「ja」または「en」のみです。加えて、Google タグマネージャーおよびそれが読み込む計測タグ（「アクセス解析について」を参照）が独自のCookieを設定する場合があります。',
         ],
       },
       {
@@ -80,7 +81,8 @@ export const privacyContent: LocalizedLegalDocument = {
       {
         heading: 'アクセス解析について',
         body: [
-          '現在、当サイトではアクセス解析ツールや広告サービスは使用していません。将来導入する場合は、有効化する前に本ポリシーを更新します。また、ローカルファイルの名前や内容を収集することはありません。',
+          '本番サイト（yoshinya.com）では、Google タグマネージャーを利用して、アクセス解析などの計測タグを読み込んでいます。これらのタグはCookieを設定し、閲覧ページ・参照元・ブラウザや端末の種類・IPアドレスから推定される大まかな地域といった一般的な利用データを収集する場合があります。これらのデータはGoogleによって処理されます。詳細はGoogleのプライバシーポリシーをご確認ください。',
+          'アクセス解析が、処理対象のファイルの名前や内容を受け取ることはありません。ファイルの処理はすべてブラウザ内で行われ、当サイトやGoogleに送信されることはありません。',
         ],
       },
       {
