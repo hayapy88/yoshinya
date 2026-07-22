@@ -521,6 +521,15 @@ function TokenSettings({
                 <input
                   type="radio"
                   name={`date-source-${token.id}`}
+                  checked={token.source === 'fileModified'}
+                  onChange={() => onUpdate(token.id, { source: 'fileModified' })}
+                />
+                {t.rule.useFileModified}
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name={`date-source-${token.id}`}
                   checked={token.source === 'fixed'}
                   onChange={() =>
                     onUpdate(token.id, {
@@ -530,15 +539,6 @@ function TokenSettings({
                   }
                 />
                 {t.rule.pickDate}
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name={`date-source-${token.id}`}
-                  checked={token.source === 'fileModified'}
-                  onChange={() => onUpdate(token.id, { source: 'fileModified' })}
-                />
-                {t.rule.useFileModified}
               </label>
             </div>
             {token.source === 'fixed' && (
@@ -581,6 +581,15 @@ function TokenSettings({
                 <input
                   type="radio"
                   name={`time-source-${token.id}`}
+                  checked={token.source === 'fileModified'}
+                  onChange={() => onUpdate(token.id, { source: 'fileModified' })}
+                />
+                {t.rule.useFileModified}
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name={`time-source-${token.id}`}
                   checked={token.source === 'fixed'}
                   onChange={() =>
                     onUpdate(token.id, {
@@ -590,15 +599,6 @@ function TokenSettings({
                   }
                 />
                 {t.rule.pickTime}
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name={`time-source-${token.id}`}
-                  checked={token.source === 'fileModified'}
-                  onChange={() => onUpdate(token.id, { source: 'fileModified' })}
-                />
-                {t.rule.useFileModified}
               </label>
             </div>
             {token.source === 'fixed' && (
