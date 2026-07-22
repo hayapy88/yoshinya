@@ -10,6 +10,9 @@ export type IndexStyle =
   | { type: 'numeric'; padding: 1 | 2 | 3 } // 1 / 01 / 001
   | { type: 'alpha'; letterCase: 'lower' | 'upper' }; // a, b, ... / A, B, ...
 
+// Image pixel dimensions. 'wxh' -> 1920x1080, 'w' -> 1920, 'h' -> 1080.
+export type DimensionsFormat = 'wxh' | 'w' | 'h';
+
 export type RenameToken =
   | { id: string; kind: 'text'; value: string }
   | { id: string; kind: 'separator'; char: string } // default '_'
@@ -27,11 +30,16 @@ export type RenameToken =
       source: DateTimeSource;
       fixedTime?: string; // when source='fixed': 'hh:mm' or 'hh:mm:ss'
     }
-  | { id: string; kind: 'index'; style: IndexStyle; start: number }; // start defaults to 1
+  | { id: string; kind: 'index'; style: IndexStyle; start: number } // start defaults to 1
+  | { id: string; kind: 'dimensions'; format: DimensionsFormat };
 
 export type RenameInput = {
   originalName: string;
   lastModified: number; // File.lastModified (epoch ms) passed as-is
+  // Image pixel dimensions, when the file is an image and they have loaded.
+  // Undefined for non-images or before dimensions are known.
+  width?: number;
+  height?: number;
 };
 
 export type RenameResult = {

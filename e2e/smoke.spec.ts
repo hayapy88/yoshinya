@@ -1,7 +1,39 @@
 import { expect, test, type Page } from '@playwright/test'
+import { deflateSync, crc32 } from 'node:zlib'
 
 function textFile(name: string) {
   return { name, mimeType: 'text/plain', buffer: Buffer.from('content') }
+}
+
+// Builds a minimal valid PNG of the given size so the browser can read its
+// natural width/height (used to exercise the dimensions token).
+function pngFile(name: string, width: number, height: number) {
+  const chunk = (type: string, data: Buffer) => {
+    const typeAndData = Buffer.concat([Buffer.from(type, 'ascii'), data])
+    const len = Buffer.alloc(4)
+    len.writeUInt32BE(data.length)
+    const crc = Buffer.alloc(4)
+    crc.writeUInt32BE(crc32(typeAndData) >>> 0)
+    return Buffer.concat([len, typeAndData, crc])
+  }
+  const ihdr = Buffer.alloc(13)
+  ihdr.writeUInt32BE(width, 0)
+  ihdr.writeUInt32BE(height, 4)
+  ihdr[8] = 8 // bit depth
+  ihdr[9] = 2 // color type: truecolor
+  const rowBytes = width * 3
+  const raw = Buffer.concat(
+    Array.from({ length: height }, () =>
+      Buffer.concat([Buffer.from([0]), Buffer.alloc(rowBytes, 0xff)]),
+    ),
+  )
+  const buffer = Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr),
+    chunk('IDAT', deflateSync(raw)),
+    chunk('IEND', Buffer.alloc(0)),
+  ])
+  return { name, mimeType: 'image/png', buffer }
 }
 
 // Drags an element onto a target slowly enough to satisfy dnd-kit's
@@ -108,7 +140,7 @@ test.describe('file renamer workflow', () => {
 
     // Build a rule: a text token alone duplicates the two .txt files.
     await dragTo(page, '.palette-chip:has-text("Text")', '.rule-area')
-    await page.getByPlaceholder('e.g. trip').fill('renamed')
+    await page.getByPlaceholder('e.g. campaign').fill('renamed')
     await expect(
       page.getByText('Duplicate file names will occur', { exact: false }),
     ).toBeVisible()
@@ -136,11 +168,30 @@ test.describe('file renamer workflow', () => {
     expect((await secondEvent).suggestedFilename()).toMatch(/\.zip$/)
   })
 
+  test('adds image dimensions from the dimensions token', async ({ page }) => {
+    await page.goto('/en/file-renamer')
+    // A real 120x80 image plus a non-image file.
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([pngFile('photo.png', 120, 80), textFile('notes.txt')])
+    await expect(page.getByText('photo.png').first()).toBeVisible()
+
+    // Rule: text "img" + separator + dimensions.
+    await dragTo(page, '.palette-chip:has-text("Text")', '.rule-area')
+    await page.getByPlaceholder('e.g. campaign').fill('img')
+    await dragTo(page, '.palette-chip:has-text("Separator")', '.rule-area')
+    await dragTo(page, '.palette-chip:has-text("Dimensions")', '.rule-area')
+
+    // The image gets its pixel size; the non-image gets no dimensions.
+    await expect(page.getByText('img_120x80.png')).toBeVisible()
+    await expect(page.getByText('img_.txt')).toBeVisible()
+  })
+
   test('validates forbidden characters in text tokens', async ({ page }) => {
     await page.goto('/en/file-renamer')
     await page.locator('input[type="file"]').setInputFiles([textFile('a.txt')])
     await dragTo(page, '.palette-chip:has-text("Text")', '.rule-area')
-    await page.getByPlaceholder('e.g. trip').fill('bad/name')
+    await page.getByPlaceholder('e.g. campaign').fill('bad/name')
     await expect(
       page.getByText('Contains characters not allowed in file names', {
         exact: false,

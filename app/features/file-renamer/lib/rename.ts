@@ -1,5 +1,6 @@
 import type {
   DateFormat,
+  DimensionsFormat,
   RenameInput,
   RenameResult,
   RenameToken,
@@ -40,6 +41,26 @@ export function formatTime(date: Date, format: TimeFormat): string {
 export function formatNumericIndex(n: number, padding: 1 | 2 | 3): string {
   // padStart never truncates, so overflow (e.g. padding=2, n=100) stays "100".
   return String(n).padStart(padding, '0');
+}
+
+export function formatDimensions(
+  format: DimensionsFormat,
+  width: number | undefined,
+  height: number | undefined,
+): string {
+  // Non-image files (or images whose size hasn't loaded yet) have no
+  // dimensions, so the token contributes nothing to the name.
+  if (width === undefined || height === undefined) {
+    return '';
+  }
+  switch (format) {
+    case 'wxh':
+      return `${width}x${height}`;
+    case 'w':
+      return `${width}`;
+    case 'h':
+      return `${height}`;
+  }
 }
 
 export function formatAlphaIndex(
@@ -84,7 +105,13 @@ function parseFixedTime(fixedTime: string): Date {
 
 export function buildFileName(
   tokens: RenameToken[],
-  context: { index: number; fileDate: Date; now: Date },
+  context: {
+    index: number;
+    fileDate: Date;
+    now: Date;
+    width?: number;
+    height?: number;
+  },
 ): string {
   // context.index is the file's 0-based position in the list.
   return tokens
@@ -118,6 +145,8 @@ export function buildFileName(
             ? formatNumericIndex(n, token.style.padding)
             : formatAlphaIndex(n, token.style.letterCase);
         }
+        case 'dimensions':
+          return formatDimensions(token.format, context.width, context.height);
       }
     })
     .join('');
@@ -134,6 +163,8 @@ export function applyRename(
       index,
       fileDate: new Date(input.lastModified),
       now: options.now,
+      width: input.width,
+      height: input.height,
     });
     return { originalName: input.originalName, newName: base + ext };
   });

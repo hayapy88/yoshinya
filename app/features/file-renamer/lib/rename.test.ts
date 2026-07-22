@@ -5,6 +5,7 @@ import {
   buildFileName,
   formatAlphaIndex,
   formatDate,
+  formatDimensions,
   formatNumericIndex,
   formatTime,
   splitExtension,
@@ -110,10 +111,49 @@ describe('splitExtension', () => {
   });
 });
 
+describe('formatDimensions', () => {
+  it('formats width x height', () => {
+    expect(formatDimensions('wxh', 1920, 1080)).toBe('1920x1080');
+  });
+
+  it('formats width only', () => {
+    expect(formatDimensions('w', 1920, 1080)).toBe('1920');
+  });
+
+  it('formats height only', () => {
+    expect(formatDimensions('h', 1920, 1080)).toBe('1080');
+  });
+
+  it('returns an empty string when dimensions are unknown', () => {
+    expect(formatDimensions('wxh', undefined, undefined)).toBe('');
+    expect(formatDimensions('wxh', 1920, undefined)).toBe('');
+    expect(formatDimensions('w', undefined, 1080)).toBe('');
+  });
+});
+
 describe('buildFileName', () => {
   const now = new Date(2026, 0, 2, 15, 30, 45);
   const fileDate = new Date(2025, 11, 24, 8, 9, 10);
   const context = { index: 0, fileDate, now };
+
+  it('renders a dimensions token from the context size', () => {
+    const tokens: RenameToken[] = [
+      { id: '1', kind: 'text', value: 'photo' },
+      { id: '2', kind: 'separator', char: '_' },
+      { id: '3', kind: 'dimensions', format: 'wxh' },
+    ];
+    expect(
+      buildFileName(tokens, { ...context, width: 800, height: 600 }),
+    ).toBe('photo_800x600');
+  });
+
+  it('omits the dimensions token for files without a size', () => {
+    const tokens: RenameToken[] = [
+      { id: '1', kind: 'text', value: 'doc' },
+      { id: '2', kind: 'dimensions', format: 'wxh' },
+    ];
+    expect(buildFileName(tokens, context)).toBe('doc');
+  });
 
   it('concatenates text and separator tokens', () => {
     const tokens: RenameToken[] = [
@@ -250,6 +290,43 @@ describe('applyRename', () => {
     expect(applyRename(inputs, tokens, { now })).toEqual([
       { originalName: 'a.jpg', newName: '2025-12-24.jpg', isDuplicate: false },
       { originalName: 'b.jpg', newName: '2026-07-05.jpg', isDuplicate: false },
+    ]);
+  });
+
+  it('uses each file\'s own dimensions and leaves non-images without a size', () => {
+    const inputs: RenameInput[] = [
+      {
+        originalName: 'wide.jpg',
+        lastModified: sampleDate.getTime(),
+        width: 1920,
+        height: 1080,
+      },
+      {
+        originalName: 'square.png',
+        lastModified: sampleDate.getTime(),
+        width: 512,
+        height: 512,
+      },
+      { originalName: 'notes.txt', lastModified: sampleDate.getTime() },
+    ];
+    const tokens: RenameToken[] = [
+      { id: '1', kind: 'text', value: 'img' },
+      { id: '2', kind: 'separator', char: '_' },
+      { id: '3', kind: 'dimensions', format: 'wxh' },
+    ];
+    expect(applyRename(inputs, tokens, { now })).toEqual([
+      {
+        originalName: 'wide.jpg',
+        newName: 'img_1920x1080.jpg',
+        isDuplicate: false,
+      },
+      {
+        originalName: 'square.png',
+        newName: 'img_512x512.png',
+        isDuplicate: false,
+      },
+      // The non-image drops the dimensions and keeps a trailing separator.
+      { originalName: 'notes.txt', newName: 'img_.txt', isDuplicate: false },
     ]);
   });
 });

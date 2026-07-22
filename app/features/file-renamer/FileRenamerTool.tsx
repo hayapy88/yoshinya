@@ -23,14 +23,46 @@ function FileRenamerTool() {
       return null
     }
     return applyRename(
-      files.map(({ file }) => ({
+      files.map(({ file, width, height }) => ({
         originalName: file.name,
         lastModified: file.lastModified,
+        width,
+        height,
       })),
       tokens,
       { now: new Date() },
     )
   }, [files, tokens])
+
+  // Load pixel dimensions for image files so the dimensions token can use them.
+  // Done here (not in the add handler) with a functional state update so it
+  // works regardless of how files were added and avoids racing on the list.
+  const measuring = useRef(new Set<string>())
+  useEffect(() => {
+    for (const item of files) {
+      if (
+        !item.previewUrl ||
+        item.width !== undefined ||
+        measuring.current.has(item.id)
+      ) {
+        continue
+      }
+      measuring.current.add(item.id)
+      const image = new Image()
+      image.onload = () => {
+        const { naturalWidth, naturalHeight } = image
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === item.id
+              ? { ...f, width: naturalWidth, height: naturalHeight }
+              : f,
+          ),
+        )
+      }
+      image.onerror = () => measuring.current.delete(item.id)
+      image.src = item.previewUrl
+    }
+  }, [files])
 
   // Analytics events carry only counts — never file names or contents.
   const handleFilesChange = (next: LoadedFile[]) => {

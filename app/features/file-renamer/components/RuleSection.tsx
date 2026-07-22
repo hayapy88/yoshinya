@@ -24,6 +24,7 @@ import { validateTextValue } from '../lib/validate'
 import { useLocale, type Dictionary } from '~/i18n/locale'
 import type {
   DateFormat,
+  DimensionsFormat,
   IndexStyle,
   RenameToken,
   TimeFormat,
@@ -42,10 +43,12 @@ const PALETTE_KINDS: TokenKind[] = [
   'date',
   'time',
   'index',
+  'dimensions',
 ]
 
 const DATE_FORMATS: DateFormat[] = ['yyyy-mm-dd', 'yyyymmdd', 'yyyy-mm', 'yyyymm']
 const TIME_FORMATS: TimeFormat[] = ['hh-mm-ss', 'hh-mm']
+const DIMENSIONS_FORMATS: DimensionsFormat[] = ['wxh', 'w', 'h']
 
 const SEPARATOR_CHARS: { value: string; labelKey: 'underscore' | 'hyphen' | 'dot' }[] = [
   { value: '_', labelKey: 'underscore' },
@@ -91,6 +94,8 @@ function createToken(kind: TokenKind): RenameToken {
       return { id, kind, format: 'hh-mm', source: 'fixed', fixedTime: currentTime() }
     case 'index':
       return { id, kind, style: { type: 'numeric', padding: 2 }, start: 1 }
+    case 'dimensions':
+      return { id, kind, format: 'wxh' }
   }
 }
 
@@ -105,6 +110,18 @@ function indexSample(style: IndexStyle): string {
   return style.type === 'numeric'
     ? formatNumericIndex(1, style.padding)
     : formatAlphaIndex(1, style.letterCase)
+}
+
+// A short label for the dimensions chip (actual pixel values vary per file).
+function dimensionsSample(format: DimensionsFormat): string {
+  switch (format) {
+    case 'wxh':
+      return 'WxH'
+    case 'w':
+      return 'W'
+    case 'h':
+      return 'H'
+  }
 }
 
 // Tokens of a kind are numbered by their order in the rule (Text 1, Text 2, ...).
@@ -136,6 +153,8 @@ function tokenChipLabel(
       return `${t.tokens.time}(${token.format})`
     case 'index':
       return `${t.tokens.index}(${indexSample(token.style)})`
+    case 'dimensions':
+      return `${t.tokens.dimensions}(${dimensionsSample(token.format)})`
   }
 }
 
@@ -616,6 +635,30 @@ function TokenSettings({
               </option>
             ))}
           </select>
+        </div>
+      )
+    case 'dimensions':
+      return (
+        <div className="settings-panel">
+          <label className="settings-label" htmlFor={`dimensions-${token.id}`}>
+            {t.tokens.dimensions}
+          </label>
+          <select
+            id={`dimensions-${token.id}`}
+            value={token.format}
+            onChange={(e) =>
+              onUpdate(token.id, {
+                format: e.target.value as DimensionsFormat,
+              })
+            }
+          >
+            {DIMENSIONS_FORMATS.map((f) => (
+              <option key={f} value={f}>
+                {t.rule.dimensionsFormats[f]}
+              </option>
+            ))}
+          </select>
+          <p className="hint">{t.rule.dimensionsHint}</p>
         </div>
       )
   }

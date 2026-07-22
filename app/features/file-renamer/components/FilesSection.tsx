@@ -21,6 +21,10 @@ export type LoadedFile = {
   id: string
   file: File
   previewUrl: string | null // object URL for image thumbnails, null for non-images
+  // Image pixel dimensions, loaded asynchronously from previewUrl.
+  // Undefined for non-images or until the image has loaded.
+  width?: number
+  height?: number
 }
 
 const THUMB_MIN = 24

@@ -62,6 +62,7 @@ export const en = {
     date: 'Date',
     time: 'Time',
     index: 'Index',
+    dimensions: 'Dimensions',
     textNumbered: (n: number) => `Text ${n}`,
     separatorNumbered: (n: number) => `Separator ${n}`,
   },
@@ -71,10 +72,17 @@ export const en = {
     dropSlotLabel: 'Insertion point',
     extChip: '.ext',
     removeToken: (label: string) => `Remove ${label}`,
-    textPlaceholder: 'e.g. trip',
+    textPlaceholder: 'e.g. campaign',
     textError: (chars: string) =>
       `Contains characters not allowed in file names: ${chars}`,
     formatLabel: 'Format',
+    dimensionsFormats: {
+      wxh: 'Width × Height (e.g. 1920x1080)',
+      w: 'Width only (e.g. 1920)',
+      h: 'Height only (e.g. 1080)',
+    },
+    dimensionsHint:
+      'Applies to image files only; other files get no dimensions.',
     dateSourceLabel: 'Date source',
     timeSourceLabel: 'Time source',
     pickDate: 'Pick a date',
