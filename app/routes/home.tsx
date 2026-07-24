@@ -40,14 +40,20 @@ export default function Home() {
             {t.home.privacyNote}
           </p>
         </div>
-        <img
-          src="/brand/yoshinyan-eyes-open.png"
-          alt={t.site.mascotAlt}
-          width={902}
-          height={1155}
-          decoding="async"
-          className="mx-auto w-32 h-auto sm:w-40"
-        />
+        <picture>
+          <source
+            type="image/webp"
+            srcSet="/brand/yoshinyan-eyes-open.webp"
+          />
+          <img
+            src="/brand/yoshinyan-eyes-open.png"
+            alt={t.site.mascotAlt}
+            width={902}
+            height={1155}
+            decoding="async"
+            className="mx-auto w-32 h-auto sm:w-40"
+          />
+        </picture>
       </section>
 
       <section aria-labelledby="tools-heading" className="mt-12">

@@ -81,20 +81,28 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center gap-10 px-4 py-16">
       <h1>
-        <img
-          src="/brand/logo-yoshinya.png"
-          alt="よしにゃ / YOSHINYA"
-          width={720}
-          height={174}
-          className="h-auto w-64 dark:hidden sm:w-80"
-        />
-        <img
-          src="/brand/logo-yoshinya-dark.png"
-          alt="よしにゃ / YOSHINYA"
-          width={720}
-          height={174}
-          className="hidden h-auto w-64 dark:block sm:w-80"
-        />
+        {/* The gateway logo is the LCP element: fetchpriority=high plus a
+            single WebP/PNG <picture> with a prefers-color-scheme dark variant. */}
+        <picture>
+          <source
+            type="image/webp"
+            media="(prefers-color-scheme: dark)"
+            srcSet="/brand/logo-yoshinya-dark.webp"
+          />
+          <source type="image/webp" srcSet="/brand/logo-yoshinya.webp" />
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcSet="/brand/logo-yoshinya-dark.png"
+          />
+          <img
+            src="/brand/logo-yoshinya.png"
+            alt="よしにゃ / YOSHINYA"
+            width={720}
+            height={174}
+            fetchPriority="high"
+            className="h-auto w-64 sm:w-80"
+          />
+        </picture>
       </h1>
       <div className="grid w-full gap-4 sm:grid-cols-2">
         {OPTIONS.map((option) => (

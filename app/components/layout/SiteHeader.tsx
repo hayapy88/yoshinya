@@ -19,20 +19,27 @@ export function SiteHeader() {
           to={`/${locale}`}
           className="no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong"
         >
-          <img
-            src="/brand/logo-yoshinya.png"
-            alt={t.site.brand}
-            width={720}
-            height={174}
-            className="h-8 w-auto dark:hidden"
-          />
-          <img
-            src="/brand/logo-yoshinya-dark.png"
-            alt={t.site.brand}
-            width={720}
-            height={174}
-            className="hidden h-8 w-auto dark:block"
-          />
+          {/* One <picture> loads a single image: WebP with a PNG fallback,
+              and the dark variant via prefers-color-scheme. */}
+          <picture>
+            <source
+              type="image/webp"
+              media="(prefers-color-scheme: dark)"
+              srcSet="/brand/logo-yoshinya-dark.webp"
+            />
+            <source type="image/webp" srcSet="/brand/logo-yoshinya.webp" />
+            <source
+              media="(prefers-color-scheme: dark)"
+              srcSet="/brand/logo-yoshinya-dark.png"
+            />
+            <img
+              src="/brand/logo-yoshinya.png"
+              alt={t.site.brand}
+              width={720}
+              height={174}
+              className="h-8 w-auto"
+            />
+          </picture>
         </Link>
         <Link
           to={switchPath}
