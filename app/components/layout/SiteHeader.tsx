@@ -22,15 +22,15 @@ export function SiteHeader() {
           <img
             src="/brand/logo-yoshinya.png"
             alt={t.site.brand}
-            width={1745}
-            height={422}
+            width={720}
+            height={174}
             className="h-8 w-auto dark:hidden"
           />
           <img
             src="/brand/logo-yoshinya-dark.png"
             alt={t.site.brand}
-            width={1745}
-            height={422}
+            width={720}
+            height={174}
             className="hidden h-8 w-auto dark:block"
           />
         </Link>

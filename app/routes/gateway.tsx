@@ -84,15 +84,15 @@ export default function Gateway({ loaderData }: Route.ComponentProps) {
         <img
           src="/brand/logo-yoshinya.png"
           alt="よしにゃ / YOSHINYA"
-          width={1745}
-          height={422}
+          width={720}
+          height={174}
           className="h-auto w-64 dark:hidden sm:w-80"
         />
         <img
           src="/brand/logo-yoshinya-dark.png"
           alt="よしにゃ / YOSHINYA"
-          width={1745}
-          height={422}
+          width={720}
+          height={174}
           className="hidden h-auto w-64 dark:block sm:w-80"
         />
       </h1>
