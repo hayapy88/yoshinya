@@ -1,4 +1,4 @@
-import type { en } from './en'
+import type { en } from './en';
 
 export const ja: typeof en = {
   site: {
@@ -14,10 +14,11 @@ export const ja: typeof en = {
   home: {
     metaTitle: 'よしにゃ｜ちょっと面倒？それ、よしにゃにおまかせ！',
     metaDescription:
-      'ちょっと面倒？それ、よしにゃにおまかせ！日々のちょっとした面倒を解決する便利ツールを、毎週ひとつ公開します。無料で、ファイルは端末内で処理されます。',
+      'ちょっと面倒？それ、よしにゃにおまかせ！日々のちょっとした面倒をよしなに解決する便利ツールを、毎週ひとつ公開します。無料で、ファイルは端末内で処理されます。',
     kicker: '毎週ひとつ、新しい便利を',
     primary: 'ちょっと面倒？それ、よしにゃにおまかせ！',
-    supporting: '日々のちょっとした面倒を解決する便利ツールを、毎週ひとつ公開します。',
+    supporting:
+      '日々のちょっとした面倒をよしなに解決する便利ツールを、毎週ひとつ公開します。',
     toolsHeading: 'ツール一覧',
     cta: '無料で使う',
     privacyNote:
@@ -49,7 +50,8 @@ export const ja: typeof en = {
   },
   upload: {
     dropzone: 'ここにファイルをドロップ、またはクリックして選択',
-    reorderHint: 'ドラッグ&ドロップで並べ替えできます（この順序が連番の順になります）',
+    reorderHint:
+      'ドラッグ&ドロップで並べ替えできます（この順序が連番の順になります）',
     thumbSizeLabel: '画像サイズ',
     thumbSmaller: 'プレビュー画像を小さくする',
     thumbLarger: 'プレビュー画像を大きくする',
@@ -82,7 +84,8 @@ export const ja: typeof en = {
       w: '幅のみ（例: 1920）',
       h: '高さのみ（例: 1080）',
     },
-    dimensionsHint: '画像ファイルのみに適用されます（画像以外は寸法なしになります）。',
+    dimensionsHint:
+      '画像ファイルのみに適用されます（画像以外は寸法なしになります）。',
     dateSourceLabel: '日付のソース',
     timeSourceLabel: '時間のソース',
     pickDate: '日付を指定',
@@ -121,4 +124,4 @@ export const ja: typeof en = {
     duplicatesBlock: '同名のファイルが発生するためダウンロードできません',
     zipFailed: (message: string) => `zipの生成に失敗しました: ${message}`,
   },
-}
+};
