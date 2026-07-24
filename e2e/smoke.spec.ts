@@ -235,6 +235,23 @@ test.describe('SEO and infrastructure', () => {
     expect((await request.get('/xx')).status()).toBe(404)
     expect((await request.get('/ja/nope')).status()).toBe(404)
   })
+
+  test('redirects locale-less page paths to a locale', async ({ request }) => {
+    for (const path of ['/file-renamer', '/privacy', '/terms']) {
+      const res = await request.get(path, { maxRedirects: 0 })
+      expect(res.status()).toBe(302)
+      expect(res.headers()['location']).toMatch(
+        new RegExp(`^/(ja|en)${path}$`),
+      )
+    }
+  })
+
+  test('the 404 page has a valid lang and a title', async ({ page }) => {
+    const response = await page.goto('/foobar')
+    expect(response?.status()).toBe(404)
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+    await expect(page).toHaveTitle(/YOSHINYA/)
+  })
 })
 
 test.describe('keyboard access', () => {

@@ -21,6 +21,22 @@ export function otherLocale(locale: Locale): Locale {
   return locale === 'en' ? 'ja' : 'en'
 }
 
+// Chooses a locale for a request that has no locale in the URL: the stored
+// cookie choice if valid, otherwise the browser's preferred language, falling
+// back to English. Used by the gateway and the locale-less redirect routes.
+export function negotiateLocale(request: Request): Locale {
+  const cookies = request.headers.get('cookie') ?? ''
+  const stored = new RegExp(`(?:^|;\\s*)${LOCALE_COOKIE}=(\\w+)`).exec(
+    cookies,
+  )?.[1]
+  if (isLocale(stored)) {
+    return stored
+  }
+  const acceptLanguage = request.headers.get('accept-language') ?? ''
+  const firstTag = acceptLanguage.split(',')[0]?.trim().toLowerCase() ?? ''
+  return firstTag.startsWith('ja') ? 'ja' : 'en'
+}
+
 // Best-effort persistence of the language choice (client-side only).
 export function storeLocaleChoice(locale: Locale) {
   try {

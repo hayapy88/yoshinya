@@ -8,6 +8,13 @@ export default [
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
+  // Locale-less page paths redirect to the negotiated locale. Static segments
+  // take precedence over the :locale route, so these win the match.
+  route('file-renamer', 'routes/locale-redirect.tsx', {
+    id: 'redirect-file-renamer',
+  }),
+  route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
+  route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),
   route('sitemap.xml', 'routes/sitemap.ts'),
   route('robots.txt', 'routes/robots.ts'),
   route('*', 'routes/not-found.tsx'),

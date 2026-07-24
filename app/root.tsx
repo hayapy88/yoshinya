@@ -11,6 +11,7 @@ import {
 
 import type { Route } from './+types/root'
 import { isProductionHost } from '~/lib/seo'
+import { isLocale } from '~/i18n/locale'
 import './app.css'
 
 // Google Tag Manager container id. Overridable via VITE_GTM_ID (build-time);
@@ -77,6 +78,16 @@ export function loader({ request }: Route.LoaderArgs) {
   return { host: new URL(request.url).host }
 }
 
+// Fallback document head. Every real page exports its own meta (which takes
+// precedence), so this only surfaces on error/404 pages, giving them a valid
+// title and keeping them out of the search index.
+export function meta(_: Route.MetaArgs) {
+  return [
+    { title: 'Page not found | YOSHINYA' },
+    { name: 'robots', content: 'noindex' },
+  ]
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   // Routes under /:locale expose their locale via handle so the html lang
   // attribute always matches the page language. The gateway defaults to "en".
@@ -87,10 +98,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       match.handle !== null &&
       'locale' in match.handle,
   )
-  const lang =
-    localeMatch && typeof localeMatch.params.locale === 'string'
-      ? localeMatch.params.locale
-      : 'en'
+  // Only trust the locale param when it is actually a supported locale;
+  // otherwise (e.g. a 404 like /foobar matching :locale) fall back to English
+  // so the html lang attribute is always a valid BCP 47 code.
+  const lang = isLocale(localeMatch?.params.locale)
+    ? localeMatch.params.locale
+    : 'en'
 
   const rootData = useRouteLoaderData('root') as { host?: string } | undefined
   const showGtm = gtmEnabled(rootData?.host)
