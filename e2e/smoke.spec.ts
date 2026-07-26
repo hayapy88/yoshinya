@@ -264,3 +264,58 @@ test.describe('keyboard access', () => {
     await expect(dropzone).toBeFocused()
   })
 })
+
+test.describe('image sorter workflow', () => {
+  test('adds images, sorts by keyboard, fixes in review, and downloads', async ({
+    page,
+  }) => {
+    await page.goto('/en/image-sorter')
+    await expect(
+      page.getByRole('heading', { name: 'Image Sorter by Yoshinya' }),
+    ).toBeVisible()
+
+    // Two folders exist by default.
+    const folderInputs = page.locator('.is-folder-row input')
+    await expect(folderInputs).toHaveCount(2)
+    await folderInputs.nth(0).fill('Main')
+    await folderInputs.nth(1).fill('Detail')
+
+    // Add three images.
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([
+        pngFile('a.png', 120, 80),
+        pngFile('b.png', 120, 80),
+        pngFile('c.png', 120, 80),
+      ])
+    await expect(page.getByText('3 images added')).toBeVisible()
+
+    // Sort: image 1 -> folder 1 (number key), then Space repeats it for image 2.
+    await page.getByRole('button', { name: 'Start sorting' }).click()
+    await page.locator('.is-stage').waitFor()
+    await page.keyboard.press('1')
+    await page.keyboard.press('Space')
+    // Image 3 -> folder 2 by clicking its button.
+    await page.locator('.is-folder-button').nth(1).click()
+
+    // Review: folders show their images with file names.
+    await page.getByRole('button', { name: 'Review & download' }).click()
+    const detail = page.locator('.is-group').filter({ hasText: 'Detail' })
+    await expect(detail.getByText('c.png')).toBeVisible()
+    await expect(detail.locator('.is-group-count')).toHaveText('1 image')
+
+    // Fix: move c.png from Detail to Main via the select-and-move path.
+    await page.getByText('c.png').click()
+    await page.getByLabel('Move to…').selectOption({ label: '1. Main' })
+    await page.getByRole('button', { name: 'Move' }).click()
+    const main = page.locator('.is-group').filter({ hasText: 'Main' })
+    await expect(main.locator('.is-group-count')).toHaveText('3 images')
+
+    // Download a dated zip.
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Download zip' }).click()
+    expect((await download).suggestedFilename()).toMatch(
+      /^image-sorting_\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.zip$/,
+    )
+  })
+})
