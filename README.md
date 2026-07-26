@@ -15,6 +15,7 @@ your device. A new tool ships every week, guided by the mascot **よしにゃん
 | Tool | Japanese name | English name | Status |
 | --- | --- | --- | --- |
 | File Renamer | よしにゃにファイルリネーム | File Renamer by Yoshinya | Available |
+| Image Sorter | よしにゃに画像仕分け | Image Sorter by Yoshinya | Available |
 
 Yoshinya plans to release one new browser-based utility every week.
 
@@ -25,6 +26,7 @@ Yoshinya plans to release one new browser-based utility every week.
 | Language gateway | `/` | `/` |
 | Home | `/ja` | `/en` |
 | File Renamer | `/ja/file-renamer` | `/en/file-renamer` |
+| Image Sorter | `/ja/image-sorter` | `/en/image-sorter` |
 | Privacy Policy | `/ja/privacy` | `/en/privacy` |
 | Terms of Use | `/ja/terms` | `/en/terms` |
 
@@ -111,8 +113,10 @@ translation key fails the type check.
 
 1. Build the tool as a feature module under `app/features/<tool>/` with pure,
    tested logic in `lib/`.
-2. Add the route file, dictionary entries (both locales), a sitemap path, and
-   a homepage card.
+2. Wire it up: add the locale route in `app/routes.ts`, a locale-less redirect
+   route (`route('<slug>', 'routes/locale-redirect.tsx', { id: 'redirect-<slug>' })`),
+   dictionary entries (both locales), a `sitemap.ts` path, a homepage card, and
+   a SEO JSON-LD helper in `app/lib/seo.ts`.
 3. `npm test && npm run e2e && npm run typecheck && npm run build`
 4. `npm run deploy` (Cloudflare Workers).
 
