@@ -78,13 +78,16 @@ export function websiteJsonLd(locale: Locale): Record<string, unknown> {
   }
 }
 
-export function fileRenamerJsonLd(locale: Locale): Record<string, unknown> {
+function toolJsonLd(
+  locale: Locale,
+  name: string,
+  path: string,
+): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name:
-      locale === 'ja' ? 'よしにゃにファイルリネーム' : 'File Renamer by Yoshinya',
-    url: `${SITE_ORIGIN}/${locale}/file-renamer`,
+    name,
+    url: `${SITE_ORIGIN}/${locale}${path}`,
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'Any',
     browserRequirements: 'Requires JavaScript',
@@ -96,4 +99,20 @@ export function fileRenamerJsonLd(locale: Locale): Record<string, unknown> {
       priceCurrency: locale === 'ja' ? 'JPY' : 'USD',
     },
   }
+}
+
+export function fileRenamerJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃにファイルリネーム' : 'File Renamer by Yoshinya',
+    '/file-renamer',
+  )
+}
+
+export function imageSorterJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃに画像仕分け' : 'Image Sorter by Yoshinya',
+    '/image-sorter',
+  )
 }

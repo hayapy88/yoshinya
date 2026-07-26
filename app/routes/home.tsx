@@ -60,20 +60,36 @@ export default function Home() {
         <h2 id="tools-heading" className="text-xl font-semibold">
           {t.home.toolsHeading}
         </h2>
-        <Link
-          to={`/${locale}/file-renamer`}
-          className="mt-4 block rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
-        >
-          <span className="block text-lg font-bold text-[color:var(--text)]">
-            {t.fileRenamerPage.toolName}
-          </span>
-          <span className="mt-1 block text-sm text-[color:var(--muted,#6f6b78)]">
-            {t.fileRenamerPage.toolDescription}
-          </span>
-          <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-navy-strong">
-            {t.home.cta}
-          </span>
-        </Link>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          {[
+            {
+              slug: 'file-renamer',
+              name: t.fileRenamerPage.toolName,
+              description: t.fileRenamerPage.toolDescription,
+            },
+            {
+              slug: 'image-sorter',
+              name: t.imageSorterPage.toolName,
+              description: t.imageSorterPage.toolDescription,
+            },
+          ].map((tool) => (
+            <Link
+              key={tool.slug}
+              to={`/${locale}/${tool.slug}`}
+              className="flex flex-col rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
+            >
+              <span className="block text-lg font-bold text-[color:var(--text)]">
+                {tool.name}
+              </span>
+              <span className="mt-1 block text-sm text-[color:var(--muted,#6f6b78)]">
+                {tool.description}
+              </span>
+              <span className="mt-4 inline-block self-start rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-navy-strong">
+                {t.home.cta}
+              </span>
+            </Link>
+          ))}
+        </div>
       </section>
     </main>
   )

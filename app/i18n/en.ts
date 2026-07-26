@@ -30,6 +30,102 @@ export const en = {
     toolName: 'File Renamer by Yoshinya',
     toolDescription: 'Rename multiple files directly in your browser.',
   },
+  imageSorterPage: {
+    metaTitle: 'Free Image Sorter Online — Sort Photos into Folders | YOSHINYA',
+    metaDescription:
+      'Sort images into folders fast: view each photo big, press a number to drop it in a folder, then download one organized zip. Everything runs in your browser — your images are never uploaded.',
+    heading: 'Image Sorter by Yoshinya',
+    toolName: 'Image Sorter by Yoshinya',
+    toolDescription:
+      'View each image and sort it into a folder by number, then download folders as a zip.',
+    intro:
+      'View your photos and sort them by number. Create your own folders and save them all as one zip.',
+    privacyNote:
+      'Images are processed in your browser and never sent to any server.',
+    steps: {
+      add: '① Add images',
+      folders: '② Create folders',
+      sort: '③ Sort by number',
+    },
+    supportedFormats: 'Supported: JPEG, PNG, WebP, GIF, and other images',
+  },
+  imageSorter: {
+    dropzone: 'Drop images here, or click to choose',
+    nonImageSkipped: (count: number) =>
+      count === 1
+        ? '1 non-image file was skipped.'
+        : `${count} non-image files were skipped.`,
+    imageCount: (n: number) => (n === 1 ? '1 image' : `${n} images`),
+    imagesAdded: (n: number) =>
+      n === 1 ? '1 image added' : `${n} images added`,
+    removeImage: (name: string) => `Remove ${name}`,
+    // Folders
+    foldersHeading: 'Folders',
+    foldersHint:
+      'Create a folder for each category you want to sort into. You can rename folders.',
+    addFolder: 'Add folder',
+    newFolderName: (n: number) => `Folder ${n}`,
+    folderNamePlaceholder: 'Folder name',
+    renameFolder: (name: string) => `Rename ${name}`,
+    deleteFolder: (name: string) => `Delete ${name}`,
+    folderNameEmpty: 'Enter a folder name.',
+    folderNameDuplicate: 'A folder with this name already exists.',
+    deleteFolderConfirm: (name: string, n: number) =>
+      `Delete "${name}"? Its ${n} image${n === 1 ? '' : 's'} will move back to unsorted.`,
+    startSorting: 'Start sorting',
+    needImages: 'Add images to start.',
+    needFolders: 'Create at least one folder to start.',
+    // Sorting view
+    position: (current: number, total: number) => `${current} / ${total}`,
+    sortedCount: (n: number) => `Sorted ${n}`,
+    remainingCount: (n: number) => `Remaining ${n}`,
+    inFolder: (name: string) => `In: ${name}`,
+    unsortedLabel: 'Unsorted',
+    keyboardHeading: 'Keyboard shortcuts',
+    keyNumber: 'Number keys 1–9 — sort into that folder',
+    keySpace: 'Space — sort into the same folder as the previous image',
+    keyArrows: '← / → — previous / next image',
+    keyUndo: 'Backspace or Ctrl/⌘ + Z — undo the last action',
+    overNineHint: 'Folders 10 and up: tap the button (no number key).',
+    prev: 'Previous',
+    next: 'Next',
+    undo: 'Undo',
+    undoneToast: 'Undone.',
+    sortedToast: (name: string) => `Moved to ${name}.`,
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    resetZoom: 'Reset zoom',
+    imageLoadError: 'This image could not be loaded.',
+    skipImage: 'Skip this image',
+    allSorted: 'All images are sorted.',
+    goToReview: 'Review & download',
+    backToSorting: 'Back to sorting',
+    // Review
+    reviewHeading: 'Review',
+    filterAll: 'All',
+    filterUnsorted: 'Unsorted',
+    selectedCount: (n: number) => `${n} selected`,
+    selectAll: 'Select all',
+    clearSelection: 'Clear selection',
+    move: 'Move',
+    dragHint: 'Tip: drag selected images onto a folder to move them.',
+    moveTo: 'Move to…',
+    moveToUnsorted: 'Move to unsorted',
+    moveDone: (name: string, n: number) =>
+      `Moved ${n} image${n === 1 ? '' : 's'} to ${name}.`,
+    emptyFilter: 'No images here yet.',
+    // Download
+    download: 'Download zip',
+    zipping: 'Preparing zip…',
+    unsortedWarningTitle: 'Some images are still unsorted',
+    unsortedWarning: (n: number) =>
+      `${n} image${n === 1 ? '' : 's'} ${n === 1 ? 'is' : 'are'} not sorted into any folder yet. Choose how to download:`,
+    downloadAnyway: 'Download without them',
+    downloadWithUnsorted: 'Download with an "Unsorted" folder',
+    reviewUnsorted: 'Review unsorted',
+    noSortedImages: 'Sort at least one image before downloading.',
+    zipFailed: (message: string) => `Failed to create the zip: ${message}`,
+  },
   footer: {
     privacy: 'Privacy Policy',
     terms: 'Terms of Use',
