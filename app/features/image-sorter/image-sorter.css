@@ -210,13 +210,18 @@
   border-radius: 10px;
   height: min(60vh, 34rem);
   overflow: hidden;
-  display: grid;
-  place-items: center;
+  /* Flexbox (not grid): a grid auto row grows to the image's natural height,
+     which breaks max-height:100% and left tall images cropped at the top.
+     Flex keeps the image fully contained and centered. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   touch-action: none;
 }
 .is-stage img {
   max-width: 100%;
   max-height: 100%;
+  min-height: 0;
   object-fit: contain;
   transform-origin: center center;
   user-select: none;
@@ -226,6 +231,9 @@
   position: absolute;
   top: 0.6rem;
   left: 0.6rem;
+  /* Above the image so it stays visible when the image is zoomed (a scaled
+     image creates a stacking context that would otherwise cover it). */
+  z-index: 2;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   font-size: 0.8rem;
@@ -236,6 +244,7 @@
   position: absolute;
   top: 0.6rem;
   right: 0.6rem;
+  z-index: 2;
   display: flex;
   gap: 0.3rem;
 }
@@ -436,7 +445,10 @@
 .is-group.is-drop-over {
   border-color: var(--accent);
   border-style: solid;
-  box-shadow: 0 0 0 2px var(--accent) inset;
+  /* Outset ring (not inset): an inset shadow is painted over by the header's
+     own background, making the highlight look thinner around the header. An
+     outset ring sits outside the border, uniform on all four sides. */
+  box-shadow: 0 0 0 2px var(--accent);
 }
 .is-row.is-dragging {
   opacity: 0.4;
