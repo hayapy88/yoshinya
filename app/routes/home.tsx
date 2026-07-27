@@ -40,7 +40,7 @@ export default function Home() {
             {t.home.privacyNote}
           </p>
         </div>
-        <picture>
+        <picture className="flex w-full justify-center sm:w-auto">
           <source
             type="image/webp"
             srcSet="/brand/yoshinyan-eyes-open.webp"
@@ -51,7 +51,7 @@ export default function Home() {
             width={902}
             height={1155}
             decoding="async"
-            className="mx-auto w-32 h-auto sm:w-40"
+            className="w-32 h-auto sm:w-40"
           />
         </picture>
       </section>
