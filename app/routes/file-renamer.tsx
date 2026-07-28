@@ -15,6 +15,7 @@ export function meta({ params, matches }: Route.MetaArgs) {
     title: t.fileRenamerPage.metaTitle,
     description: t.fileRenamerPage.metaDescription,
     noindex: !isProductionHost(rootData?.host),
+    ogImageSlug: 'file-renamer',
     jsonLd: [fileRenamerJsonLd(locale)],
   })
 }

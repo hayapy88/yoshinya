@@ -4,7 +4,7 @@ import type { Locale } from '~/i18n/locale'
 export const SITE_ORIGIN = 'https://yoshinya.com'
 export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com']
 export const X_HANDLE = '@yoshinya_com'
-export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp-default.png`
+export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp/ogp-default.png`
 export const BRAND_ICON = `${SITE_ORIGIN}/brand/yoshinyan-face-512.png`
 
 export function isProductionHost(host: string | undefined): boolean {
@@ -19,6 +19,9 @@ type PageMetaArgs = {
   description: string
   // Preview/staging hosts set this to keep non-production URLs unindexed.
   noindex?: boolean
+  // Tool slug for a per-tool OGP image at
+  // /brand/ogp/ogp-<slug>-<locale>.png. Falls back to the shared image.
+  ogImageSlug?: string
   jsonLd?: Record<string, unknown>[]
 }
 
@@ -31,9 +34,13 @@ export function pageMeta({
   title,
   description,
   noindex = false,
+  ogImageSlug,
   jsonLd = [],
 }: PageMetaArgs): MetaDescriptor[] {
   const canonical = `${SITE_ORIGIN}/${locale}${path}`
+  const ogImage = ogImageSlug
+    ? `${SITE_ORIGIN}/brand/ogp/ogp-${ogImageSlug}-${locale}.png`
+    : OGP_IMAGE
 
   return [
     { title },
@@ -52,7 +59,7 @@ export function pageMeta({
       property: 'og:locale:alternate',
       content: locale === 'ja' ? 'en_US' : 'ja_JP',
     },
-    { property: 'og:image', content: OGP_IMAGE },
+    { property: 'og:image', content: ogImage },
     { property: 'og:image:width', content: '1200' },
     { property: 'og:image:height', content: '630' },
     { property: 'og:image:alt', content: 'よしにゃ YOSHINYA' },
@@ -60,7 +67,7 @@ export function pageMeta({
     { name: 'twitter:site', content: X_HANDLE },
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description },
-    { name: 'twitter:image', content: OGP_IMAGE },
+    { name: 'twitter:image', content: ogImage },
     ...(noindex ? [{ name: 'robots', content: 'noindex, nofollow' }] : []),
     ...jsonLd.map((data) => ({ 'script:ld+json': data })),
   ]

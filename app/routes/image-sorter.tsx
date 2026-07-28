@@ -15,6 +15,7 @@ export function meta({ params, matches }: Route.MetaArgs) {
     title: t.imageSorterPage.metaTitle,
     description: t.imageSorterPage.metaDescription,
     noindex: !isProductionHost(rootData?.host),
+    ogImageSlug: 'image-sorter',
     jsonLd: [imageSorterJsonLd(locale)],
   })
 }
