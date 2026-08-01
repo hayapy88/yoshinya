@@ -38,6 +38,9 @@ test-results
 # Claude Code local settings
 .claude/settings.local.json
 
+# Internal planning notes (not published)
+docs/roadmap.md
+
 # wrangler files
 .wrangler
 .dev.vars*
