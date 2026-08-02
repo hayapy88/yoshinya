@@ -1,0 +1,7 @@
+# Never upload these to Workers Static Assets. Vite copies public/ verbatim
+# into build/client, so macOS and Windows folder metadata would otherwise be
+# served publicly and expose the directory listing. Finder recreates .DS_Store
+# on its own, so deleting it once is not enough — this file is the guard.
+# Wrangler reads this from the assets root and does not upload it either.
+.DS_Store
+Thumbs.db
