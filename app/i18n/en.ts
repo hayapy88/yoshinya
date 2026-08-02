@@ -23,7 +23,7 @@ export const en = {
       'Every tool runs right in your browser. Files are processed on your device and never sent to an external server.',
   },
   fileRenamerPage: {
-    metaTitle: 'Free Bulk File Renamer Online | YOSHINYA',
+    metaTitle: 'Bulk Rename Files - File Renamer by Yoshinya | Free, No Sign-up',
     metaDescription:
       'Batch-rename files entirely in your browser: reorder them, build a naming rule with prefix, date, and index tokens, then download as a zip. Your files never leave your browser.',
     heading: 'File Renamer by Yoshinya',
@@ -31,7 +31,8 @@ export const en = {
     toolDescription: 'Rename multiple files directly in your browser.',
   },
   imageSorterPage: {
-    metaTitle: 'Free Image Sorter Online — Sort Photos into Folders | YOSHINYA',
+    metaTitle:
+      'Sort Photos into Folders - Image Sorter by Yoshinya | Free, No Sign-up',
     metaDescription:
       'Sort images into folders fast: view each photo big, press a number to drop it in a folder, then download one organized zip. Everything runs in your browser — your images are never uploaded.',
     heading: 'Image Sorter by Yoshinya',
