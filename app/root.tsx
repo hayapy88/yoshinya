@@ -90,7 +90,8 @@ export function meta(_: Route.MetaArgs) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   // Routes under /:locale expose their locale via handle so the html lang
-  // attribute always matches the page language. The gateway defaults to "en".
+  // attribute always matches the page language. Non-localized routes (the
+  // redirects and 404) fall back to "en".
   const matches = useMatches()
   const localeMatch = matches.find(
     (match) =>

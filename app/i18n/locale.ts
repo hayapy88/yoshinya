@@ -8,7 +8,7 @@ export type Dictionary = typeof en
 export const LOCALES: Locale[] = ['en', 'ja']
 
 // Cookie that stores the visitor's explicit language choice. Read by the
-// gateway route (/) to send returning visitors straight to their language.
+// redirect routes so a returning visitor's choice outranks Accept-Language.
 export const LOCALE_COOKIE = 'yoshinya_locale'
 
 export const dictionaries: Record<Locale, Dictionary> = { en, ja }
@@ -23,7 +23,7 @@ export function otherLocale(locale: Locale): Locale {
 
 // Chooses a locale for a request that has no locale in the URL: the stored
 // cookie choice if valid, otherwise the browser's preferred language, falling
-// back to English. Used by the gateway and the locale-less redirect routes.
+// back to English. Used by the root and locale-less redirect routes.
 export function negotiateLocale(request: Request): Locale {
   const cookies = request.headers.get('cookie') ?? ''
   const stored = new RegExp(`(?:^|;\\s*)${LOCALE_COOKIE}=(\\w+)`).exec(

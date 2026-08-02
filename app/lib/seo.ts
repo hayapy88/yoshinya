@@ -26,8 +26,9 @@ type PageMetaArgs = {
 }
 
 // Builds the full head for a localized page: title, description,
-// self-referencing canonical, hreflang alternates (ja / en / x-default →
-// language gateway), Open Graph, and X/Twitter card metadata.
+// self-referencing canonical, hreflang alternates (ja / en / x-default → the
+// root, which redirects to the visitor's language), Open Graph, and X/Twitter
+// card metadata.
 export function pageMeta({
   locale,
   path,

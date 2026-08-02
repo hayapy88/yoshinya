@@ -57,25 +57,46 @@ async function dragTo(page: Page, sourceSelector: string, targetSelector: string
   await page.mouse.up()
 }
 
-test.describe('language gateway', () => {
-  test('shows both language options and honors the choice', async ({
-    page,
+test.describe('root language redirect', () => {
+  test('sends a Japanese browser to /ja', async ({ browser }) => {
+    const context = await browser.newContext({ locale: 'ja-JP' })
+    const page = await context.newPage()
+    await page.goto('/')
+    await expect(page).toHaveURL('/ja')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ja')
+    await context.close()
+  })
+
+  test('sends every other browser to /en', async ({ browser }) => {
+    const context = await browser.newContext({ locale: 'de-DE' })
+    const page = await context.newPage()
+    await page.goto('/')
+    await expect(page).toHaveURL('/en')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+    await context.close()
+  })
+
+  test('an explicit choice outranks the browser language', async ({
+    browser,
   }) => {
-    await page.goto('/')
-    await expect(page.getByRole('link', { name: /日本語で続ける/ })).toBeVisible()
-    await expect(
-      page.getByRole('link', { name: /Continue in English/ }),
-    ).toBeVisible()
+    // Japanese browser, but the visitor previously switched to English.
+    const context = await browser.newContext({ locale: 'ja-JP' })
+    const page = await context.newPage()
+    await page.goto('/ja')
+    await page.getByRole('link', { name: /English/ }).click()
+    await expect(page).toHaveURL('/en')
 
-    await page.getByRole('link', { name: /日本語で続ける/ }).click()
-    await expect(page).toHaveURL('/ja')
-    await expect(
-      page.getByRole('heading', { name: 'ちょっと面倒？それ、よしにゃにおまかせ！' }),
-    ).toBeVisible()
-
-    // The stored choice now redirects the gateway.
     await page.goto('/')
-    await expect(page).toHaveURL('/ja')
+    await expect(page).toHaveURL('/en')
+    await context.close()
+  })
+
+  test('the redirect is never cached across visitors', async ({ request }) => {
+    const response = await request.get('/', { maxRedirects: 0 })
+    expect(response.status()).toBe(302)
+    expect(response.headers()['vary']).toContain('Accept-Language')
+    expect(response.headers()['vary']).toContain('Cookie')
+    expect(response.headers()['cache-control']).toContain('no-store')
   })
 })
 
