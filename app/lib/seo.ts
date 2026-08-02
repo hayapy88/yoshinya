@@ -124,3 +124,52 @@ export function imageSorterJsonLd(locale: Locale): Record<string, unknown> {
     '/image-sorter',
   )
 }
+
+export function pdfTitleEditorJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃにPDFタイトル変更' : 'PDF Title Editor by Yoshinya',
+    '/pdf-title-editor',
+  )
+}
+
+// Only ever call this with questions and answers that are also rendered on the
+// page — structured data that is not visible is a manual-action risk.
+export function faqJsonLd(
+  faq: readonly { question: string; answer: string }[],
+): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((entry) => ({
+      '@type': 'Question',
+      name: entry.question,
+      acceptedAnswer: { '@type': 'Answer', text: entry.answer },
+    })),
+  }
+}
+
+export function breadcrumbJsonLd(
+  locale: Locale,
+  trail: { name: string; path: string }[],
+): Record<string, unknown> {
+  const home = {
+    '@type': 'ListItem',
+    position: 1,
+    name: locale === 'ja' ? 'よしにゃ' : 'YOSHINYA',
+    item: `${SITE_ORIGIN}/${locale}`,
+  }
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      home,
+      ...trail.map((entry, index) => ({
+        '@type': 'ListItem',
+        position: index + 2,
+        name: entry.name,
+        item: `${SITE_ORIGIN}/${locale}${entry.path}`,
+      })),
+    ],
+  }
+}

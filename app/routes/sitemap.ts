@@ -2,7 +2,14 @@ import type { Route } from './+types/sitemap'
 import { SITE_ORIGIN } from '~/lib/seo'
 
 // Localized page paths (without the locale prefix). Add new tools here.
-const PATHS = ['', '/file-renamer', '/image-sorter', '/privacy', '/terms']
+const PATHS = [
+  '',
+  '/file-renamer',
+  '/image-sorter',
+  '/pdf-title-editor',
+  '/privacy',
+  '/terms',
+]
 
 function urlEntry(path: string): string {
   const ja = `${SITE_ORIGIN}/ja${path}`

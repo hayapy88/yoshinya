@@ -1,8 +1,29 @@
 import { expect, test, type Page } from '@playwright/test'
 import { deflateSync, crc32 } from 'node:zlib'
+import { PDFDocument } from 'pdf-lib'
 
 function textFile(name: string) {
   return { name, mimeType: 'text/plain', buffer: Buffer.from('content') }
+}
+
+// Builds a real PDF so the tool parses genuine metadata rather than a stub.
+async function pdfFile(
+  name: string,
+  metadata: { title?: string; author?: string } = {},
+) {
+  const doc = await PDFDocument.create()
+  doc.addPage()
+  if (metadata.title !== undefined) {
+    doc.setTitle(metadata.title)
+  }
+  if (metadata.author !== undefined) {
+    doc.setAuthor(metadata.author)
+  }
+  return {
+    name,
+    mimeType: 'application/pdf',
+    buffer: Buffer.from(await doc.save()),
+  }
 }
 
 // Builds a minimal valid PNG of the given size so the browser can read its
@@ -338,5 +359,135 @@ test.describe('image sorter workflow', () => {
     expect((await download).suggestedFilename()).toMatch(
       /^image-sorting_\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.zip$/,
     )
+  })
+})
+
+test.describe('pdf title editor workflow', () => {
+  test('changes a title and downloads a single PDF', async ({ page }) => {
+    await page.goto('/en/pdf-title-editor')
+    await expect(
+      page.getByRole('heading', { name: 'PDF Title Editor by Yoshinya', level: 1 }),
+    ).toBeVisible()
+
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([await pdfFile('proposal.pdf', { title: 'Template v3' })])
+
+    // The internal title is read and shown separately from the filename.
+    await expect(page.getByText('Template v3')).toBeVisible()
+    await expect(page.locator('.pte-status')).toHaveText(/Unchanged/)
+
+    const titleField = page.getByLabel('New PDF title')
+    await titleField.fill('2026 Proposal')
+    await expect(page.locator('.pte-status')).toHaveText(/Modified/)
+    // The marker points at the field that actually changed.
+    await expect(page.getByRole('img', { name: 'Changed' })).toHaveCount(1)
+    // With a single file the per-card create button is redundant and hidden.
+    await expect(
+      page.getByRole('button', { name: 'Create this one' }),
+    ).toHaveCount(0)
+
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Create and download PDF' }).click()
+    expect((await download).suggestedFilename()).toBe('proposal.pdf')
+    await expect(page.getByText('1 file created')).toBeVisible()
+  })
+
+  test('rejects a non-PDF and explains why', async ({ page }) => {
+    await page.goto('/en/pdf-title-editor')
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([textFile('notes.txt')])
+    await expect(page.getByText('Please select a PDF file.')).toBeVisible()
+    await expect(page.locator('.pte-card')).toHaveCount(0)
+  })
+
+  test('applies a bulk value and downloads a ZIP', async ({ page }) => {
+    await page.goto('/en/pdf-title-editor')
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([
+        await pdfFile('a.pdf', { title: 'Old A' }),
+        await pdfFile('b.pdf'),
+      ])
+    await expect(page.locator('.pte-card')).toHaveCount(2)
+    await expect(page.locator('.pte-status').first()).toHaveText(/Unchanged/)
+    await expect(page.locator('.pte-status').last()).toHaveText(/Unchanged/)
+
+    // Blank-only mode must skip the file that already has a title.
+    await page.getByLabel('Field', { exact: true }).selectOption('title')
+    await page.getByLabel('Blank fields only').check()
+    await expect(
+      page.getByRole('button', { name: 'Apply to 1 file' }),
+    ).toBeVisible()
+    await page.getByLabel('Value').fill('Filled In')
+    await page.getByRole('button', { name: 'Apply to 1 file' }).click()
+
+    const titles = page.getByLabel('New PDF title')
+    await expect(titles.nth(0)).toHaveValue('Old A')
+    await expect(titles.nth(1)).toHaveValue('Filled In')
+
+    const download = page.waitForEvent('download')
+    await page
+      .getByRole('button', { name: 'Create all and download ZIP' })
+      .click()
+    expect((await download).suggestedFilename()).toMatch(
+      /^yoshinya-pdf-title-editor-\d{8}-\d{4}\.zip$/,
+    )
+    await expect(page.getByText('2 files created')).toBeVisible()
+  })
+
+  test('copies filenames into titles in bulk', async ({ page }) => {
+    await page.goto('/en/pdf-title-editor')
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([
+        await pdfFile('2026 report.pdf'),
+        await pdfFile('minutes.pdf'),
+      ])
+    await expect(page.locator('.pte-status').first()).toHaveText(/Unchanged/)
+    await expect(page.locator('.pte-status').last()).toHaveText(/Unchanged/)
+    await page.getByRole('button', { name: 'Use filename as title' }).click()
+    const titles = page.getByLabel('New PDF title')
+    await expect(titles.nth(0)).toHaveValue('2026 report')
+    await expect(titles.nth(1)).toHaveValue('minutes')
+  })
+
+  test('resets and removes files', async ({ page }) => {
+    await page.goto('/en/pdf-title-editor')
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([await pdfFile('a.pdf', { title: 'Original' })])
+
+    await page.getByLabel('New PDF title').fill('Changed')
+    await page.getByRole('button', { name: 'Reset', exact: true }).click()
+    await expect(page.getByLabel('New PDF title')).toHaveValue('Original')
+
+    await page.getByRole('button', { name: 'Remove', exact: true }).click()
+    await expect(page.locator('.pte-card')).toHaveCount(0)
+  })
+
+  test('renders the Japanese route with its own copy', async ({ page }) => {
+    await page.goto('/ja/pdf-title-editor')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ja')
+    await expect(
+      page.getByRole('heading', { name: 'よしにゃにPDFタイトル変更', level: 1 }),
+    ).toBeVisible()
+    await expect(page.getByText('登録不要')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'よくある質問' }),
+    ).toBeVisible()
+  })
+
+  test('the dropzone is reachable and operable by keyboard', async ({
+    page,
+  }) => {
+    await page.goto('/en/pdf-title-editor')
+    const dropzone = page.locator('.pte-dropzone')
+    await dropzone.focus()
+    await expect(dropzone).toBeFocused()
+    const chooser = page.waitForEvent('filechooser')
+    await page.keyboard.press('Enter')
+    expect(await chooser).toBeTruthy()
   })
 })

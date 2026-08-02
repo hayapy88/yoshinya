@@ -51,6 +51,192 @@ export const ja: typeof en = {
     },
     supportedFormats: '対応形式: JPEG・PNG・WebP・GIF などの画像',
   },
+  pdfTitleEditorPage: {
+    metaTitle:
+      'PDFのプロパティ・作成者を変更 - よしにゃにPDFタイトル変更｜無料・登録不要',
+    metaDescription:
+      'PDF内部のタイトル、作成者、件名、キーワードをブラウザ上で変更できます。複数PDFの一括編集にも対応。ファイルは外部へ送信されず、無料・登録不要です。',
+    heading: 'よしにゃにPDFタイトル変更',
+    toolName: 'よしにゃにPDFタイトル変更',
+    toolDescription:
+      'ファイル名ではなく、PDFの中に保存されたタイトルを変更できます。',
+    lead: 'PDFを開いた時のタイトルが意図したものになっていなくて、変更したい時はないですか？このツールを使えば、PDF内部のタイトルや作成者情報などを、このページ上で直接書き換え、変更版をダウンロードすることができます。',
+    privacyNote:
+      'PDFはサーバーに送信されません。すべての処理はブラウザ内で完結します。',
+    badgeFree: '無料',
+    badgeNoSignup: '登録不要',
+    badgeLocal: 'ブラウザ内で処理',
+  },
+  pdfTitleEditor: {
+    // Input
+    addHeading: '① PDFを追加',
+    dropzone: 'ここにPDFをドロップ、またはクリックして選択',
+    dropzoneHint: '複数まとめて選択できます',
+    addMore: '＋ PDFを追加',
+    supportedFormats: '対応形式: .pdf',
+    rejectedHeading: '追加できなかったファイル',
+    dismiss: '閉じる',
+    // File cards
+    filesHeading: (n: number) => `② ${n}件のPDFを編集`,
+    pages: (n: number) => `${n}ページ`,
+    currentTitle: '現在のタイトル:',
+    noTitle: 'タイトル未設定',
+    newTitle: '新しいPDFタイトル',
+    titlePlaceholder: '例: 2026年 決算報告',
+    outputFileName: 'ダウンロード時のファイル名',
+    outputFileNameHint: '空欄にすると元のファイル名のままになります。',
+    otherMetadata: 'その他のメタデータ',
+    title: 'タイトル',
+    author: '作成者',
+    subject: '件名',
+    keywords: 'キーワード',
+    keywordsPlaceholder: '報告書, 2026, 決算',
+    keywordsHint: 'キーワードはカンマで区切ってください。',
+    createThisOne: 'このPDFだけ作成',
+    changedMarker: '変更あり',
+    resetOne: '元に戻す',
+    removeOne: '削除',
+    status: {
+      loading: '読み込み中',
+      ready: '変更なし',
+      modified: '変更あり',
+      processing: '処理中',
+      completed: '完了',
+      warning: '警告',
+      error: 'エラー',
+    },
+    errors: {
+      not_pdf: 'PDFファイルを選択してください。',
+      empty_file: 'このファイルは空です。',
+      corrupted:
+        'このPDFを読み込めませんでした。ファイルが壊れている可能性があります。',
+      encrypted: 'パスワード付きPDFには対応していません。',
+      signed:
+        'このPDFには電子署名があります。保存すると署名が無効になるおそれがあるため、編集できません。',
+      file_too_large: 'このファイルは上限の100MBを超えています。',
+      total_too_large: 'このファイルを追加すると合計500MBの上限を超えます。',
+      too_many_files: '一度に扱えるPDFは100件までです。',
+      out_of_memory:
+        'ブラウザのメモリが不足しました。ファイル数を減らすか、小さいファイルでお試しください。',
+      write_failed: 'このPDFを保存できませんでした。',
+    },
+    // Batch
+    batchHeading: 'すべてのPDFにまとめて適用',
+    titleFromFileName: 'ファイル名をタイトルにする',
+    fileNameFromTitle: 'タイトルをファイル名にする',
+    batchFieldLabel: '項目',
+    batchValueLabel: '値',
+    batchModeLabel: '適用範囲',
+    batchModeAll: 'すべてのファイル',
+    batchModeBlank: '空欄のみ',
+    applyToCount: (n: number) => `${n}件に適用`,
+    resetAll: 'すべての変更を元に戻す',
+    removeAll: 'すべて削除',
+    removeAllConfirm: 'リストからすべてのPDFを削除しますか？',
+    // Run
+    runHeading: '③ 作成してダウンロード',
+    createAll: 'すべて作成してZIPをダウンロード',
+    createAndDownload: 'PDFを作成してダウンロード',
+    processing: (done: number, total: number) =>
+      `処理中 ${done} / ${total}…`,
+    processed: (success: number, failed: number) =>
+      failed === 0
+        ? `完了 — ${success}件のファイルを作成しました。`
+        : `${success}件を作成、${failed}件が失敗しました。成功したファイルはダウンロード済みです。`,
+    readingFiles: 'PDFを読み込み中…',
+    nothingToDo: '作成できるファイルがありません。',
+    keptAvailable: (n: number) =>
+      `作成した${n}件のPDFは、ページを再読み込みするまで再ダウンロードできます。`,
+    zipFailed: (message: string) => `ZIPの作成に失敗しました: ${message}`,
+  },
+  pdfTitleEditorGuide: {
+    guideHeading: '使用ガイド',
+    whatIsTitle: {
+      heading: 'PDFのタイトルとは？',
+      body:
+        'PDFには、ファイルそのものの中に文書のプロパティが保存されていて、そのひとつがタイトルです。ブラウザはこれをタブに表示し、PDFリーダーはウィンドウやプロパティ画面に表示します。検索結果にPDFが出るときに使われることもあります。タイトルはPDFを作成した時点で書き込まれるため、書き出した文書のタイトルが、元になったテンプレートやスライド、Wordファイルの名前のままになっていることがよくあります。',
+    },
+    filenameVsTitle: {
+      heading: 'ファイル名とPDFタイトルの違い',
+      body:
+        'この2つは別物で、片方を変えてももう片方は変わりません。このツールが存在する理由がまさにそこにあります。',
+      filenameTerm: 'ファイル名',
+      filenameDefinition:
+        'OSが表示する名前（例: proposal.pdf）。ファイルの名前を変更しても、変わるのはこちらだけです。',
+      titleTerm: 'PDFタイトル',
+      titleDefinition:
+        'PDFの内部に保存されている値。ブラウザのタブに表示されるのはこちらで、ファイル名を何度変えても変わりません。',
+    },
+    howToUse: {
+      heading: '使い方',
+      steps: [
+        '上のエリアにPDFをドロップします。ブラウザ内で読み込まれ、アップロードは行われません。',
+        '各PDFの現在のタイトルがファイル名の下に表示されます。新しいタイトルを入力してください。',
+        '必要に応じて「その他のメタデータ」を開き、作成者・件名・キーワードの編集や、ダウンロード時のファイル名の変更ができます。',
+        '複数のPDFを読み込んでいるときは「すべてのPDFにまとめて適用」で同じ値を一括設定したり、ファイル名を一括でタイトルにコピーしたりできます。',
+        '作成ボタンを押します。1件ならPDFがそのまま、複数ならZIPにまとめてダウンロードされます。',
+      ],
+    },
+    whenUseful: {
+      heading: 'こんなときに便利',
+      cases: [
+        'サイトに公開したPDFが、ブラウザのタブに違う名前で表示されている。',
+        'テンプレートから書き出した見積書や請求書に、テンプレートのタイトルが残っている。',
+        '配布前に、資料や教材のタイトルを統一しておきたい。',
+        '取引先やお客様から集めたPDFの文書プロパティがバラバラ、または空になっている。',
+        '社外に共有する前に、作成者の情報を消しておきたい。',
+      ],
+    },
+    privacy: {
+      heading: 'プライバシーと安全性',
+      body:
+        'PDFの読み込み・編集・再生成は、すべてブラウザの中だけで行われます。サーバーへのアップロードはなく、アカウント登録も不要で、ページを閉じるか再読み込みすればデータは消えます。ファイルが端末から出ないため、オンラインサービスへのアップロードが禁止されている職場でも、機密文書に対して使えます。',
+    },
+    faqHeading: 'よくある質問',
+    faq: [
+      {
+        question: 'ファイル名とPDFタイトルは何が違いますか？',
+        answer:
+          'ファイル名はOSがフォルダ内で表示する名前です。タイトルはPDFの内部に保存されていて、ブラウザのタブに表示されます。ファイル名を変更してもタイトルは変わりません。',
+      },
+      {
+        question: 'ファイル名を変えたのに、ブラウザのタブに別の名前が出るのはなぜですか？',
+        answer:
+          'ブラウザがファイル名より、文書内部に保存されたタイトルを優先して表示するためです。PDFの作成時に設定されたタイトルは、メタデータ自体を編集しない限り、名前を変えても残り続けます。',
+      },
+      {
+        question: 'PDFはサーバーにアップロードされますか？',
+        answer:
+          'いいえ。PDFの読み込みも書き換えも、お使いの端末のメモリ上でブラウザが行います。ファイル・ファイル名・メタデータのいずれも送信されません。',
+      },
+      {
+        question: '複数のPDFをまとめて変更できますか？',
+        answer:
+          'できます。必要な数だけ追加して、個別に編集することも、同じ値を全件に一括適用することもできます。最後にまとめてZIPでダウンロードできます。',
+      },
+      {
+        question: 'パスワード付きPDFは編集できますか？',
+        answer:
+          'できません。暗号化・パスワード保護されたPDFは受け付けません。先に作成元のアプリケーションで保護を解除してください。',
+      },
+      {
+        question: '電子署名付きPDFは編集できますか？',
+        answer:
+          'できません。署名付きPDFを保存すると、署名が対象としているバイト位置が書き換わり署名が無効になるため、署名を検出した時点で編集を止めています。検出は簡易的なもので、署名について言及しているだけのファイルを誤検出することがあります。',
+      },
+      {
+        question: 'PDFの中身や画質は変わりますか？',
+        answer:
+          'いいえ。ページ・テキスト・画像はそのまま引き継がれ、再圧縮も行いません。文書を書き出し直すため元ファイルとバイト構造は変わりますが、見た目は変わりません。',
+      },
+      {
+        question: 'PDFタイトルを空欄にできますか？',
+        answer:
+          'できます。欄を空にして作成すると保存されていたタイトルが削除され、ブラウザはファイル名を表示するようになります。',
+      },
+    ],
+    relatedHeading: '関連ツール',
+  },
   imageSorter: {
     dropzone: 'ここに画像をドロップ、またはクリックして選択',
     nonImageSkipped: (count: number) =>

@@ -16,6 +16,9 @@ export type AnalyticsEvent =
   | 'rename_preview_generated'
   | 'download_completed'
   | 'language_changed'
+  // Which bulk action was used and how many rows it touched — never the value
+  // that was applied, which is user input.
+  | 'batch_action'
 
 export type AnalyticsParams = Record<string, string | number>
 

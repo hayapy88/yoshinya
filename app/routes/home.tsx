@@ -72,6 +72,11 @@ export default function Home() {
               name: t.imageSorterPage.toolName,
               description: t.imageSorterPage.toolDescription,
             },
+            {
+              slug: 'pdf-title-editor',
+              name: t.pdfTitleEditorPage.toolName,
+              description: t.pdfTitleEditorPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

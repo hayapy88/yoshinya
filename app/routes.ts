@@ -6,6 +6,7 @@ export default [
     index('routes/home.tsx'),
     route('file-renamer', 'routes/file-renamer.tsx'),
     route('image-sorter', 'routes/image-sorter.tsx'),
+    route('pdf-title-editor', 'routes/pdf-title-editor.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -16,6 +17,9 @@ export default [
   }),
   route('image-sorter', 'routes/locale-redirect.tsx', {
     id: 'redirect-image-sorter',
+  }),
+  route('pdf-title-editor', 'routes/locale-redirect.tsx', {
+    id: 'redirect-pdf-title-editor',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

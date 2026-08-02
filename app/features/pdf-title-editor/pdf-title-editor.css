@@ -1,0 +1,417 @@
+/* Palette aligned with the File Renamer and Image Sorter: navy accent on light,
+   coral orange on dark, cream chips. */
+.pte-root {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --chip-bg: #fdf2d0;
+  /* Declared next to the background it sits on: the chip flips to a dark brown
+     in dark mode, where navy text would be unreadable. */
+  --chip-text: #041b55;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --error: #c22f2f;
+  --error-bg: #fdecec;
+  --warn-text: #9a3b12;
+  --warn-bg: #fdeee5;
+  --ok-text: #1c6b45;
+  /* Brand coral orange, used for the "changed" dot in both themes. It is only
+     ever a dot beside readable text, never text carrying meaning on its own,
+     so its contrast is not load-bearing. */
+  --changed: #fb713c;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  accent-color: var(--yoshinyan-orange);
+}
+
+@media (prefers-color-scheme: dark) {
+  .pte-root {
+    --border: #3a3841;
+    --panel: #201f24;
+    --chip-bg: #3b2d1e;
+    --chip-text: #fdf2d0;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --error: #ef8080;
+    --error-bg: #3a1d1d;
+    --warn-text: #f2b28c;
+    --warn-bg: #3a2417;
+    --ok-text: #7fd3a8;
+  }
+}
+
+/* Header ------------------------------------------------------------------ */
+.pte-header h1 {
+  margin: 0;
+}
+.pte-lead {
+  color: var(--muted);
+  max-width: 44rem;
+}
+.pte-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+}
+.pte-badges li {
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.pte-privacy {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Sections ---------------------------------------------------------------- */
+.pte-section,
+.pte-batch,
+.pte-run,
+.pte-rejected {
+  margin-top: 2rem;
+}
+.pte-section h2,
+.pte-batch h2,
+.pte-run h2,
+.pte-rejected h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+.pte-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.4rem 0 0;
+}
+.pte-muted {
+  color: var(--muted);
+}
+
+/* Dropzone ---------------------------------------------------------------- */
+.pte-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 2px dashed var(--border);
+  border-radius: 1rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--panel);
+}
+.pte-dropzone.pte-compact {
+  padding: 1rem;
+}
+.pte-dropzone:hover,
+.pte-dropzone.pte-over {
+  border-color: var(--accent);
+}
+.pte-dropzone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pte-dropzone-label {
+  font-weight: 600;
+}
+.pte-dropzone-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* File cards -------------------------------------------------------------- */
+.pte-cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 60rem) {
+  .pte-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.pte-card {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  background: var(--panel);
+  min-width: 0;
+}
+.pte-card-error {
+  border-left: 3px solid var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+.pte-card-warning .pte-card-error {
+  border-left-color: var(--warn-text);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+.pte-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.pte-card-id {
+  min-width: 0;
+}
+.pte-filename {
+  font-weight: 600;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.pte-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.pte-status {
+  flex: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+/* The dot is coloured, the word beside it keeps the readable text colour. */
+.pte-status-modified .pte-status-mark {
+  color: var(--changed);
+}
+.pte-status-modified {
+  border-color: var(--changed);
+}
+.pte-changed {
+  color: var(--changed);
+  font-size: 0.7em;
+  margin-left: 0.4em;
+  vertical-align: 0.15em;
+}
+.pte-details summary .pte-changed {
+  font-size: 0.75em;
+}
+.pte-status-completed {
+  color: var(--ok-text);
+}
+.pte-status-error {
+  color: var(--error);
+}
+.pte-status-warning {
+  color: var(--warn-text);
+}
+.pte-current-title {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+.pte-current-title-label {
+  color: var(--muted);
+}
+
+/* Fields ------------------------------------------------------------------ */
+.pte-field {
+  margin-top: 0.75rem;
+  min-width: 0;
+}
+.pte-field label,
+.pte-modes legend {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.pte-field input,
+.pte-field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  background: canvas;
+  color: inherit;
+}
+.pte-field input:focus-visible,
+.pte-field select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.pte-field input:disabled {
+  opacity: 0.6;
+}
+.pte-details {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+}
+.pte-details summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.pte-card-actions,
+.pte-batch-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.pte-btn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+.pte-btn-primary {
+  font-size: 1.05rem;
+}
+.pte-btn-small {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.9rem;
+}
+.pte-btn-secondary {
+  background: transparent;
+  color: inherit;
+  border-color: var(--border);
+}
+.pte-btn:disabled,
+.pte-linkbtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pte-btn:focus-visible,
+.pte-linkbtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pte-linkbtn {
+  background: none;
+  border: none;
+  padding: 0.35rem 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.pte-remove {
+  color: var(--error);
+}
+
+/* Batch ------------------------------------------------------------------- */
+.pte-batch {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+}
+.pte-batch-apply {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+.pte-field-grow {
+  flex: 1 1 14rem;
+}
+.pte-modes {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.pte-modes label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-right: 0.75rem;
+}
+
+/* Run --------------------------------------------------------------------- */
+.pte-run {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+.pte-progress {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  min-height: 1.4em;
+}
+
+/* Rejected ---------------------------------------------------------------- */
+.pte-rejected {
+  border: 1px solid var(--error);
+  background: var(--error-bg);
+  border-radius: 0.9rem;
+  padding: 1rem;
+}
+.pte-rejected ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.pte-rejected li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Educational content ----------------------------------------------------- */
+.pte-guide {
+  margin-top: 3rem;
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+  max-width: 48rem;
+}
+/* The guide's own title, above the sections it contains. */
+.pte-guide-title {
+  font-size: 1.4rem;
+  margin-top: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent);
+}
+.pte-guide h3 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+}
+.pte-guide p,
+.pte-guide li {
+  line-height: 1.8;
+}
+.pte-guide dt {
+  font-weight: 600;
+  margin-top: 1.25rem;
+}
+.pte-guide dd {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}

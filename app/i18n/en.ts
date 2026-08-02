@@ -49,6 +49,194 @@ export const en = {
     },
     supportedFormats: 'Supported: JPEG, PNG, WebP, GIF, and other images',
   },
+  pdfTitleEditorPage: {
+    metaTitle:
+      'Edit PDF Metadata & Author - PDF Title Editor by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Edit PDF titles, authors, subjects, and keywords in your browser. Batch-process multiple PDFs without uploading your files. Free and no sign-up required.',
+    heading: 'PDF Title Editor by Yoshinya',
+    toolName: 'PDF Title Editor by Yoshinya',
+    toolDescription:
+      'Change the title stored inside a PDF, not just its filename.',
+    lead: 'Does a PDF open with a title that isn’t the one you meant? This tool lets you rewrite the title, author, and other properties stored inside the PDF right here on this page, then download the updated file.',
+    privacyNote:
+      'Your PDFs are not sent to a server. All processing happens in your browser.',
+    badgeFree: 'Free',
+    badgeNoSignup: 'No sign-up',
+    badgeLocal: 'Processed in your browser',
+  },
+  pdfTitleEditor: {
+    // Input
+    addHeading: '① Add PDFs',
+    dropzone: 'Drop PDFs here, or click to choose',
+    dropzoneHint: 'You can select several at once',
+    addMore: '+ Add more PDFs',
+    supportedFormats: 'Supported format: .pdf',
+    rejectedHeading: 'These files were not added',
+    dismiss: 'Dismiss',
+    // File cards
+    filesHeading: (n: number) => (n === 1 ? '② Edit 1 PDF' : `② Edit ${n} PDFs`),
+    pages: (n: number) => (n === 1 ? '1 page' : `${n} pages`),
+    currentTitle: 'Current title:',
+    noTitle: 'No title set',
+    newTitle: 'New PDF title',
+    titlePlaceholder: 'e.g. 2026 Annual Report',
+    outputFileName: 'Download as',
+    outputFileNameHint: 'Leave blank to keep the original filename.',
+    otherMetadata: 'Other metadata',
+    title: 'Title',
+    author: 'Author',
+    subject: 'Subject',
+    keywords: 'Keywords',
+    keywordsPlaceholder: 'report, 2026, finance',
+    keywordsHint: 'Separate keywords with commas.',
+    createThisOne: 'Create this one',
+    changedMarker: 'Changed',
+    resetOne: 'Reset',
+    removeOne: 'Remove',
+    status: {
+      loading: 'Reading',
+      ready: 'Unchanged',
+      modified: 'Modified',
+      processing: 'Processing',
+      completed: 'Complete',
+      warning: 'Warning',
+      error: 'Error',
+    },
+    errors: {
+      not_pdf: 'Please select a PDF file.',
+      empty_file: 'This file is empty.',
+      corrupted: 'This PDF could not be read. The file may be corrupted.',
+      encrypted: 'Password-protected PDFs are not supported.',
+      signed:
+        'This PDF has a digital signature. Editing is disabled because changes may invalidate the signature.',
+      file_too_large: 'This file is larger than the 100 MB limit.',
+      total_too_large: 'Adding this file would exceed the 500 MB total limit.',
+      too_many_files: 'You can work on up to 100 PDFs at a time.',
+      out_of_memory:
+        'Your browser ran out of memory. Try again with fewer or smaller files.',
+      write_failed: 'This PDF could not be saved.',
+    },
+    // Batch
+    batchHeading: 'Apply to every PDF',
+    titleFromFileName: 'Use filename as title',
+    fileNameFromTitle: 'Use title as filename',
+    batchFieldLabel: 'Field',
+    batchValueLabel: 'Value',
+    batchModeLabel: 'Apply to',
+    batchModeAll: 'All files',
+    batchModeBlank: 'Blank fields only',
+    applyToCount: (n: number) =>
+      n === 1 ? 'Apply to 1 file' : `Apply to ${n} files`,
+    resetAll: 'Reset all changes',
+    removeAll: 'Remove all',
+    removeAllConfirm: 'Remove every PDF from the list?',
+    // Run
+    runHeading: '③ Create and download',
+    createAll: 'Create all and download ZIP',
+    createAndDownload: 'Create and download PDF',
+    processing: (done: number, total: number) =>
+      `Processing ${done} of ${total}…`,
+    processed: (success: number, failed: number) =>
+      failed === 0
+        ? `Done — ${success} file${success === 1 ? '' : 's'} created.`
+        : `${success} created, ${failed} failed. The successful files were downloaded.`,
+    readingFiles: 'Reading PDFs…',
+    nothingToDo: 'Nothing to create yet.',
+    keptAvailable: (n: number) =>
+      n === 1
+        ? '1 created PDF stays available until you reload the page.'
+        : `${n} created PDFs stay available until you reload the page.`,
+    zipFailed: (message: string) => `Failed to create the ZIP: ${message}`,
+  },
+  pdfTitleEditorGuide: {
+    guideHeading: 'Guide',
+    whatIsTitle: {
+      heading: 'What is a PDF title?',
+      body:
+        'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
+    },
+    filenameVsTitle: {
+      heading: 'Filename vs PDF title',
+      body:
+        'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
+      filenameTerm: 'Filename',
+      filenameDefinition:
+        'The name your operating system shows, such as proposal.pdf. Renaming the file changes only this.',
+      titleTerm: 'PDF title',
+      titleDefinition:
+        'A value stored inside the PDF. It is what a browser tab displays, and it stays the same no matter how many times you rename the file.',
+    },
+    howToUse: {
+      heading: 'How to use the tool',
+      steps: [
+        'Drop one or more PDFs onto the area above. They are read in your browser and never uploaded.',
+        'The current title of each PDF appears under its filename. Type the new title you want.',
+        'Optionally open “Other metadata” to edit the author, subject, and keywords, and change the download filename.',
+        'With several PDFs loaded, use “Apply to every PDF” to set the same value everywhere, or to copy filenames into titles in one go.',
+        'Press create. A single PDF downloads directly; several download together as a ZIP.',
+      ],
+    },
+    whenUseful: {
+      heading: 'When is it useful?',
+      cases: [
+        'A PDF you publish on your website shows the wrong name in the browser tab.',
+        'A quote or invoice exported from a template still carries the template’s title.',
+        'Handouts and teaching material need consistent titles before distribution.',
+        'PDFs collected from customers or suppliers have inconsistent or missing document properties.',
+        'You want the author field cleared before sharing a document outside your organisation.',
+      ],
+    },
+    privacy: {
+      heading: 'Privacy and security',
+      body:
+        'Your PDFs are opened, edited, and rebuilt entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential documents in workplaces where uploading to an online service is not allowed.',
+    },
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'What is the difference between a PDF filename and title?',
+        answer:
+          'The filename is what your operating system shows in a folder. The title is stored inside the PDF and is what a browser tab displays. Renaming the file does not touch the title.',
+      },
+      {
+        question: 'Why does a renamed PDF show a different name in the browser tab?',
+        answer:
+          'Because the browser prefers the title stored inside the document over the filename. If that title was set when the PDF was created, it survives every rename until you edit the metadata itself.',
+      },
+      {
+        question: 'Are my PDFs uploaded to a server?',
+        answer:
+          'No. The PDF is read and rewritten in your browser using your device’s own memory. No file, filename, or metadata is sent anywhere.',
+      },
+      {
+        question: 'Can I change multiple PDFs at once?',
+        answer:
+          'Yes. Add as many as you need, edit them individually or apply one value to all of them, then download everything as a single ZIP.',
+      },
+      {
+        question: 'Can I edit a password-protected PDF?',
+        answer:
+          'No. Encrypted and password-protected PDFs are rejected. Remove the protection in the application that created the file first.',
+      },
+      {
+        question: 'Can I edit a digitally signed PDF?',
+        answer:
+          'No. Saving a signed PDF would rewrite the byte offsets the signature covers and invalidate it, so editing is blocked when a signature is detected. Detection is best-effort and may occasionally flag a file that only mentions a signature.',
+      },
+      {
+        question: 'Will the tool change the PDF content or image quality?',
+        answer:
+          'No. Pages, text, and images are carried over untouched and nothing is re-compressed. The saved file may differ in byte structure from the original, because the document is written out again, but what you see is unchanged.',
+      },
+      {
+        question: 'Can I leave the PDF title blank?',
+        answer:
+          'Yes. Clearing the field and creating the PDF removes the stored title, and the browser falls back to showing the filename.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   imageSorter: {
     dropzone: 'Drop images here, or click to choose',
     nonImageSkipped: (count: number) =>
