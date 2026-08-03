@@ -9,6 +9,8 @@ import { Dropzone } from './components/Dropzone'
 import { FolderManager } from './components/FolderManager'
 import { SortingView } from './components/SortingView'
 import { ReviewView } from './components/ReviewView'
+import { ToolIntro } from '~/components/tool/ToolIntro'
+import { ToolGuide } from '~/components/tool/ToolGuide'
 import './image-sorter.css'
 
 type Phase = 'setup' | 'sorting' | 'review'
@@ -186,11 +188,11 @@ function ImageSorterTool() {
 
   return (
     <main className="is-root">
-      <header className="is-header">
-        <h1>{t.imageSorterPage.heading}</h1>
-        <p>{t.imageSorterPage.intro}</p>
-        <p className="is-privacy">🔒 {t.imageSorterPage.privacyNote}</p>
-      </header>
+      <ToolIntro
+        heading={t.imageSorterPage.heading}
+        lead={t.imageSorterPage.lead}
+        privacyNote={t.imageSorterPage.privacyNote}
+      />
 
       {phase === 'setup' && (
         <>
@@ -325,6 +327,8 @@ function ImageSorterTool() {
           )}
         </div>
       )}
+
+      <ToolGuide guide={t.imageSorterGuide} current="image-sorter" />
     </main>
   )
 }

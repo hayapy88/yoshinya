@@ -1,0 +1,96 @@
+/* Shared chrome for every tool page: the intro block and the guide below the
+   tool. Each tool keeps its own namespaced styles for its working area; these
+   classes cover only what all tools have in common, so the pages open and close
+   the same way.
+
+   Tokens are declared here rather than inherited, because a tool's own root
+   (.pte-root, .is-root, .app-root) defines its palette and these blocks may sit
+   inside any of them. */
+.tool-intro,
+.tool-guide {
+  --tool-border: #d9d7de;
+  --tool-muted: #6f6b78;
+  --tool-accent: #162e64;
+  --tool-chip-bg: #fdf2d0;
+  /* Declared next to the background it sits on: the chip flips to a dark brown
+     in dark mode, where navy text would be unreadable. */
+  --tool-chip-text: #041b55;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tool-intro,
+  .tool-guide {
+    --tool-border: #3a3841;
+    --tool-muted: #a09caa;
+    --tool-accent: #fb713c;
+    --tool-chip-bg: #3b2d1e;
+    --tool-chip-text: #fdf2d0;
+  }
+}
+
+/* Intro -------------------------------------------------------------------- */
+.tool-intro h1 {
+  margin: 0;
+}
+/* Held to a comfortable measure: a lead running the full container width is
+   hard to track back to the next line. Matches the guide below it. */
+.tool-lead {
+  color: var(--tool-muted);
+  max-width: 44rem;
+}
+.tool-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+}
+.tool-badges li {
+  background: var(--tool-chip-bg);
+  color: var(--tool-chip-text);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.tool-privacy {
+  font-size: 0.9rem;
+  color: var(--tool-muted);
+}
+
+/* Guide -------------------------------------------------------------------- */
+.tool-guide {
+  margin-top: 3rem;
+  border-top: 1px solid var(--tool-border);
+  padding-top: 2rem;
+  max-width: 48rem;
+}
+.tool-guide-title {
+  font-size: 1.4rem;
+  margin-top: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--tool-accent);
+}
+.tool-guide h3 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+}
+.tool-guide p,
+.tool-guide li {
+  line-height: 1.8;
+}
+.tool-guide dt {
+  font-weight: 600;
+  margin-top: 1.25rem;
+}
+.tool-guide dd {
+  margin: 0.35rem 0 0;
+  color: var(--tool-muted);
+}
+.tool-related {
+  padding-left: 1.2rem;
+}
+.tool-related li {
+  margin-top: 0.5rem;
+}

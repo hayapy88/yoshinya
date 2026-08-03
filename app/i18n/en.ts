@@ -4,6 +4,13 @@ export const en = {
     xUrl: 'https://x.com/yoshinya_com',
     mascotAlt: 'Yoshinyan, the Yoshinya mascot',
   },
+  // The three promises shown on every tool page. Shared so no tool words
+  // the product's core claim differently.
+  toolBadges: {
+    free: 'Free',
+    noSignup: 'No sign-up',
+    local: 'Processed in your browser',
+  },
   nav: {
     languageLabel: 'Language',
     switchLocale: '日本語',
@@ -29,6 +36,9 @@ export const en = {
     heading: 'File Renamer by Yoshinya',
     toolName: 'File Renamer by Yoshinya',
     toolDescription: 'Rename multiple files directly in your browser.',
+    lead: 'Renaming files one at a time is slow, and a good naming rule is easy to get wrong by hand. Build the rule once — prefix, date, index — see every new name before you commit, then download the whole batch as a zip.',
+    privacyNote:
+      'Your files are not sent to a server. All processing happens in your browser.',
   },
   imageSorterPage: {
     metaTitle:
@@ -39,10 +49,10 @@ export const en = {
     toolName: 'Image Sorter by Yoshinya',
     toolDescription:
       'View each image and sort it into a folder by number, then download folders as a zip.',
-    intro:
+    lead:
       'View your photos and sort them by number. Create your own folders and save them all as one zip.',
     privacyNote:
-      'Images are processed in your browser and never sent to any server.',
+      'Your images are not sent to a server. All processing happens in your browser.',
     steps: {
       add: '① Add images',
       folders: '② Create folders',
@@ -62,9 +72,6 @@ export const en = {
     lead: 'Does a PDF open with a title that isn’t the one you meant? This tool lets you rewrite the title, author, and other properties stored inside the PDF right here on this page, then download the updated file.',
     privacyNote:
       'Your PDFs are not sent to a server. All processing happens in your browser.',
-    badgeFree: 'Free',
-    badgeNoSignup: 'No sign-up',
-    badgeLocal: 'Processed in your browser',
   },
   pdfTitleEditor: {
     // Input
@@ -150,49 +157,185 @@ export const en = {
         : `${n} created PDFs stay available until you reload the page.`,
     zipFailed: (message: string) => `Failed to create the ZIP: ${message}`,
   },
+  fileRenamerGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop your files onto the upload area, or click to choose them. They are read in your browser and never uploaded.',
+          'Drag the files into the order you want. That order becomes the numbering order for the index token.',
+          'Drag tokens into the rule area to build the new name: Text, Separator, Date, Time, Index, and Dimensions.',
+          'Check the preview. Every file shows its old name beside its new one, and duplicates are flagged before you download anything.',
+          'Press *Confirm and download*. The renamed files download together as a single zip.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Photos straight off a camera or phone all carry names like DSC_0431.JPG that say nothing about what they show.',
+          'Files for a client or a marketplace have to follow a naming convention exactly.',
+          'A folder of scans or receipts needs dating and numbering before it is filed.',
+          'Assets for a website need consistent, predictable names before they are uploaded.',
+          'Someone sent you a batch of files whose names are a mess and you would rather not fix them one at a time.',
+        ],
+      },
+      {
+        heading: 'Privacy and security',
+        body:
+          'Your files are read and renamed entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential material in workplaces where uploading to an online service is not allowed.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Are my files uploaded to a server?',
+        answer:
+          'No. The files are read and the zip is built in your browser using your own device. No file or filename is sent anywhere.',
+      },
+      {
+        question: 'Does it change the original files?',
+        answer:
+          'No. The originals on your disk are left untouched. The tool produces a new zip containing renamed copies.',
+      },
+      {
+        question: 'How many files can I rename at once?',
+        answer:
+          'There is no fixed limit; the practical ceiling is your browser’s memory. Hundreds of ordinary documents are fine, and very large media files are best done in smaller batches.',
+      },
+      {
+        question: 'What happens to file extensions?',
+        answer:
+          'They are preserved. A rule is applied to the name only, so report.pdf becomes something like 2026-04-01_report_01.pdf.',
+      },
+      {
+        question: 'What if two files end up with the same name?',
+        answer:
+          'The preview warns you and *Confirm and download* stays disabled until it is resolved. Adding an Index token gives every file a unique number.',
+      },
+      {
+        question: 'Can I control the order of the numbering?',
+        answer:
+          'Yes. Drag the files into the order you want before adding an Index token — the list order is the numbering order.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
+  imageSorterGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop your images onto the upload area. They are read in your browser and never uploaded.',
+          'Create a folder for each category you want to sort into, and name them. Two are ready to start with.',
+          'Press *Start sorting*. Each image is shown large, one at a time.',
+          'Press a number key to file the image into that folder and move to the next unsorted image. Space repeats the previous folder, and Backspace undoes.',
+          'Open *Review & download*, move anything that landed in the wrong place, then press *Download zip*.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Product photos need splitting into main shots, detail shots, and rejects before they go on a marketplace.',
+          'A shoot has to be triaged into keep, hold, and discard.',
+          'Property or travel photos need grouping by room, building, or city.',
+          'Screenshots have piled up and need filing by feature or by report.',
+          'Any pile of images that would otherwise mean opening each one and dragging it to a folder.',
+        ],
+      },
+      {
+        heading: 'Privacy and security',
+        body:
+          'Your images are read, grouped, and packed into a zip entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the images never leave your device, the tool can be used with confidential or personal photos.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Are my images uploaded to a server?',
+        answer:
+          'No. Every image is read and packed into the zip in your browser using your own device. No image or filename is sent anywhere.',
+      },
+      {
+        question: 'Does the tool change or recompress my images?',
+        answer:
+          'No. Each image is copied into the zip byte for byte. Quality, size, and metadata are exactly as they were.',
+      },
+      {
+        question: 'What do I get when I download?',
+        answer:
+          'A single zip with one folder per category you created. Filenames are kept as they were — a number is added only when two images in the same folder share a name, so neither is lost. Folders you filed nothing into are left out.',
+      },
+      {
+        question: 'Can I sort with the keyboard only?',
+        answer:
+          'Yes, and it is the fastest way. Number keys 1–9 file into that folder, Space repeats the previous folder, the arrow keys move between images, and Backspace or Ctrl/⌘ + Z undoes.',
+      },
+      {
+        question: 'What if I have more than nine folders?',
+        answer:
+          'Folders beyond the ninth are sorted by tapping or clicking their button; only the first nine have number-key shortcuts.',
+      },
+      {
+        question: 'What happens to images I did not sort?',
+        answer:
+          'You are asked before downloading. You can leave them out, or include them in an "Unsorted" folder so nothing is lost.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   pdfTitleEditorGuide: {
-    guideHeading: 'Guide',
-    whatIsTitle: {
-      heading: 'What is a PDF title?',
-      body:
-        'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
-    },
-    filenameVsTitle: {
-      heading: 'Filename vs PDF title',
-      body:
-        'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
-      filenameTerm: 'Filename',
-      filenameDefinition:
-        'The name your operating system shows, such as proposal.pdf. Renaming the file changes only this.',
-      titleTerm: 'PDF title',
-      titleDefinition:
-        'A value stored inside the PDF. It is what a browser tab displays, and it stays the same no matter how many times you rename the file.',
-    },
-    howToUse: {
-      heading: 'How to use the tool',
-      steps: [
-        'Drop one or more PDFs onto the area above. They are read in your browser and never uploaded.',
-        'The current title of each PDF appears under its filename. Type the new title you want.',
-        'Optionally open “Other metadata” to edit the author, subject, and keywords, and change the download filename.',
-        'With several PDFs loaded, use “Apply to every PDF” to set the same value everywhere, or to copy filenames into titles in one go.',
-        'Press create. A single PDF downloads directly; several download together as a ZIP.',
-      ],
-    },
-    whenUseful: {
-      heading: 'When is it useful?',
-      cases: [
-        'A PDF you publish on your website shows the wrong name in the browser tab.',
-        'A quote or invoice exported from a template still carries the template’s title.',
-        'Handouts and teaching material need consistent titles before distribution.',
-        'PDFs collected from customers or suppliers have inconsistent or missing document properties.',
-        'You want the author field cleared before sharing a document outside your organisation.',
-      ],
-    },
-    privacy: {
-      heading: 'Privacy and security',
-      body:
-        'Your PDFs are opened, edited, and rebuilt entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential documents in workplaces where uploading to an online service is not allowed.',
-    },
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'What is a PDF title?',
+        body:
+          'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
+      },
+      {
+        heading: 'Filename vs PDF title',
+        body:
+          'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
+        terms: [
+          {
+            term: 'Filename',
+            definition:
+              'The name your operating system shows, such as proposal.pdf. Renaming the file changes only this.',
+          },
+          {
+            term: 'PDF title',
+            definition:
+              'A value stored inside the PDF. It is what a browser tab displays, and it stays the same no matter how many times you rename the file.',
+          },
+        ],
+      },
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop one or more PDFs onto the area above. They are read in your browser and never uploaded.',
+          'The current title of each PDF appears under its filename. Type the new title you want.',
+          'Optionally open “Other metadata” to edit the author, subject, and keywords, and change the download filename.',
+          'With several PDFs loaded, use “Apply to every PDF” to set the same value everywhere, or to copy filenames into titles in one go.',
+          'Press *Create and download PDF* for one file, or *Create all and download ZIP* for several.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'A PDF you publish on your website shows the wrong name in the browser tab.',
+          'A quote or invoice exported from a template still carries the template’s title.',
+          'Handouts and teaching material need consistent titles before distribution.',
+          'PDFs collected from customers or suppliers have inconsistent or missing document properties.',
+          'You want the author field cleared before sharing a document outside your organisation.',
+        ],
+      },
+      {
+        heading: 'Privacy and security',
+        body:
+          'Your PDFs are opened, edited, and rebuilt entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential documents in workplaces where uploading to an online service is not allowed.',
+      },
+    ],
     faqHeading: 'Frequently asked questions',
     faq: [
       {
@@ -320,11 +463,6 @@ export const en = {
     terms: 'Terms of Use',
     followX: 'Follow on X',
     copyright: (year: number) => `© ${year} YOSHINYA`,
-  },
-  header: {
-    tagline:
-      'Rename multiple files at once with a rule you build, then download them as a zip. Your files never leave your browser. All processing happens locally.',
-    languageLabel: 'Language',
   },
   steps: {
     upload: '① Upload files',

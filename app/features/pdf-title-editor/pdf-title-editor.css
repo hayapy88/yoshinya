@@ -3,10 +3,6 @@
 .pte-root {
   --border: #d9d7de;
   --panel: #f5f4f7;
-  --chip-bg: #fdf2d0;
-  /* Declared next to the background it sits on: the chip flips to a dark brown
-     in dark mode, where navy text would be unreadable. */
-  --chip-text: #041b55;
   --accent: #162e64;
   --accent-contrast: #fff;
   --muted: #6f6b78;
@@ -29,8 +25,6 @@
   .pte-root {
     --border: #3a3841;
     --panel: #201f24;
-    --chip-bg: #3b2d1e;
-    --chip-text: #fdf2d0;
     --accent: #fb713c;
     --accent-contrast: #041b55;
     --muted: #a09caa;
@@ -40,35 +34,6 @@
     --warn-bg: #3a2417;
     --ok-text: #7fd3a8;
   }
-}
-
-/* Header ------------------------------------------------------------------ */
-.pte-header h1 {
-  margin: 0;
-}
-.pte-lead {
-  color: var(--muted);
-  max-width: 44rem;
-}
-.pte-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0.75rem 0 0;
-}
-.pte-badges li {
-  background: var(--chip-bg);
-  color: var(--chip-text);
-  border-radius: 999px;
-  padding: 0.2rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.pte-privacy {
-  font-size: 0.9rem;
-  color: var(--muted);
 }
 
 /* Sections ---------------------------------------------------------------- */
@@ -383,35 +348,4 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-}
-
-/* Educational content ----------------------------------------------------- */
-.pte-guide {
-  margin-top: 3rem;
-  border-top: 1px solid var(--border);
-  padding-top: 2rem;
-  max-width: 48rem;
-}
-/* The guide's own title, above the sections it contains. */
-.pte-guide-title {
-  font-size: 1.4rem;
-  margin-top: 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--accent);
-}
-.pte-guide h3 {
-  font-size: 1.15rem;
-  margin-top: 2rem;
-}
-.pte-guide p,
-.pte-guide li {
-  line-height: 1.8;
-}
-.pte-guide dt {
-  font-weight: 600;
-  margin-top: 1.25rem;
-}
-.pte-guide dd {
-  margin: 0.35rem 0 0;
-  color: var(--muted);
 }

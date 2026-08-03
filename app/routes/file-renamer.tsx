@@ -1,7 +1,13 @@
 import { useEffect } from 'react'
 import type { Route } from './+types/file-renamer'
 import { dictionaries, isLocale } from '~/i18n/locale'
-import { fileRenamerJsonLd, isProductionHost, pageMeta } from '~/lib/seo'
+import {
+  breadcrumbJsonLd,
+  faqJsonLd,
+  fileRenamerJsonLd,
+  isProductionHost,
+  pageMeta,
+} from '~/lib/seo'
 import { track } from '~/lib/analytics'
 import FileRenamerTool from '~/features/file-renamer/FileRenamerTool'
 
@@ -16,7 +22,14 @@ export function meta({ params, matches }: Route.MetaArgs) {
     description: t.fileRenamerPage.metaDescription,
     noindex: !isProductionHost(rootData?.host),
     ogImageSlug: 'file-renamer',
-    jsonLd: [fileRenamerJsonLd(locale)],
+    jsonLd: [
+      fileRenamerJsonLd(locale),
+      // Mirrors the FAQ rendered below the tool, as required for FAQPage.
+      faqJsonLd(t.fileRenamerGuide.faq),
+      breadcrumbJsonLd(locale, [
+        { name: t.fileRenamerPage.toolName, path: '/file-renamer' },
+      ]),
+    ],
   })
 }
 

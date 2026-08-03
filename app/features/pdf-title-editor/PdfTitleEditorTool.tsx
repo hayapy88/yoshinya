@@ -4,7 +4,8 @@ import { track } from '~/lib/analytics'
 import { Dropzone } from './components/Dropzone'
 import { FileCard } from './components/FileCard'
 import { BatchActions } from './components/BatchActions'
-import { Guide } from './components/Guide'
+import { ToolIntro } from '~/components/tool/ToolIntro'
+import { ToolGuide } from '~/components/tool/ToolGuide'
 import {
   completedItems,
   editorReducer,
@@ -194,16 +195,11 @@ function PdfTitleEditorTool() {
 
   return (
     <main className="pte-root">
-      <header className="pte-header">
-        <h1>{t.pdfTitleEditorPage.heading}</h1>
-        <p className="pte-lead">{t.pdfTitleEditorPage.lead}</p>
-        <ul className="pte-badges">
-          <li>{t.pdfTitleEditorPage.badgeFree}</li>
-          <li>{t.pdfTitleEditorPage.badgeNoSignup}</li>
-          <li>{t.pdfTitleEditorPage.badgeLocal}</li>
-        </ul>
-        <p className="pte-privacy">🔒 {t.pdfTitleEditorPage.privacyNote}</p>
-      </header>
+      <ToolIntro
+        heading={t.pdfTitleEditorPage.heading}
+        lead={t.pdfTitleEditorPage.lead}
+        privacyNote={t.pdfTitleEditorPage.privacyNote}
+      />
 
       <section className="pte-section" aria-labelledby="pte-add-heading">
         <h2 id="pte-add-heading">{t.pdfTitleEditor.addHeading}</h2>
@@ -328,7 +324,7 @@ function PdfTitleEditorTool() {
         </section>
       )}
 
-      <Guide />
+      <ToolGuide guide={t.pdfTitleEditorGuide} current="pdf-title-editor" />
     </main>
   )
 }

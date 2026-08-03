@@ -491,3 +491,63 @@ test.describe('pdf title editor workflow', () => {
     expect(await chooser).toBeTruthy()
   })
 })
+
+test.describe('shared tool page structure', () => {
+  // Every tool must open and close the same way: same badges, same privacy
+  // note, a 使い方ガイド with an FAQ, and links to the other two tools.
+  const tools = [
+    { slug: 'file-renamer', heading: 'よしにゃにファイルリネーム' },
+    { slug: 'image-sorter', heading: 'よしにゃに画像仕分け' },
+    { slug: 'pdf-title-editor', heading: 'よしにゃにPDFタイトル変更' },
+  ]
+
+  for (const tool of tools) {
+    test(`${tool.slug} has the shared intro, guide, and related tools`, async ({
+      page,
+    }) => {
+      await page.goto(`/ja/${tool.slug}`)
+      await expect(
+        page.getByRole('heading', { name: tool.heading, level: 1 }),
+      ).toBeVisible()
+
+      // The three promises, identically worded on every tool.
+      for (const badge of ['無料', '登録不要', 'ブラウザ内で処理']) {
+        await expect(page.locator('.tool-badges li', { hasText: badge })).toBeVisible()
+      }
+      await expect(page.locator('.tool-privacy')).toContainText(
+        'すべての処理はブラウザ内で完結します',
+      )
+
+      await expect(
+        page.getByRole('heading', { name: '使い方ガイド', level: 2 }),
+      ).toBeVisible()
+      for (const section of ['使い方', 'こんなときに便利', 'プライバシーと安全性', 'よくある質問', '関連ツール']) {
+        await expect(
+          page.getByRole('heading', { name: section, level: 3 }),
+        ).toBeVisible()
+      }
+
+      // Related tools links to the other two, and never to itself.
+      const related = page.locator('.tool-related a')
+      await expect(related).toHaveCount(2)
+      for (const other of tools.filter((t) => t.slug !== tool.slug)) {
+        await expect(
+          related.filter({ hasText: other.heading }),
+        ).toHaveAttribute('href', `/ja/${other.slug}`)
+      }
+    })
+  }
+
+  test('the English pages carry the same structure', async ({ page }) => {
+    await page.goto('/en/file-renamer')
+    await expect(page.locator('.tool-badges li')).toHaveText([
+      'Free',
+      'No sign-up',
+      'Processed in your browser',
+    ])
+    await expect(
+      page.getByRole('heading', { name: 'Guide', level: 2 }),
+    ).toBeVisible()
+    await expect(page.locator('.tool-related a')).toHaveCount(2)
+  })
+})

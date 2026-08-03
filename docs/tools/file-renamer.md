@@ -85,3 +85,11 @@ Covered by unit and end-to-end tests:
 - Find & replace and case-conversion tokens
 - Persist the last used rule locally (respecting the no-upload promise)
 - Optimized mascot/hero image variants (WebP) for faster first paint
+
+## Page structure
+
+The intro block above the tool and the 使い方ガイド below it come from the
+shared components described in
+[shared-page-structure.md](./shared-page-structure.md). The badges, the privacy
+note, the guide sections, the FAQ, and the related-tools list are identical in
+shape across every tool.

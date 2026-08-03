@@ -2,15 +2,20 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+import { MemoryRouter } from 'react-router'
 import { LocaleProvider } from '~/i18n/LocaleContext'
 import type { Locale } from '~/i18n/locale'
 import FileRenamerTool from './FileRenamerTool'
 
+// The shared guide below the tool links to the other tools, so the component
+// needs a router context.
 function renderTool(locale: Locale = 'en') {
   return render(
-    <LocaleProvider locale={locale}>
-      <FileRenamerTool />
-    </LocaleProvider>,
+    <MemoryRouter>
+      <LocaleProvider locale={locale}>
+        <FileRenamerTool />
+      </LocaleProvider>
+    </MemoryRouter>,
   )
 }
 

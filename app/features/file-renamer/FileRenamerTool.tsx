@@ -8,6 +8,8 @@ import { useLocale } from '~/i18n/locale'
 import { FilesSection, type LoadedFile } from './components/FilesSection'
 import { RuleSection } from './components/RuleSection'
 import { PreviewSection } from './components/PreviewSection'
+import { ToolIntro } from '~/components/tool/ToolIntro'
+import { ToolGuide } from '~/components/tool/ToolGuide'
 import './file-renamer.css'
 
 function FileRenamerTool() {
@@ -133,10 +135,11 @@ function FileRenamerTool() {
 
   return (
     <main style={{ '--thumb-size': `${thumbSize}px` } as React.CSSProperties}>
-      <header className="app-header">
-        <h1>{t.fileRenamerPage.heading}</h1>
-        <p>{t.header.tagline}</p>
-      </header>
+      <ToolIntro
+        heading={t.fileRenamerPage.heading}
+        lead={t.fileRenamerPage.lead}
+        privacyNote={t.fileRenamerPage.privacyNote}
+      />
 
       <section className="step">
         <h2>{t.steps.upload}</h2>
@@ -177,6 +180,8 @@ function FileRenamerTool() {
           )}
         </div>
       </section>
+
+      <ToolGuide guide={t.fileRenamerGuide} current="file-renamer" />
     </main>
   )
 }

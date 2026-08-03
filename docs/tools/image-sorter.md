@@ -101,3 +101,11 @@ Covered by unit, component, and end-to-end tests:
 - Reordering folders
 - Virtualized thumbnails for very large batches
 - Remembering the last session locally (respecting the no-upload promise)
+
+## Page structure
+
+The intro block above the tool and the 使い方ガイド below it come from the
+shared components described in
+[shared-page-structure.md](./shared-page-structure.md). The badges, the privacy
+note, the guide sections, the FAQ, and the related-tools list are identical in
+shape across every tool.

@@ -52,12 +52,10 @@ the metadata directly, edits it in the browser, and does the whole batch at once
 - **Blocked cases**: password-protected and corrupted PDFs are rejected;
   digitally signed PDFs load but editing is disabled, because re-saving would
   rewrite the byte offsets the signature covers.
-- **Guide** below the tool: what a PDF title is, how it differs from a filename,
-  how to use the tool, when it helps, privacy, FAQ, and related tools. It sits
-  under one *Guide* heading (`h2`) with the sections one level below it (`h3`),
-  so the page outline is `h1 → h2 → h3` with no skipped levels. The FAQ entries
-  are the same objects the `FAQPage` structured data is built from, so the two
-  cannot drift apart.
+- **Guide** below the tool, plus the shared intro above it. Both come from the
+  components described in [shared-page-structure.md](./shared-page-structure.md),
+  which every tool now uses. This tool adds two sections of its own — what a PDF
+  title is, and how it differs from a filename — ahead of the common ones.
 
 ## Implementation notes
 
