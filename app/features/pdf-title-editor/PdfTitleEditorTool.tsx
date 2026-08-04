@@ -22,6 +22,9 @@ import { createPdfZip, zipFileName } from './lib/zip'
 import type { PdfErrorCode, PdfItem, PdfMetadataForm } from './lib/types'
 import './pdf-title-editor.css'
 
+// Tagged on every analytics event so GA4 can segment by tool.
+const TOOL = 'pdf-title-editor' as const
+
 function toErrorCode(error: unknown): PdfErrorCode {
   return error instanceof PdfToolError ? error.code : 'write_failed'
 }
@@ -66,7 +69,7 @@ function PdfTitleEditorTool() {
     }))
     dispatch({ type: 'add_files', items, rejected })
     if (items.length > 0) {
-      track('files_added', { added: items.length })
+      track('files_added', { tool: TOOL, file_count: items.length })
     }
 
     // Analysed one at a time: a hundred simultaneous arrayBuffer() calls would
@@ -108,7 +111,7 @@ function PdfTitleEditorTool() {
       })
       downloadBlob(blob, item.outputFileName)
       dispatch({ type: 'process_end', success: 1, failed: 0 })
-      track('download_completed', { files: 1 })
+      track('download_completed', { tool: TOOL, file_count: 1 })
     } catch (error) {
       dispatch({ type: 'process_failed', id: item.id, code: toErrorCode(error) })
       dispatch({ type: 'process_end', success: 0, failed: 1 })
@@ -167,7 +170,7 @@ function PdfTitleEditorTool() {
         })),
       )
       downloadBlob(blob, zipFileName(new Date()))
-      track('download_completed', { files: built.length })
+      track('download_completed', { tool: TOOL, file_count: built.length })
     } catch (error) {
       setZipError(
         t.pdfTitleEditor.zipFailed(
@@ -238,7 +241,7 @@ function PdfTitleEditorTool() {
           disabled={busy}
           onApply={(field: EditableField, value: string, mode: ApplyMode) => {
             dispatch({ type: 'batch_apply', field, value, mode })
-            track('batch_action', { action: field, mode })
+            track('batch_action', { tool: TOOL, action: field, mode })
           }}
           onTitleFromFileName={() =>
             dispatch({ type: 'batch_title_from_filename' })

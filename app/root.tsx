@@ -14,38 +14,37 @@ import { isProductionHost } from '~/lib/seo'
 import { isLocale } from '~/i18n/locale'
 import './app.css'
 
-// Google Tag Manager container id. Overridable via VITE_GTM_ID (build-time);
-// defaults to the site container. GTM only loads on the production domain so
-// preview deployments and local development never pollute the measurement data.
-const GTM_ID = (import.meta.env.VITE_GTM_ID as string | undefined) ?? 'GTM-KGRKPV2B'
+// GA4 measurement id. Overridable via VITE_GA4_ID (build-time); defaults to the
+// site's property. Analytics only loads on the production domain so preview
+// deployments and local development never pollute the measurement data.
+//
+// Loaded directly rather than through Tag Manager: with no one outside the repo
+// needing to add tags, keeping the configuration in code means it is reviewable,
+// versioned, and visible to whoever reads this file — and it is one script
+// lighter, since a Tag Manager container loads this same library on top of
+// itself. See docs/analytics.md.
+const GA4_ID = (import.meta.env.VITE_GA4_ID as string | undefined) ?? 'G-5M9ZWGZJ0J'
 
-function gtmEnabled(host: string | undefined): boolean {
-  return GTM_ID.length > 0 && isProductionHost(host)
+function analyticsEnabled(host: string | undefined): boolean {
+  return GA4_ID.length > 0 && isProductionHost(host)
 }
 
-function GtmHeadScript() {
-  // The standard GTM loader snippet, injected server-side so it runs on the
-  // initial page load.
+function AnalyticsScripts() {
+  // The stub half of the standard snippet must come first and must be inline:
+  // it defines the queue that gtag() writes into, so an event fired before the
+  // library finishes downloading is replayed rather than dropped.
   return (
-    <script
-      dangerouslySetInnerHTML={{
-        __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
-      }}
-    />
-  )
-}
-
-function GtmNoScript() {
-  return (
-    <noscript>
-      <iframe
-        title="Google Tag Manager"
-        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-        height="0"
-        width="0"
-        style={{ display: 'none', visibility: 'hidden' }}
+    <>
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
       />
-    </noscript>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA4_ID}');`,
+        }}
+      />
+    </>
   )
 }
 
@@ -107,19 +106,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
     : 'en'
 
   const rootData = useRouteLoaderData('root') as { host?: string } | undefined
-  const showGtm = gtmEnabled(rootData?.host)
+  const showAnalytics = analyticsEnabled(rootData?.host)
 
   return (
     <html lang={lang}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {showGtm && <GtmHeadScript />}
+        {showAnalytics && <AnalyticsScripts />}
         <Meta />
         <Links />
       </head>
       <body>
-        {showGtm && <GtmNoScript />}
         {children}
         <ScrollRestoration />
         <Scripts />

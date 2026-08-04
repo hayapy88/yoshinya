@@ -16,9 +16,12 @@ Renamer (よしにゃにファイルリネーム / File Renamer by Yoshinya).
   `app/i18n/ja.ts` fails `npm run typecheck`.
 - **English for code, comments, commits, and docs.** Japanese belongs in the
   Japanese UI copy, Japanese metadata, and translation files.
-- **Do not activate analytics.** The scaffolding in `app/lib/analytics.ts`
-  stays inactive until a GA4 ID is provided via `VITE_GA4_ID` and a real
-  consent flow exists. Events must never contain file names or contents.
+- **Analytics events may only carry counts and fixed identifiers.** GA4 is live
+  via gtag.js (see `app/root.tsx` and `docs/analytics.md`), loading on the
+  production domain only. Never send a file name, file contents, or anything
+  the user typed — `AnalyticsParams` in `app/lib/analytics.ts` is deliberately
+  narrow to make that hard to get wrong. There is no consent banner yet; adding
+  one is a decision, not an oversight.
 
 ## Architecture
 

@@ -1,26 +1,36 @@
-// Analytics scaffolding for GA4, prepared but deliberately inactive.
+// Product analytics for the tools, sent to GA4 through gtag.js.
 //
-// Activation requires ALL of the following:
-//   1. A GA4 measurement ID provided via the VITE_GA4_ID environment variable
-//      (never hard-coded).
-//   2. A consent mechanism: hasAnalyticsConsent() must be backed by a real
-//      user-facing consent flow before it may return true.
-//   3. Calling initAnalytics() after consent is granted.
+// The gtag library and its config live in app/root.tsx and load only on the
+// production domain. This module is the typed front door: every event a tool
+// can send is named in AnalyticsEvent, so a typo is a compile error rather than
+// a silently missing metric.
 //
-// Privacy rules for every event: no file names, no file contents, no free-form
-// user input. Only counts, locales, and tool identifiers are allowed.
+// Privacy rules, non-negotiable and enforced by the parameter type below:
+// no file names, no file contents, no free-form user input. Counts, tool slugs,
+// and fixed enum-like values only. Everything the tools process stays on the
+// device, and nothing about it may leak through an event.
 
 export type AnalyticsEvent =
   | 'tool_opened'
   | 'files_added'
   | 'rename_preview_generated'
   | 'download_completed'
-  | 'language_changed'
   // Which bulk action was used and how many rows it touched — never the value
   // that was applied, which is user input.
   | 'batch_action'
+  | 'language_changed'
 
-export type AnalyticsParams = Record<string, string | number>
+export type ToolSlug = 'file-renamer' | 'image-sorter' | 'pdf-title-editor'
+
+// Deliberately narrow. Adding a free-form string field here would be the way a
+// filename eventually ends up in an event, so new keys need a deliberate edit.
+export type AnalyticsParams = {
+  tool?: ToolSlug
+  file_count?: number
+  action?: string
+  mode?: string
+  to?: string
+}
 
 declare global {
   interface Window {
@@ -29,41 +39,20 @@ declare global {
   }
 }
 
-const GA4_ID: string | undefined = import.meta.env.VITE_GA4_ID
-
-// Placeholder until a real consent flow exists. Keeping this hard-coded to
-// false guarantees analytics cannot activate even if an ID is configured.
-export function hasAnalyticsConsent(): boolean {
-  return false
-}
-
 export function isAnalyticsEnabled(): boolean {
-  return (
-    typeof window !== 'undefined' && Boolean(GA4_ID) && hasAnalyticsConsent()
-  )
+  return typeof window !== 'undefined' && typeof window.gtag === 'function'
 }
 
-// Injects gtag.js. Safe to call unconditionally: it is a no-op unless an ID
-// is configured and consent has been granted.
-export function initAnalytics(): void {
-  if (!isAnalyticsEnabled() || window.gtag) {
-    return
-  }
-  const script = document.createElement('script')
-  script.async = true
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`
-  document.head.appendChild(script)
-  window.dataLayer = window.dataLayer ?? []
-  window.gtag = (...args: unknown[]) => {
-    window.dataLayer?.push(args)
-  }
-  window.gtag('js', new Date())
-  window.gtag('config', GA4_ID)
-}
-
+/**
+ * Records one event. A no-op during server rendering, in development, and on
+ * preview hosts, because the library is only injected on the production domain.
+ *
+ * Safe to call before gtag.js has finished downloading: the inline stub in
+ * root.tsx queues the call and the library replays it on load.
+ */
 export function track(event: AnalyticsEvent, params?: AnalyticsParams): void {
-  if (!isAnalyticsEnabled() || typeof window.gtag !== 'function') {
+  if (!isAnalyticsEnabled()) {
     return
   }
-  window.gtag('event', event, params)
+  window.gtag?.('event', event, params)
 }

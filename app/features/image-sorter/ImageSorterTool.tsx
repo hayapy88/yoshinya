@@ -13,6 +13,9 @@ import { ToolIntro } from '~/components/tool/ToolIntro'
 import { ToolGuide } from '~/components/tool/ToolGuide'
 import './image-sorter.css'
 
+// Tagged on every analytics event so GA4 can segment by tool.
+const TOOL = 'image-sorter' as const
+
 type Phase = 'setup' | 'sorting' | 'review'
 type Toast = { message: string; onUndo?: () => void }
 
@@ -78,7 +81,7 @@ function ImageSorterTool() {
     }))
     if (items.length > 0) {
       dispatch({ type: 'add_images', items })
-      track('files_added', { added: items.length })
+      track('files_added', { tool: TOOL, file_count: items.length })
     }
     if (rejectedCount > 0) {
       showToast(t.imageSorter.nonImageSkipped(rejectedCount))
@@ -166,7 +169,7 @@ function ImageSorterTool() {
       anchor.download = zipFileName(new Date())
       anchor.click()
       URL.revokeObjectURL(url)
-      track('download_completed', { files: entries.length })
+      track('download_completed', { tool: TOOL, file_count: entries.length })
     } catch (error) {
       setZipError(
         t.imageSorter.zipFailed(

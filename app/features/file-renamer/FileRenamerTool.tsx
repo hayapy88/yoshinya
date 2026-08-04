@@ -12,6 +12,9 @@ import { ToolIntro } from '~/components/tool/ToolIntro'
 import { ToolGuide } from '~/components/tool/ToolGuide'
 import './file-renamer.css'
 
+// Tagged on every analytics event so GA4 can segment by tool.
+const TOOL = 'file-renamer' as const
+
 function FileRenamerTool() {
   const { t } = useLocale()
   const [files, setFiles] = useState<LoadedFile[]>([])
@@ -69,10 +72,7 @@ function FileRenamerTool() {
   // Analytics events carry only counts — never file names or contents.
   const handleFilesChange = (next: LoadedFile[]) => {
     if (next.length > files.length) {
-      track('files_added', {
-        added: next.length - files.length,
-        total: next.length,
-      })
+      track('files_added', { tool: TOOL, file_count: next.length })
     }
     setFiles(next)
   }
@@ -81,7 +81,7 @@ function FileRenamerTool() {
   useEffect(() => {
     if (results && !hadPreview.current) {
       hadPreview.current = true
-      track('rename_preview_generated', { files: results.length })
+      track('rename_preview_generated', { tool: TOOL, file_count: results.length })
     }
     if (!results) {
       hadPreview.current = false
@@ -121,7 +121,7 @@ function FileRenamerTool() {
       anchor.download = `renamed_${formatDate(now, 'yyyy-mm-dd')}-${formatTime(now, 'hh-mm-ss')}.zip`
       anchor.click()
       URL.revokeObjectURL(url)
-      track('download_completed', { files: results.length })
+      track('download_completed', { tool: TOOL, file_count: results.length })
     } catch (error) {
       setZipError(
         t.download.zipFailed(
