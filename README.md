@@ -1,6 +1,6 @@
 # YOSHINYA (よしにゃ)
 
-**A little hassle? Leave it to Yoshinya! / ちょっと面倒？それ、よしにゃにおまかせ！**
+**A little hassle? Leave it to Yoshinya! / 何か面倒に感じてる？それよしにゃにまかせて！**
 
 Yoshinya is a collection of free, browser-based utility tools with a simple
 promise: every tool runs entirely in your browser, so your files never leave
