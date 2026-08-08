@@ -37,14 +37,20 @@ export type EncodeResponse =
       sourceWidth: number
       sourceHeight: number
     }
-  | { jobId: string; ok: false; reason: 'decode' | 'encode' | 'memory' }
+  | {
+      jobId: string
+      ok: false
+      reason: 'decode' | 'encode' | 'memory' | 'format'
+    }
 
 function isMemoryError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error)
   return /memory|allocation/i.test(message)
 }
 
-async function encode(request: EncodeRequest): Promise<EncodeResponse> {
+// Exported for tests. The message plumbing below is trivial; the branches worth
+// pinning are all in here.
+export async function encode(request: EncodeRequest): Promise<EncodeResponse> {
   let bitmap: ImageBitmap
   try {
     // imageOrientation: 'from-image' applies EXIF rotation during decode, so the
@@ -85,6 +91,15 @@ async function encode(request: EncodeRequest): Promise<EncodeResponse> {
         ? { type: request.mimeType, quality: request.quality / 100 }
         : { type: request.mimeType },
     )
+    // An encoder that cannot produce the requested type does not throw: the
+    // specification has it fall back to PNG, and the only evidence is the type
+    // on the returned Blob. Left unchecked that ships a PNG named .webp, which
+    // is worse than an error because it looks like it worked. Engine support
+    // differs here — Chromium and Gecko encode WebP, older WebKit does not —
+    // so the check is the only portable way to know.
+    if (blob.type !== request.mimeType) {
+      return { jobId: request.jobId, ok: false, reason: 'format' }
+    }
     return {
       jobId: request.jobId,
       ok: true,

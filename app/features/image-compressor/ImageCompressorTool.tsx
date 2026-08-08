@@ -192,7 +192,9 @@ function ImageCompressorTool() {
               ? 'out_of_memory'
               : response.reason === 'decode'
                 ? 'decode_failed'
-                : 'encode_failed',
+                : response.reason === 'format'
+                  ? 'format_unsupported'
+                  : 'encode_failed',
         })
         track('tool_error' as never, { tool: TOOL, action: response.reason })
         return

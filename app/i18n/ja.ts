@@ -519,6 +519,8 @@ export const ja: typeof en = {
       decode_failed:
         'この画像を読み込めませんでした。ファイルが壊れている可能性があります。',
       encode_failed: 'この画像を圧縮できませんでした。',
+      format_unsupported:
+        'お使いのブラウザはこの形式で保存できません。JPEGかPNGをお選びください。',
       out_of_memory:
         'ブラウザのメモリが不足しました。枚数を減らすか、小さい画像でお試しください。',
     },

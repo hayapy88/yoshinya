@@ -24,6 +24,7 @@ export type ImageErrorCode =
   | 'too_many_files'
   | 'decode_failed'
   | 'encode_failed'
+  | 'format_unsupported'
   | 'out_of_memory'
 
 export type ImageItem = {
