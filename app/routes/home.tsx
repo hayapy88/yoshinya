@@ -77,6 +77,11 @@ export default function Home() {
               name: t.pdfTitleEditorPage.toolName,
               description: t.pdfTitleEditorPage.toolDescription,
             },
+            {
+              slug: 'image-compressor',
+              name: t.imageCompressorPage.toolName,
+              description: t.imageCompressorPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

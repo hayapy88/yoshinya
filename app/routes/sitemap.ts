@@ -7,6 +7,7 @@ const PATHS = [
   '/file-renamer',
   '/image-sorter',
   '/pdf-title-editor',
+  '/image-compressor',
   '/privacy',
   '/terms',
 ]

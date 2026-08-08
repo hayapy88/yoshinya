@@ -380,6 +380,233 @@ export const ja: typeof en = {
     ],
     relatedHeading: '関連ツール',
   },
+  imageCompressorPage: {
+    metaTitle:
+      '画像をまとめて圧縮・軽量化 - よしにゃにまとめて画像圧縮｜無料・登録不要',
+    metaDescription:
+      '複数の画像を一度に圧縮し、変換前後をスライダーで見比べてから保存できます。JPEG・PNG・WebPへの変換、品質調整、1枚ずつの保存もZIP一括保存も可能。すべてブラウザ内で処理され、画像は外部へ送信されません。',
+    heading: 'よしにゃにまとめて画像圧縮',
+    toolName: 'よしにゃにまとめて画像圧縮',
+    toolDescription:
+      '複数の画像を、1枚ずつ変換前後を見比べながら圧縮できます。',
+    lead: '一括圧縮ツールで、思ったより画像が劣化してしまったことはありませんか？また、左右で見比べられるツールは1枚ずつしか読み込めず、不便に感じていませんか？よしにゃにまとめて画像圧縮なら、画像をまとめて読み込めて、1枚ずつ見比べながら圧縮具合を調整できます。',
+    privacyNote:
+      '画像はサーバーに送信されません。すべての処理はブラウザ内で完結します。',
+  },
+  imageCompressor: {
+    // Input
+    dropzone: 'ここに画像をドロップ、またはクリックして選択',
+    supportedFormats: 'JPEG・PNG・WebP ／ 最大100枚',
+    addMore: '＋ 画像を追加',
+    rejectedHeading: '追加できなかったファイル',
+    dismiss: '閉じる',
+    // List
+    listHeading: (n: number) => `${n}枚の画像`,
+    filterLabel: '一覧の絞り込み',
+    filters: {
+      all: 'すべて',
+      'not-downloaded': '未保存',
+      customized: '個別調整',
+      downloaded: '保存済み',
+      error: 'エラー',
+    },
+    emptyFilter: '該当する画像はありません。',
+    removeOne: (name: string) => `${name} を削除`,
+    removeAll: 'すべて削除',
+    removeAllConfirm: 'すべての画像を削除しますか？',
+    stateProcessing: '処理中',
+    stateDownloaded: '保存済み',
+    stateCustomized: '個別調整',
+    stateError: 'エラー',
+    progress: (done: number, total: number) => `${total}枚中 ${done}枚 保存済み`,
+    provisional: '（処理中）',
+    // Compare
+    beforeLabel: '変換前',
+    afterLabel: '変換後',
+    dividerLabel: '比較位置',
+    dividerValue: (percent: number) =>
+      `${percent}% — 境界線の左が変換前、右が変換後です`,
+    compareHint:
+      'ドラッグで比較 ／ 画像をドラッグで移動 ／ スペースキーを押している間は変換前を表示',
+    processing: '圧縮中…',
+    zoomIn: '拡大',
+    zoomOut: '縮小',
+    zoomFit: '全体を表示',
+    enterFullscreen: '全画面で比較',
+    exitFullscreen: '全画面を終了',
+    fullscreenHint: 'Escで終了',
+    // Sizes
+    beforeSize: (size: string) => `変換前: ${size}`,
+    afterSize: (size: string) => `変換後: ${size}`,
+    savedBy: (bytes: string, percent: string) => `${bytes} 削減（${percent}）`,
+    grewBy: (percent: string) => `${percent} 増加`,
+    grewNote:
+      'この設定では元の画像より大きくなります。品質を下げるか、元のファイルをそのまま使ってください。',
+    // Settings
+    settingsHeading: '圧縮設定',
+    scopeLabel: '設定の適用先',
+    scopeCommon: '共通設定',
+    scopeImage: 'この画像のみ',
+    resetToCommon: '共通設定に戻す',
+    scopeCommonNote: (n: number) =>
+      `個別調整した${n}枚には反映されません。まとめて上書きするには「その他の操作」を開いてください。`,
+    formatLabel: '出力形式',
+    formats: {
+      original: '元の形式を維持',
+      jpeg: 'JPEG',
+      png: 'PNG',
+      webp: 'WebP',
+    },
+    backgroundLabel: '透過部分の背景色',
+    backgroundHint:
+      'JPEGは透過を扱えないため、透明な部分はこの色で塗りつぶされます。',
+    qualityLabel: '品質',
+    losslessAt100:
+      '品質100はWebPを可逆で書き出します。元画像と完全に同一で、品質99より小さくなることもあります。一切劣化させたくない場合はこちらを使ってください。',
+    useLossless: '100（可逆）にする',
+    qualityFlatTop:
+      'おおよそ90を超えると画質はほとんど改善せず、容量だけ増えていきます。まったく劣化させたくない場合は100にしてください。',
+    pngLossless:
+      'PNGは可逆圧縮のため、品質設定はありません。PNGを軽くするには、サイズを変更するか出力形式をWebPにしてください。',
+    applyQualityToRest: (quality: number, count: number) =>
+      `品質${quality}を残り${count}枚に適用`,
+    applyRestNone: 'この画像より後ろに、未保存の画像がありません。',
+    appliedQuality: (quality: number, count: number) =>
+      `品質${quality}を残り${count}枚に適用しました。`,
+    applyAllToRest: (count: number) => `現在の設定すべてを残り${count}枚に適用`,
+    applyAllHint:
+      'この画像の形式・品質・サイズを、後ろにある未保存の画像へコピーします。それらの個別調整は上書きされます。',
+    appliedAll: (count: number) => `現在の設定すべてを残り${count}枚に適用しました。`,
+    notFollowed: (n: number) => `個別調整した${n}枚には反映していません。`,
+    includeThem: 'これも変更する',
+    moreActions: 'その他の操作',
+    applyToAll: (n: number) => `現在の設定を全${n}枚に適用（個別調整も上書き）`,
+    applyToAllConfirm: (n: number) =>
+      `現在の設定を${n}枚すべてに適用します。個別調整とダウンロード済みの画像も上書きされます。よろしいですか？`,
+    appliedToAll: (n: number) => `現在の設定を${n}枚すべてに適用しました。`,
+    undo: '元に戻す',
+    resizeHeading: 'サイズ変更',
+    resizeEnable: 'ピクセルサイズを変更する',
+    widthLabel: '幅',
+    heightLabel: '高さ',
+    keepRatio: '縦横比を維持',
+    preventUpscale: '元サイズより大きくしない',
+    distortWarning: 'この寸法では画像が歪みます。',
+    dimensionsPreview: (fromW: number, fromH: number, toW: number, toH: number) =>
+      `${fromW}×${fromH} → ${toW}×${toH}`,
+    metadataNote:
+      '再エンコードにより、撮影場所などのメタデータは出力画像に引き継がれません。画像の向きは保持されます。',
+    // Download
+    download: 'ダウンロード',
+    downloadNext: 'ダウンロードして次へ',
+    downloadFinish: 'ダウンロードして完了',
+    downloadZip: 'すべてZIPでダウンロード',
+    zipping: (percent: number) => `ZIPを作成中… ${percent}%`,
+    zipSkipped: (count: number) => `処理できなかった${count}枚を除いています。`,
+    zipFailed: (message: string) => `ZIPの作成に失敗しました: ${message}`,
+    finished: (count: number) =>
+      `${count}枚の画像を保存しました。設定を変えて再保存することもできます。`,
+    shortcuts:
+      'ショートカット: ← → 画像を移動 ／ Enter ダウンロードして次へ ／ スペース 変換前を表示 ／ ＋ − 0 拡大・縮小・全体表示',
+    // Errors
+    errors: {
+      unsupported_type:
+        'この形式には対応していません。JPEG・PNG・WebPをご利用ください。',
+      empty_file: 'このファイルは空です。',
+      file_too_large: 'このファイルは上限の30MBを超えています。',
+      total_too_large: 'このファイルを追加すると合計300MBの上限を超えます。',
+      too_many_files: '一度に扱える画像は100枚までです。',
+      decode_failed:
+        'この画像を読み込めませんでした。ファイルが壊れている可能性があります。',
+      encode_failed: 'この画像を圧縮できませんでした。',
+      out_of_memory:
+        'ブラウザのメモリが不足しました。枚数を減らすか、小さい画像でお試しください。',
+    },
+  },
+  imageCompressorGuide: {
+    heading: '使い方ガイド',
+    sections: [
+      {
+        heading: '使い方',
+        steps: [
+          'アップロードエリアに画像をドロップします。ブラウザ内で読み込まれ、アップロードは行われません。',
+          '1枚目が比較画面に表示されます。境界線を左右にドラッグすると、左が変換前、右が変換後です。',
+          '見た目が許容できるところまで品質を調整します。ファイルサイズはその場で更新されます。',
+          '「品質○○を残り○枚に適用」を押すと、この画像より後ろの画像が、いま決めた品質から始まります。',
+          '「ダウンロードして次へ」を押します。保存して次の未保存画像へ進みます。まとめて取得したい場合は「すべてZIPでダウンロード」を使ってください。',
+        ],
+      },
+      {
+        heading: 'こんなときに便利',
+        items: [
+          'サイトに載せる写真が重く、ページの表示が遅い。',
+          'フォームやモールで、数MBを超えるファイルが受け付けられない。',
+          '大量の商品写真を、見た目を保ったまま軽くしたい。',
+          '圧縮でどこが劣化するかを、確定する前に自分の目で確かめたい。',
+          '機密性のある画像で、オンラインの圧縮サービスにアップロードできない。',
+        ],
+      },
+      {
+        heading: '品質の決め方',
+        body:
+          '写真なら品質80あたりが出発点になります。容量の大半が落ちる一方で、違いは見つけにくいままです。細かい模様、画像内の文字、フラットなイラストは劣化が早く出るので、100%表示で確認してから決めてください。60を下回るとたいてい肉眼で分かるようになります。逆に90を超えると画質はほとんど改善せず容量だけ増えていきますが、100ちょうどのときだけWebPは可逆モードに切り替わり、元画像と完全に同一かつ99より小さくなることがあります。PNGは可逆圧縮のため品質設定自体がありません。PNGを軽くしたい場合は、サイズを変更するかWebPに変換してください。',
+      },
+      {
+        heading: 'プライバシーと安全性',
+        body:
+          '画像の読み込み・圧縮・ZIPの作成は、すべてブラウザの中だけで行われます。サーバーへのアップロードはなく、アカウント登録も不要で、ページを閉じるか再読み込みすればデータは消えます。画像が端末から出ないため、機密性のある画像や個人的な写真にも安心して使えます。',
+      },
+    ],
+    faqHeading: 'よくある質問',
+    faq: [
+      {
+        question: '画像はサーバーにアップロードされますか？',
+        answer:
+          'いいえ。画像の読み込みも再エンコードも、お使いの端末のメモリ上でブラウザが行います。画像・ファイル名のいずれも送信されません。',
+      },
+      {
+        question: '対応している形式は何ですか？',
+        answer:
+          '入力はJPEG・PNG・WebPです。出力もこの3つ、または元の形式を維持できます。HEIC・AVIF・SVG・GIF・RAWには対応していません。',
+      },
+      {
+        question: 'PNGに品質スライダーがないのはなぜですか？',
+        answer:
+          'PNGの圧縮は可逆で、品質と引き換えに削る要素がないためです。品質設定を置いても何も起きません。PNGを軽くするには、サイズを変更するかWebPに変換してください。',
+      },
+      {
+        question: '品質100と99では何が違いますか？',
+        answer:
+          '大きく違います。100のときだけブラウザはWebPを可逆で書き出すため、結果は元画像と完全に同一で、しかも品質99より小さくなることがあります。90〜99の範囲では画質はほとんど改善せず容量だけ増えるので、99は「品質80並みの劣化で容量だけ大きい」状態になりがちです。一切劣化させたくないなら100、容量を優先するなら75〜85を目安にしてください。',
+      },
+      {
+        question: 'ファイルが大きくなってしまいました。',
+        answer:
+          '圧縮済みの画像をより高い品質で再エンコードしたり、写真をPNGにしたりすると、元より大きくなることがあります。その場合は隠さずに増加として表示します。品質を下げるか、元のファイルをそのままお使いください。',
+      },
+      {
+        question: '1枚だけ違う品質にできますか？',
+        answer:
+          'できます。設定の適用先を「この画像のみ」に切り替えて調整すれば、他の画像は変わりません。その画像は一覧で「個別調整」と表示されます。',
+      },
+      {
+        question: '「残りに適用」はどこまで変わりますか？',
+        answer:
+          '現在の画像より後ろにあり、まだ保存していない画像だけです。前の画像、保存済みの画像、エラーの画像は変更されません。適用後は対象枚数が通知され、その場で元に戻せます。',
+      },
+      {
+        question: '写真のメタデータは残りますか？',
+        answer:
+          '残りません。再エンコードにより撮影場所やカメラ情報などは失われます。公開前にはむしろ望ましい挙動です。向きの情報は反映されるので、画像が回転して出力されることはありません。',
+      },
+      {
+        question: '一度に何枚まで処理できますか？',
+        answer:
+          '100枚、1ファイル30MB、合計300MBまでです。実際の限界は端末のメモリなので、非常に大きい写真は小分けにすることをおすすめします。',
+      },
+    ],
+    relatedHeading: '関連ツール',
+  },
   imageSorter: {
     dropzone: 'ここに画像をドロップ、またはクリックして選択',
     nonImageSkipped: (count: number) =>

@@ -1,0 +1,765 @@
+/* Palette aligned with the other tools: navy accent on light, coral orange on
+   dark. The comparison stage stays neutral so it never tints the photo. */
+.ic-root {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --error: #c22f2f;
+  --error-bg: #fdecec;
+  --warn-text: #9a3b12;
+  --warn-bg: #fdeee5;
+  --ok-text: #1c6b45;
+  --changed: #fb713c;
+  --stage: #2b2a30;
+  /* Same 72rem as the header, the footer and every other tool. Wider looked
+     appealing for the three-column workspace, but it pushed the content past
+     the site frame, so the page read as broken. Full screen is where the
+     comparison gets real space. */
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  accent-color: var(--yoshinyan-orange);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ic-root {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --error: #ef8080;
+    --error-bg: #3a1d1d;
+    --warn-text: #f2b28c;
+    --warn-bg: #3a2417;
+    --ok-text: #7fd3a8;
+    --stage: #17161a;
+  }
+}
+
+.ic-section {
+  margin-top: 2rem;
+}
+.ic-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.4rem 0 0;
+}
+.ic-saved {
+  color: var(--ok-text);
+  font-weight: 600;
+}
+.ic-grew {
+  color: var(--warn-text);
+  font-weight: 600;
+}
+.ic-warn {
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  border-left: 3px solid var(--warn-text);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+.ic-error {
+  background: var(--error-bg);
+  color: var(--error);
+  border-left: 3px solid var(--error);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Dropzone ---------------------------------------------------------------- */
+.ic-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 2px dashed var(--border);
+  border-radius: 1rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--panel);
+}
+.ic-dropzone.ic-compact {
+  padding: 0.5rem 0.9rem;
+  border-width: 1px;
+  border-radius: 0.6rem;
+}
+.ic-dropzone:hover,
+.ic-dropzone.ic-over {
+  border-color: var(--accent);
+}
+.ic-dropzone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.ic-dropzone-label {
+  font-weight: 600;
+}
+.ic-dropzone-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Top bar ----------------------------------------------------------------- */
+.ic-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.ic-progress {
+  margin: 0;
+  font-size: 0.9rem;
+}
+.ic-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Workspace: list, stage, settings ---------------------------------------- */
+.ic-workspace {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  grid-template-columns: 1fr;
+}
+/* The comparison gets the space first; the panels take what is left. */
+@media (min-width: 64rem) {
+  .ic-workspace {
+    grid-template-columns: 15rem minmax(0, 1fr) 18rem;
+    align-items: start;
+  }
+}
+.ic-main {
+  min-width: 0;
+}
+
+/* Image list -------------------------------------------------------------- */
+/* Without this the horizontal thumbnail strip sets the column's min-content
+   width — three 14rem cards — and the whole page becomes wider than the phone,
+   which the browser answers by zooming out. */
+.ic-list {
+  min-width: 0;
+}
+.ic-list h2,
+.ic-settings h2 {
+  font-size: 1rem;
+  margin: 0 0 0.6rem;
+}
+.ic-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+.ic-filter {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.ic-filter-on {
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.ic-thumbs {
+  min-width: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  max-height: 32rem;
+  overflow-y: auto;
+}
+/* On narrow screens the list becomes a horizontal strip so the comparison
+   keeps the vertical space. */
+@media (max-width: 63.99rem) {
+  .ic-thumbs {
+    grid-auto-flow: column;
+    grid-auto-columns: 14rem;
+    overflow-x: auto;
+    max-height: none;
+  }
+}
+.ic-thumbs li {
+  position: relative;
+}
+.ic-thumb {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  background: var(--panel);
+  padding: 0.4rem;
+  font: inherit;
+  cursor: pointer;
+  min-width: 0;
+}
+.ic-thumb-on {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.ic-thumb img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 0.35rem;
+  flex: none;
+  background: var(--stage);
+}
+.ic-thumb-body {
+  min-width: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+.ic-thumb-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ic-thumb-size {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.ic-thumb-remove {
+  position: absolute;
+  top: 0.15rem;
+  right: 0.15rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.15rem 0.3rem;
+}
+.ic-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.ic-badge-done {
+  color: var(--ok-text);
+}
+.ic-badge-error {
+  color: var(--error);
+}
+.ic-badge-custom {
+  color: var(--changed);
+}
+
+/* Compare stage ----------------------------------------------------------- */
+.ic-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: var(--stage);
+  aspect-ratio: 4 / 3;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+.ic-stage:active {
+  cursor: grabbing;
+}
+.ic-layer {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  /* Deliberately no will-change: promoting these to composited layers lets the
+     GPU scale a stale raster, blurring exactly the detail the comparison
+     exists to show. Re-rasterising on zoom is the point. */
+  /* Purely visual. The stage handles panning and the divider handles itself,
+     so a promoted layer must never sit in front of anything clickable. */
+  pointer-events: none;
+}
+/* Untransformed on purpose: it carries the clip, which must stay in stage
+   coordinates so the visible boundary matches the divider at every zoom. */
+.ic-clip {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* Past 100% the honest thing to show is the actual pixels, not the browser's
+   interpolation of them. */
+.ic-zoomed .ic-layer img {
+  image-rendering: pixelated;
+}
+.ic-layer img {
+  width: 100%;
+  height: 100%;
+  /* contain, so both sides show the same framing regardless of output size —
+     the comparison is about quality, not scale. */
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+.ic-side {
+  position: absolute;
+  top: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.ic-side-left {
+  left: 0.5rem;
+}
+.ic-side-right {
+  right: 0.5rem;
+}
+.ic-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  cursor: ew-resize;
+  transform: translateX(-1px);
+}
+.ic-divider:focus-visible {
+  outline: 2px solid var(--changed);
+  outline-offset: 2px;
+}
+.ic-divider-grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2rem;
+  height: 2rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+.ic-stage-busy {
+  position: absolute;
+  inset: auto 0 0.5rem 0;
+  text-align: center;
+  color: #fff;
+  font-size: 0.8rem;
+  margin: 0;
+}
+.ic-zoom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* Wider than the gap inside the stepper, so the stepper reads as one unit
+     rather than as three separate controls. */
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.ic-zoom-steps {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.ic-zoom-step {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.4rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  line-height: 1;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ic-zoom-value {
+  font-size: 0.8rem;
+  color: var(--muted);
+  /* Fixed width so the buttons do not shuffle as the number changes. */
+  min-width: 3rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sizes and actions ------------------------------------------------------- */
+.ic-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+.ic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.ic-btn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+.ic-btn-primary {
+  font-size: 1.05rem;
+}
+/* Matches the zoom stepper's height so the whole row lines up. */
+.ic-btn-small {
+  min-height: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.9rem;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.ic-btn-secondary {
+  background: transparent;
+  color: inherit;
+  border-color: var(--border);
+}
+.ic-btn:disabled,
+.ic-linkbtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ic-btn:focus-visible,
+.ic-linkbtn:focus-visible,
+.ic-filter:focus-visible,
+.ic-thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.ic-linkbtn {
+  background: none;
+  border: none;
+  padding: 0.3rem 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.ic-remove {
+  color: var(--error);
+}
+.ic-done {
+  margin-top: 1rem;
+  color: var(--ok-text);
+  font-weight: 600;
+}
+
+/* Settings ---------------------------------------------------------------- */
+.ic-settings {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  min-width: 0;
+}
+.ic-scope {
+  border: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.ic-scope legend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.ic-scope label,
+.ic-check {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+.ic-override-note {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.75rem;
+}
+.ic-field {
+  margin-top: 0.75rem;
+  min-width: 0;
+}
+.ic-field > label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.ic-field select,
+.ic-field input[type='number'],
+.ic-field input[type='text'] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  background: canvas;
+  color: inherit;
+}
+.ic-field input:focus-visible,
+.ic-field select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.ic-quality-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ic-quality-row input[type='range'] {
+  flex: 1;
+  min-width: 0;
+}
+.ic-quality-row input[type='number'] {
+  width: 4.5rem;
+  flex: none;
+}
+.ic-apply-rest {
+  margin-top: 0.6rem;
+  width: 100%;
+  font-size: 0.85rem;
+  min-height: 2.4rem;
+}
+.ic-lossless {
+  background: var(--panel);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-top: 0.75rem;
+}
+.ic-details {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.6rem;
+}
+.ic-details summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.ic-dims {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Rejected and toast ------------------------------------------------------ */
+.ic-rejected {
+  border: 1px solid var(--error);
+  background: var(--error-bg);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.ic-rejected h2 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+.ic-rejected ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+.ic-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #162e64;
+  color: #fff;
+  padding: 0.7rem 1.1rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  font-size: 0.9rem;
+  z-index: 100;
+  max-width: calc(100vw - 2rem);
+}
+.ic-toast button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.7rem;
+  font: inherit;
+  cursor: pointer;
+  flex: none;
+}
+.ic-shortcuts {
+  margin-top: 1.5rem;
+}
+
+/* The comparison's own positioning context, so the settings panel can float
+   over the picture when full screen. Declared before .ic-fullscreen, which
+   overrides it — same specificity, so source order decides. */
+.ic-viewer {
+  position: relative;
+}
+
+/* Full-screen comparison ---------------------------------------------------
+   Squoosh-style: the picture gets the whole screen, with just enough controls
+   left to keep judging and saving without coming back out. Built as an overlay
+   rather than only the Fullscreen API, because iOS Safari has no such API for
+   ordinary elements — the native call is layered on top where it exists. */
+.ic-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--stage);
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+.ic-fullscreen .ic-compare {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+/* The 4:3 box is right in the page layout; here the picture should take
+   whatever the screen has. */
+.ic-fullscreen .ic-stage {
+  aspect-ratio: auto;
+  flex: 1;
+  min-height: 0;
+}
+.ic-fullscreen .ic-zoom {
+  color: #fff;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.ic-fullscreen .ic-zoom .ic-hint,
+.ic-fullscreen .ic-zoom-value {
+  color: #cfcbd6;
+}
+.ic-fullscreen .ic-zoom-step,
+.ic-fullscreen .ic-zoom .ic-btn {
+  border-color: #56545e;
+  color: #fff;
+}
+.ic-fullscreen .ic-zoom .ic-btn-secondary {
+  background: transparent;
+}
+/* The settings float over the picture rather than shrinking it, so every
+   control — format, quality, resize, apply-to-the-rest — is reachable without
+   leaving full screen. A quality slider alone was not enough: PNG output has
+   none, which left nothing to adjust. */
+/* The palette is re-declared here rather than each element restyled: the
+   children are the same components the page uses, so they read these tokens.
+   Patching them one at a time is how the lossless note ended up as white text
+   on a white block. */
+.ic-fs-panel {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 19rem;
+  max-height: calc(100% - 6rem);
+  overflow-y: auto;
+  z-index: 2;
+  --panel: #2f2e36;
+  --border: #46444e;
+  --muted: #b9b5c2;
+  --warn-bg: #3a2417;
+  --warn-text: #f2b28c;
+  --error-bg: #3a1d1d;
+  --error: #ef8080;
+  --ok-text: #7fd3a8;
+  --accent: #fb713c;
+  --accent-contrast: #041b55;
+  color: #f2f0f5;
+}
+.ic-fs-panel .ic-settings {
+  background: rgba(24, 23, 28, 0.94);
+  border-color: var(--border);
+  backdrop-filter: blur(6px);
+}
+.ic-fs-panel .ic-field select,
+.ic-fs-panel .ic-field input[type='number'] {
+  background: #2a2930;
+  color: inherit;
+  border-color: var(--border);
+}
+.ic-fs-panel .ic-btn-secondary {
+  color: inherit;
+  border-color: var(--border);
+}
+
+/* Narrow screens have no room beside the picture, so it becomes a sheet across
+   the bottom instead of covering the image. */
+@media (max-width: 48rem) {
+  .ic-fs-panel {
+    position: static;
+    width: auto;
+    max-height: 45vh;
+    margin-top: 0.5rem;
+  }
+}
+
+.ic-fs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem 0.25rem;
+  color: #fff;
+  font-size: 0.85rem;
+}
+.ic-fs-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 16rem;
+}
+.ic-fs-quality {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.ic-fs-quality input[type='range'] {
+  flex: 1;
+  min-width: 6rem;
+}
+.ic-fs-bar .ic-btn-primary {
+  margin-left: auto;
+}
