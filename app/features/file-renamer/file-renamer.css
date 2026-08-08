@@ -30,7 +30,7 @@
 }
 
 main {
-  max-width: 72rem;
+  max-width: 80rem;
   margin: 0 auto;
   padding: 2rem 1rem 4rem;
   /* Coral orange brand accent for native controls (radios, date/time pickers)

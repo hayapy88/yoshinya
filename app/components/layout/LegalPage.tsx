@@ -7,7 +7,8 @@ export function LegalPage({ content }: { content: LocalizedLegalDocument }) {
   const doc = content[locale]
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-12">
+    <main className="mx-auto w-full max-w-7xl px-4 py-12">
+      <div className="max-w-3xl">
       <h1 className="text-3xl font-bold">{doc.title}</h1>
       <p className="mt-2 text-sm text-[color:var(--muted,#6f6b78)]">
         {doc.updatedLabel}
@@ -27,6 +28,7 @@ export function LegalPage({ content }: { content: LocalizedLegalDocument }) {
           ))}
         </section>
       ))}
+      </div>
     </main>
   )
 }

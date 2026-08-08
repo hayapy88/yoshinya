@@ -11,7 +11,7 @@
   --warn-text: #9a3b12;
   --warn-bg: #fdeee5;
   --overlay: rgba(0, 0, 0, 0.85);
-  max-width: 72rem;
+  max-width: 80rem;
   margin: 0 auto;
   padding: 2rem 1rem 4rem;
   accent-color: var(--yoshinyan-orange);
