@@ -519,6 +519,8 @@ export const en = {
       too_many_files: 'You can work on up to 100 images at a time.',
       decode_failed: 'This image could not be opened. The file may be damaged.',
       encode_failed: 'This image could not be compressed.',
+      format_unsupported:
+        'Your browser cannot save images in this format. Choose JPEG or PNG instead.',
       out_of_memory:
         'Your browser ran out of memory. Try again with fewer or smaller images.',
     },
