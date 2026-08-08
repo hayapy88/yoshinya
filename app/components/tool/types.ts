@@ -23,10 +23,15 @@ export type ToolGuideContent = {
 }
 
 // Slugs of the tools that exist, used to build the related-tools list.
-export type ToolSlug = 'file-renamer' | 'image-sorter' | 'pdf-title-editor'
+export type ToolSlug =
+  | 'file-renamer'
+  | 'image-sorter'
+  | 'pdf-title-editor'
+  | 'image-compressor'
 
 export const TOOL_SLUGS: ToolSlug[] = [
   'file-renamer',
   'image-sorter',
   'pdf-title-editor',
+  'image-compressor',
 ]

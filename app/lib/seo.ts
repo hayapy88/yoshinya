@@ -133,6 +133,16 @@ export function pdfTitleEditorJsonLd(locale: Locale): Record<string, unknown> {
   )
 }
 
+export function imageCompressorJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja'
+      ? 'よしにゃにまとめて画像圧縮'
+      : 'Batch Image Compressor by Yoshinya',
+    '/image-compressor',
+  )
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 export function faqJsonLd(

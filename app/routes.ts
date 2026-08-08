@@ -7,6 +7,7 @@ export default [
     route('file-renamer', 'routes/file-renamer.tsx'),
     route('image-sorter', 'routes/image-sorter.tsx'),
     route('pdf-title-editor', 'routes/pdf-title-editor.tsx'),
+    route('image-compressor', 'routes/image-compressor.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -20,6 +21,9 @@ export default [
   }),
   route('pdf-title-editor', 'routes/locale-redirect.tsx', {
     id: 'redirect-pdf-title-editor',
+  }),
+  route('image-compressor', 'routes/locale-redirect.tsx', {
+    id: 'redirect-image-compressor',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

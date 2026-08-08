@@ -20,7 +20,11 @@ export type AnalyticsEvent =
   | 'batch_action'
   | 'language_changed'
 
-export type ToolSlug = 'file-renamer' | 'image-sorter' | 'pdf-title-editor'
+export type ToolSlug =
+  | 'file-renamer'
+  | 'image-sorter'
+  | 'pdf-title-editor'
+  | 'image-compressor'
 
 // Deliberately narrow. Adding a free-form string field here would be the way a
 // filename eventually ends up in an event, so new keys need a deliberate edit.

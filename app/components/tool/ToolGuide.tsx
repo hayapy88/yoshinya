@@ -9,6 +9,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'file-renamer': 'fileRenamerPage',
   'image-sorter': 'imageSorterPage',
   'pdf-title-editor': 'pdfTitleEditorPage',
+  'image-compressor': 'imageCompressorPage',
 }
 
 function Section({ section }: { section: GuideSection }) {

@@ -381,6 +381,232 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  imageCompressorPage: {
+    metaTitle:
+      'Compress Images in Bulk - Batch Image Compressor by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Compress several images at once and compare before and after with a slider before you save. Choose JPEG, PNG or WebP, set the quality, and download one at a time or all as a ZIP. Everything runs in your browser — your images are never uploaded.',
+    heading: 'Batch Image Compressor by Yoshinya',
+    toolName: 'Batch Image Compressor by Yoshinya',
+    toolDescription:
+      'Compress multiple images, comparing each result before you save it.',
+    lead: 'Ever run images through a bulk compressor and found them more degraded than you expected? Or found that the tools which let you compare before and after only take one file at a time? Batch Image Compressor loads the whole batch at once, so you can compare and adjust each image as you go.',
+    privacyNote:
+      'Your images are not sent to a server. All processing happens in your browser.',
+  },
+  imageCompressor: {
+    // Input
+    dropzone: 'Drop images here, or click to choose',
+    supportedFormats: 'JPEG, PNG and WebP · up to 100 images',
+    addMore: '+ Add images',
+    rejectedHeading: 'These files were not added',
+    dismiss: 'Dismiss',
+    // List
+    listHeading: (n: number) => (n === 1 ? '1 image' : `${n} images`),
+    filterLabel: 'Filter the list',
+    filters: {
+      all: 'All',
+      'not-downloaded': 'Not saved',
+      customized: 'Adjusted',
+      downloaded: 'Saved',
+      error: 'Failed',
+    },
+    emptyFilter: 'Nothing here.',
+    removeOne: (name: string) => `Remove ${name}`,
+    removeAll: 'Remove all',
+    removeAllConfirm: 'Remove every image?',
+    stateProcessing: 'Working',
+    stateDownloaded: 'Saved',
+    stateCustomized: 'Adjusted',
+    stateError: 'Failed',
+    progress: (done: number, total: number) => `${done} of ${total} saved`,
+    provisional: '(still working)',
+    // Compare
+    beforeLabel: 'Before',
+    afterLabel: 'After',
+    dividerLabel: 'Comparison position',
+    dividerValue: (percent: number) =>
+      `${percent}% — left of the line is the original, right is the compressed result`,
+    compareHint: 'Drag to compare · drag the image to pan · hold Space to see the original',
+    processing: 'Compressing…',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    zoomFit: 'Fit',
+    enterFullscreen: 'Full screen',
+    exitFullscreen: 'Exit full screen',
+    fullscreenHint: 'Esc to exit',
+    // Sizes
+    beforeSize: (size: string) => `Before: ${size}`,
+    afterSize: (size: string) => `After: ${size}`,
+    savedBy: (bytes: string, percent: string) => `${bytes} smaller (${percent})`,
+    grewBy: (percent: string) => `${percent} larger`,
+    grewNote:
+      'This setting produces a bigger file than the original. Lower the quality, or keep the original file.',
+    // Settings
+    settingsHeading: 'Compression',
+    scopeLabel: 'These settings apply to',
+    scopeCommon: 'Shared settings',
+    scopeImage: 'This image only',
+    resetToCommon: 'Use the shared settings',
+    scopeCommonNote: (n: number) =>
+      `${n} adjusted image${n === 1 ? '' : 's'} will not follow this. Open More to overwrite them.`,
+    formatLabel: 'Output format',
+    formats: {
+      original: 'Keep original format',
+      jpeg: 'JPEG',
+      png: 'PNG',
+      webp: 'WebP',
+    },
+    backgroundLabel: 'Background behind transparency',
+    backgroundHint: 'JPEG has no transparency, so clear areas are filled with this colour.',
+    qualityLabel: 'Quality',
+    losslessAt100:
+      'Quality 100 encodes WebP losslessly — pixel-identical to the original, and often smaller than quality 99. Use it when nothing may be lost.',
+    useLossless: 'Use 100 (lossless)',
+    qualityFlatTop:
+      'Above roughly 90 the picture barely improves while the file keeps growing. If you want no loss at all, use 100.',
+    pngLossless:
+      'PNG is lossless, so there is no quality setting. To make a PNG smaller, resize it or switch the format to WebP.',
+    applyQualityToRest: (quality: number, count: number) =>
+      `Apply quality ${quality} to the remaining ${count}`,
+    applyRestNone: 'No later images are waiting to be saved.',
+    appliedQuality: (quality: number, count: number) =>
+      `Applied quality ${quality} to ${count} image${count === 1 ? '' : 's'}.`,
+    applyAllToRest: (count: number) => `Apply all settings to the remaining ${count}`,
+    applyAllHint:
+      'Copies the format, quality and size of this image onto the later images that are still unsaved, replacing any adjustments they had.',
+    appliedAll: (count: number) =>
+      `Applied every setting to ${count} image${count === 1 ? '' : 's'}.`,
+    notFollowed: (n: number) =>
+      `${n} adjusted image${n === 1 ? '' : 's'} did not follow this change.`,
+    includeThem: 'Change those too',
+    moreActions: 'More',
+    applyToAll: (n: number) => `Apply these settings to all ${n} images (overwrites adjustments)`,
+    applyToAllConfirm: (n: number) =>
+      `Apply the current settings to all ${n} images? Images you adjusted individually and images you already saved will be overwritten.`,
+    appliedToAll: (n: number) => `Applied the current settings to all ${n} images.`,
+    undo: 'Undo',
+    resizeHeading: 'Resize',
+    resizeEnable: 'Change the pixel size',
+    widthLabel: 'Width',
+    heightLabel: 'Height',
+    keepRatio: 'Keep the aspect ratio',
+    preventUpscale: 'Never enlarge beyond the original',
+    distortWarning: 'These dimensions will stretch the image out of shape.',
+    dimensionsPreview: (fromW: number, fromH: number, toW: number, toH: number) =>
+      `${fromW}×${fromH} → ${toW}×${toH}`,
+    metadataNote:
+      'Re-encoding drops metadata such as the capture location. Rotation is preserved.',
+    // Download
+    download: 'Download',
+    downloadNext: 'Download & next',
+    downloadFinish: 'Download & finish',
+    downloadZip: 'Download all as ZIP',
+    zipping: (percent: number) => `Building ZIP… ${percent}%`,
+    zipSkipped: (count: number) =>
+      `${count} image${count === 1 ? ' was' : 's were'} left out because ${count === 1 ? 'it' : 'they'} could not be processed.`,
+    zipFailed: (message: string) => `Failed to build the ZIP: ${message}`,
+    finished: (count: number) =>
+      `All ${count} images saved. You can change the settings and save again.`,
+    shortcuts:
+      'Shortcuts: ← → move between images · Enter downloads and moves on · Space shows the original · + − 0 zoom',
+    // Errors
+    errors: {
+      unsupported_type: 'This format is not supported. Use JPEG, PNG or WebP.',
+      empty_file: 'This file is empty.',
+      file_too_large: 'This file is larger than the 30 MB limit.',
+      total_too_large: 'Adding this file would exceed the 300 MB total limit.',
+      too_many_files: 'You can work on up to 100 images at a time.',
+      decode_failed: 'This image could not be opened. The file may be damaged.',
+      encode_failed: 'This image could not be compressed.',
+      out_of_memory:
+        'Your browser ran out of memory. Try again with fewer or smaller images.',
+    },
+  },
+  imageCompressorGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop your images onto the upload area. They are read in your browser and never uploaded.',
+          'The first image opens in the comparison view. Drag the line across it to see the original on the left and the compressed result on the right.',
+          'Adjust the quality until the result still looks right to you. The file size updates as you go.',
+          'Press “Apply quality N to the remaining …” so the images after this one start from the setting you just chose.',
+          'Press Download & next. The image is saved and you move to the next one that still needs attention — or take everything at once with Download all as ZIP.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Photos for a website are too heavy and the page is slow to load.',
+          'A form or a marketplace refuses anything over a few megabytes.',
+          'A batch of product shots has to come down in size without visibly degrading.',
+          'You want to see what compression did to each picture before committing to it.',
+          'The images are confidential and uploading them to an online compressor is not an option.',
+        ],
+      },
+      {
+        heading: 'Choosing a quality',
+        body:
+          'Quality 80 is a good starting point for photographs — most of the file disappears while the difference stays hard to see. Detailed textures, text inside an image, and flat illustrations show artefacts sooner, so compare those at 100% zoom before deciding. Below about 60 the damage is usually visible. Above about 90 the opposite happens — the picture stops improving while the file keeps growing — except at exactly 100, where WebP switches to lossless and comes out pixel-identical, often smaller than 99. PNG has no quality setting at all because it is lossless; to shrink a PNG, resize it or convert it to WebP.',
+      },
+      {
+        heading: 'Privacy and security',
+        body:
+          'Your images are decoded, compressed, and packed into a ZIP entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the images never leave your device, the tool can be used with confidential or personal photos.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Are my images uploaded to a server?',
+        answer:
+          'No. Every image is decoded and re-encoded in your browser using your own device. No image or filename is sent anywhere.',
+      },
+      {
+        question: 'Which formats can I use?',
+        answer:
+          'JPEG, PNG and WebP go in, and you can save as any of those or keep the original format. HEIC, AVIF, SVG, GIF and RAW are not supported.',
+      },
+      {
+        question: 'Why is there no quality slider for PNG?',
+        answer:
+          'PNG compression is lossless, so there is no quality to trade away — a quality setting would do nothing. Resize the image or convert it to WebP to make a PNG smaller.',
+      },
+      {
+        question: 'Is quality 100 different from 99?',
+        answer:
+          'Very. At 100 the browser encodes WebP losslessly — the result is pixel-identical to the original and is often smaller than quality 99. Between about 90 and 99 the picture barely improves while the file keeps growing, so 99 gives you roughly the loss of 80 at a much larger size. Use 100 when nothing may be lost, and 75–85 when size matters.',
+      },
+      {
+        question: 'Why did my file get bigger?',
+        answer:
+          'Re-encoding an already-compressed image at a higher quality, or turning a photograph into PNG, can produce a larger file. The tool tells you when that happens rather than hiding it; lower the quality or keep the original.',
+      },
+      {
+        question: 'Can I use a different quality for one image?',
+        answer:
+          'Yes. Switch the settings to “This image only”, adjust it, and the rest are left alone. That image is then marked as adjusted in the list.',
+      },
+      {
+        question: 'What does “apply to the remaining” change?',
+        answer:
+          'Only images after the current one that you have not saved yet. Images before it, ones you already downloaded, and ones that failed are never touched, and the notification tells you how many were affected so you can undo it.',
+      },
+      {
+        question: 'Is the photo metadata kept?',
+        answer:
+          'No. Re-encoding drops metadata such as the capture location and camera, which is often what you want before publishing. Rotation is applied so the image stays the right way up.',
+      },
+      {
+        question: 'How many images can I do at once?',
+        answer:
+          'Up to 100 images, 30 MB each and 300 MB in total. The real limit is your device’s memory, so very large photos are best done in smaller batches.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   imageSorter: {
     dropzone: 'Drop images here, or click to choose',
     nonImageSkipped: (count: number) =>

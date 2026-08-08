@@ -499,6 +499,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'file-renamer', heading: 'よしにゃにファイルリネーム' },
     { slug: 'image-sorter', heading: 'よしにゃに画像仕分け' },
     { slug: 'pdf-title-editor', heading: 'よしにゃにPDFタイトル変更' },
+    { slug: 'image-compressor', heading: 'よしにゃにまとめて画像圧縮' },
   ]
 
   for (const tool of tools) {
@@ -529,7 +530,7 @@ test.describe('shared tool page structure', () => {
 
       // Related tools links to the other two, and never to itself.
       const related = page.locator('.tool-related a')
-      await expect(related).toHaveCount(2)
+      await expect(related).toHaveCount(tools.length - 1)
       for (const other of tools.filter((t) => t.slug !== tool.slug)) {
         await expect(
           related.filter({ hasText: other.heading }),
@@ -548,6 +549,339 @@ test.describe('shared tool page structure', () => {
     await expect(
       page.getByRole('heading', { name: 'Guide', level: 2 }),
     ).toBeVisible()
-    await expect(page.locator('.tool-related a')).toHaveCount(2)
+    await expect(page.locator('.tool-related a')).toHaveCount(3)
+  })
+})
+
+test.describe('image compressor workflow', () => {
+  // Real PNGs, built by the same helper the sorter tests use, so the browser
+  // genuinely decodes and re-encodes them. Output is switched to WebP where a
+  // test needs a quality slider — PNG output deliberately has none.
+  const addImages = async (page: Page, names: string[]) => {
+    await page
+      .locator('input[type="file"]')
+      .first()
+      .setInputFiles(names.map((name) => pngFile(name, 120, 90)))
+  }
+  const waitForCompare = (page: Page) =>
+    expect(page.locator('.ic-divider')).toBeVisible({ timeout: 20000 })
+
+  test('compresses an image and shows the before/after comparison', async ({
+    page,
+  }) => {
+    await page.goto('/ja/image-compressor')
+    await expect(
+      page.getByRole('heading', { name: 'よしにゃにまとめて画像圧縮', level: 1 }),
+    ).toBeVisible()
+
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    await expect(page.locator('.ic-side-left')).toHaveText('変換前')
+    await expect(page.locator('.ic-side-right')).toHaveText('変換後')
+    await expect(page.locator('.ic-sizes')).toContainText('変換後')
+  })
+
+  test('png output offers no quality slider, and says why', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    // A png source kept in its original format is lossless: no quality to set.
+    await expect(page.locator('#ic-quality')).toHaveCount(0)
+    await expect(page.locator('.ic-lossless')).toContainText('PNGは可逆圧縮')
+  })
+
+  test('bulk quality applies only to later unsaved images, and undo restores them', async ({
+    page,
+  }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png', 'c.png'])
+    await expect(page.locator('.ic-thumb')).toHaveCount(3)
+    await waitForCompare(page)
+
+    // WebP everywhere, so quality is meaningful for all three.
+    await page.getByLabel('出力形式').selectOption('webp')
+    await expect(page.locator('#ic-quality')).toBeVisible()
+
+    // Adjust this image alone, leaving the others on the shared setting.
+    await page.getByLabel('この画像のみ').check()
+    await page.locator('#ic-quality').fill('40')
+
+    // The button states the value and how many images it will touch: the two
+    // that follow the current one.
+    const apply = page.getByRole('button', { name: /品質40を残り2枚に適用/ })
+    await expect(apply).toBeVisible()
+    await apply.click()
+    await expect(page.locator('.ic-toast')).toContainText('残り2枚に適用しました')
+
+    await page.locator('.ic-thumb').nth(1).click()
+    await expect(page.locator('#ic-quality')).toHaveValue('40')
+
+    await page.getByRole('button', { name: '元に戻す' }).click()
+    await expect(page.locator('#ic-quality')).toHaveValue('80')
+
+    // The image the user was editing keeps what they set on it.
+    await page.locator('.ic-thumb').nth(0).click()
+    await expect(page.locator('#ic-quality')).toHaveValue('40')
+  })
+
+  test('downloads one image and moves to the next', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png'])
+    await waitForCompare(page)
+
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'ダウンロードして次へ' }).click()
+    expect((await download).suggestedFilename()).toBe('a.png')
+
+    await expect(page.locator('.ic-thumb').nth(1)).toHaveAttribute('aria-current', 'true')
+    await expect(page.locator('.ic-thumb').nth(0)).toContainText('保存済み')
+    // Only one image is left to save, so the button changes wording.
+    await expect(
+      page.getByRole('button', { name: 'ダウンロードして完了' }),
+    ).toBeVisible()
+  })
+
+  test('changing the format changes the download extension', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    await page.getByLabel('出力形式').selectOption('webp')
+    await expect(page.locator('#ic-quality')).toBeVisible()
+
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'ダウンロード', exact: true }).click()
+    expect((await download).suggestedFilename()).toBe('a.webp')
+  })
+
+  test('downloads everything as a ZIP', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png'])
+    await waitForCompare(page)
+
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'すべてZIPでダウンロード' }).click()
+    expect((await download).suggestedFilename()).toBe('yoshinya-compressed-images.zip')
+  })
+
+  test('the comparison boundary stays under the divider when zoomed', async ({
+    page,
+  }) => {
+    // clip-path resolves in the clipped element's own coordinate space. Putting
+    // it on the transformed layer made the visible seam zoom away from the
+    // divider, so the invariant worth pinning is that the clipped box is not
+    // itself transformed.
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+
+    await page.getByRole('button', { name: '拡大' }).click()
+    await page.getByRole('button', { name: '拡大' }).click()
+
+    const geometry = await page.evaluate(() => {
+      const q = (sel: string) =>
+        (globalThis as unknown as { document: { querySelector(s: string): unknown } })
+          .document.querySelector(sel) as {
+          getBoundingClientRect(): { left: number; width: number }
+        } | null
+      const win = globalThis as unknown as {
+        getComputedStyle(el: unknown): { transform: string; clipPath: string }
+      }
+      const stage = q('.ic-stage')!
+      const clip = q('.ic-clip')!
+      const layer = q('.ic-clip .ic-layer')!
+      return {
+        clipTransform: win.getComputedStyle(clip).transform,
+        layerTransform: win.getComputedStyle(layer).transform,
+        clipPath: win.getComputedStyle(clip).clipPath,
+        sameBox:
+          Math.abs(clip.getBoundingClientRect().left - stage.getBoundingClientRect().left) < 1 &&
+          Math.abs(clip.getBoundingClientRect().width - stage.getBoundingClientRect().width) < 1,
+      }
+    })
+
+    // The clipped box tracks the stage exactly, and only the layer inside moves.
+    expect(geometry.clipTransform).toBe('none')
+    expect(geometry.layerTransform).not.toBe('none')
+    expect(geometry.sameBox).toBe(true)
+    expect(geometry.clipPath).toContain('inset')
+  })
+
+  test('steers a high webp quality toward the lossless setting', async ({ page }) => {
+    // Chrome's WebP encoder only goes lossless at exactly 100; 99 loses about
+    // as much as 80 and produces a much larger file. Someone reaching for 99
+    // wants no loss, so the UI has to say where that actually is.
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    await page.getByLabel('出力形式').selectOption('webp')
+    await page.locator('#ic-quality').fill('99')
+    // Scoped to the panel: the same explanation also appears in the guide below.
+    const panel = page.locator('.ic-settings')
+    await expect(panel.getByText('画質はほとんど改善せず', { exact: false })).toBeVisible()
+
+    await page.getByRole('button', { name: '100（可逆）にする' }).click()
+    await expect(page.locator('#ic-quality')).toHaveValue('100')
+    await expect(panel.getByText('可逆で書き出します', { exact: false })).toBeVisible()
+  })
+
+  test('resize starts from the image size, and the ratio keeps the pair in step', async ({
+    page,
+  }) => {
+    await page.goto('/ja/image-compressor')
+    // 120x90, a 4:3 image, so the derived partner value is predictable.
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+
+    await page.getByText('サイズ変更', { exact: true }).click()
+    await page.getByLabel('ピクセルサイズを変更する').check()
+
+    // Seeded with the real dimensions rather than left empty, where the number
+    // spinner's first press would jump to 1.
+    await expect(page.getByLabel('幅')).toHaveValue('120')
+    await expect(page.getByLabel('高さ')).toHaveValue('90')
+
+    // With the ratio locked, editing one has to move the other, or the stale
+    // value would silently constrain the result.
+    await page.getByLabel('幅').fill('60')
+    await expect(page.getByLabel('高さ')).toHaveValue('45')
+  })
+
+  test('an adjusted image keeps its own format until explicitly overwritten', async ({
+    page,
+  }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png'])
+    await waitForCompare(page)
+
+    // Pin the first image to JPEG.
+    await page.getByLabel('この画像のみ').check()
+    await page.getByLabel('出力形式').selectOption('jpeg')
+    await expect(page.locator('.ic-thumb').first()).toContainText('個別調整')
+
+    // The shared settings deliberately skip it, and the panel says so.
+    await page.getByLabel('共通設定').check()
+    await expect(page.getByText('個別調整した1枚には反映されません', { exact: false })).toBeVisible()
+    await page.getByLabel('出力形式').selectOption('webp')
+    await page.waitForTimeout(600)
+    await expect(page.getByLabel('出力形式')).toHaveValue('jpeg')
+
+    // The way out is offered at the moment of confusion, not buried in a menu.
+    await expect(page.locator('.ic-toast')).toContainText('反映していません')
+    await page.getByRole('button', { name: 'これも変更する' }).click()
+    await page.waitForTimeout(600)
+    await expect(page.getByLabel('出力形式')).toHaveValue('webp')
+    await expect(page.locator('.ic-thumb').first()).not.toContainText('個別調整')
+  })
+
+  test('the whole-batch override reaches downloaded and pinned images', async ({
+    page,
+  }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png'])
+    await waitForCompare(page)
+    await page.getByLabel('この画像のみ').check()
+    await page.getByLabel('出力形式').selectOption('jpeg')
+    await expect(page.locator('.ic-thumb').first()).toContainText('個別調整')
+    await page.getByLabel('共通設定').check()
+
+    // The escape hatch does reach it.
+    page.once('dialog', (d) => void d.accept())
+    await page.getByText('その他の操作', { exact: true }).click()
+    await page.getByRole('button', { name: /現在の設定を全2枚に適用/ }).click()
+    await expect(page.locator('.ic-thumb').first()).not.toContainText('個別調整')
+  })
+
+  test('the content lines up with the site frame', async ({ page }) => {
+    // This tool was briefly 84rem wide while the header and footer are 72rem,
+    // so on a wide screen the page content stuck out past its own frame.
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/ja/image-compressor')
+    const edges = await page.evaluate(() => {
+      const d = (globalThis as unknown as {
+        document: { querySelector(s: string): { getBoundingClientRect(): { left: number } } }
+      }).document
+      const left = (sel: string) => Math.round(d.querySelector(sel).getBoundingClientRect().left)
+      return [left('header a picture'), left('.ic-root h1'), left('footer p')]
+    })
+    expect(new Set(edges).size).toBe(1)
+  })
+
+  test('the view controls are one consistent row', async ({ page }) => {
+    // The zoom stepper, fit and full screen are all view commands, so they get
+    // the same height. One of them was an underlined link and another fell back
+    // to the tall default because its style was never defined.
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    const heights = await page.evaluate(() => {
+      const d = (globalThis as unknown as {
+        document: { querySelectorAll(s: string): ArrayLike<{ getBoundingClientRect(): { height: number } }> }
+      }).document
+      return Array.from(d.querySelectorAll('.ic-zoom .ic-zoom-step, .ic-zoom .ic-btn')).map(
+        (e) => Math.round(e.getBoundingClientRect().height),
+      )
+    })
+    expect(heights.length).toBe(4)
+    expect(new Set(heights).size).toBe(1)
+  })
+
+  test('compares full screen and comes back', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png'])
+    await waitForCompare(page)
+
+    await page.getByRole('button', { name: '全画面で比較' }).click()
+    const viewer = page.locator('.ic-viewer.ic-fullscreen')
+    await expect(viewer).toBeVisible()
+
+    // The stage really does take the screen, not the page column.
+    const box = (await page.locator('.ic-stage').boundingBox())!
+    const size = page.viewportSize()!
+    expect(box.width).toBeGreaterThan(size.width * 0.9)
+
+    // Every setting is reachable without leaving — a quality slider alone was
+    // not enough, because PNG output has none and left nothing to adjust.
+    await expect(page.locator('.ic-fs-panel')).toBeVisible()
+    await page.getByLabel('出力形式').selectOption('webp')
+    await expect(page.locator('.ic-fs-panel #ic-quality')).toBeVisible()
+
+    // Still able to judge and save without leaving.
+    await expect(page.locator('.ic-fs-bar')).toBeVisible()
+    await expect(
+      page.locator('.ic-fs-bar').getByRole('button', { name: /ダウンロードして/ }),
+    ).toBeVisible()
+
+    // Escape gets out, which is the only exit some users will look for.
+    await page.keyboard.press('Escape')
+    await expect(viewer).toHaveCount(0)
+    await expect(page.locator('.ic-divider')).toBeVisible()
+  })
+
+  test('never makes the page wider than the screen', async ({ page }) => {
+    // A page wider than the device makes the browser zoom out, shrinking every
+    // control. The thumbnail strip caused exactly that until it was given a
+    // min-width, so the invariant is worth pinning.
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png', 'b.png', 'c.png', 'd.png'])
+    await waitForCompare(page)
+    const overflow = await page.evaluate(() => {
+      const el = (globalThis as unknown as {
+        document: { documentElement: { scrollWidth: number; clientWidth: number } }
+      }).document.documentElement
+      return { scroll: el.scrollWidth, client: el.clientWidth }
+    })
+    expect(overflow.scroll).toBeLessThanOrEqual(overflow.client + 1)
+  })
+
+  test('refuses an unsupported format and keeps the rest', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await page
+      .locator('input[type="file"]')
+      .first()
+      .setInputFiles([textFile('notes.txt'), pngFile('ok.png', 120, 90)])
+    await expect(
+      page.getByText('この形式には対応していません', { exact: false }),
+    ).toBeVisible()
+    await expect(page.locator('.ic-thumb')).toHaveCount(1)
   })
 })
