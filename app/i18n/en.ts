@@ -599,7 +599,7 @@ export const en = {
       {
         question: 'Is the photo metadata kept?',
         answer:
-          'No. Re-encoding drops metadata such as the capture location and camera, which is often what you want before publishing. Rotation is applied so the image stays the right way up.',
+          'No. Re-encoding drops the capture location, date, and camera details. For anything you post online, that means your home address is not embedded in the file. If you sort photos by capture date, keep the originals as well. Rotation is applied to the image itself, so nothing comes out sideways.',
       },
       {
         question: 'How many images can I do at once?',
