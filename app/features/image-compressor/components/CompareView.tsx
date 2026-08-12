@@ -21,6 +21,8 @@ export function CompareView({
   isBusy,
   isFullscreen = false,
   onToggleFullscreen,
+  onToggleSettings,
+  isSettingsOpen = false,
 }: {
   beforeUrl: string
   afterUrl: string | null
@@ -28,6 +30,9 @@ export function CompareView({
   isBusy: boolean
   isFullscreen?: boolean
   onToggleFullscreen?: () => void
+  /** Only supplied in full screen; the row hides it above the narrow layout. */
+  onToggleSettings?: () => void
+  isSettingsOpen?: boolean
 }) {
   const { t } = useLocale()
   const stageRef = useRef<HTMLDivElement>(null)
@@ -251,6 +256,21 @@ export function CompareView({
         >
           {t.imageCompressor.zoomFit}
         </button>
+        {/* Narrow screens only, by stylesheet: where the settings float beside
+            the picture there is nothing to reveal. */}
+        {onToggleSettings && (
+          <button
+            type="button"
+            className="ic-btn ic-btn-secondary ic-btn-small ic-fs-settings"
+            aria-expanded={isSettingsOpen}
+            onClick={onToggleSettings}
+          >
+            {/* Always the reveal label. The open sheet covers this row and
+                carries its own way out, so relabelling it would only put a
+                second unreachable "close" on the page under the same name. */}
+            {t.imageCompressor.showSettings}
+          </button>
+        )}
         {onToggleFullscreen && (
           <button
             type="button"

@@ -457,6 +457,8 @@ export const ja: typeof en = {
       png: 'PNG',
       webp: 'WebP',
     },
+    showSettings: '設定',
+    hideSettings: '設定を閉じる',
     formatUnavailable: (name: string) => `${name}（このブラウザは非対応）`,
     formatUnavailableHint:
       'グレー表示の形式は、このブラウザでは作成できません。別のブラウザや新しいバージョンでは利用できます。',

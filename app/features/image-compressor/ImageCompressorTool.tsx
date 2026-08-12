@@ -58,6 +58,10 @@ function ImageCompressorTool() {
   const [toast, setToast] = useState<Toast | null>(null)
   const [zipProgress, setZipProgress] = useState<number | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  // Full screen on a phone is a request to see the picture, so the settings
+  // start out of the way. Above the narrow layout they float beside it and this
+  // is ignored.
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   // null until the probe answers. Nothing is greyed out in the meantime: a
   // format briefly marked unavailable and then restored is worse than one
   // offered a moment before we can prove it works.
@@ -82,7 +86,11 @@ function ImageCompressorTool() {
   // chrome and adds the OS's own exit overlay and Esc handling on top of ours,
   // which is a different thing from what this needs — and it does not exist for
   // ordinary elements on iOS Safari at all. Squoosh does the same.
-  const toggleFullscreen = () => setIsFullscreen((v) => !v)
+  const toggleFullscreen = () => {
+    setIsFullscreen((v) => !v)
+    // Leaving the sheet open would make the next entry start covered again.
+    setIsSettingsOpen(false)
+  }
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -547,9 +555,30 @@ function ImageCompressorTool() {
                         isBusy={item.processingState !== 'ready'}
                         isFullscreen={isFullscreen}
                         onToggleFullscreen={toggleFullscreen}
+                        onToggleSettings={
+                          isFullscreen
+                            ? () => setIsSettingsOpen((v) => !v)
+                            : undefined
+                        }
+                        isSettingsOpen={isSettingsOpen}
                       />
                       {isFullscreen && (
-                        <div className="ic-fs-panel">{settingsPanel}</div>
+                        <div
+                          className={`ic-fs-panel${isSettingsOpen ? '' : ' ic-fs-panel-closed'}`}
+                        >
+                          {/* Shown only in the narrow layout, where the sheet
+                              covers the controls that would otherwise close it. */}
+                          <div className="ic-fs-panel-head">
+                            <button
+                              type="button"
+                              className="ic-fs-panel-close"
+                              onClick={() => setIsSettingsOpen(false)}
+                            >
+                              {t.imageCompressor.hideSettings}
+                            </button>
+                          </div>
+                          {settingsPanel}
+                        </div>
                       )}
                       {isFullscreen && (
                         // Enough to keep working without leaving: judge the

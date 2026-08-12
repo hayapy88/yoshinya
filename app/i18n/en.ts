@@ -460,6 +460,10 @@ export const en = {
     // Unavailable formats stay listed rather than disappearing: the option is
     // worth knowing about, and a silently shorter menu reads as a missing
     // feature rather than as a limit of this browser.
+    // Full screen on a narrow screen exists to make the picture big, so the
+    // settings arrive on request rather than taking a third of it up front.
+    showSettings: 'Settings',
+    hideSettings: 'Close the settings',
     formatUnavailable: (name: string) => `${name} (not supported by this browser)`,
     formatUnavailableHint:
       'Greyed-out formats cannot be written by this browser. Another browser, or a newer version of this one, will offer them.',

@@ -840,7 +840,11 @@ test.describe('image compressor workflow', () => {
     expect(box.width).toBeGreaterThan(size.width * 0.9)
 
     // Every setting is reachable without leaving — a quality slider alone was
-    // not enough, because PNG output has none and left nothing to adjust.
+    // not enough, because PNG output has none and left nothing to adjust. On a
+    // narrow screen they wait behind a control so the picture gets the room.
+    if (page.viewportSize()!.width <= 768) {
+      await page.getByRole('button', { name: '設定', exact: true }).click()
+    }
     await expect(page.locator('.ic-fs-panel')).toBeVisible()
     await page.getByLabel('出力形式').selectOption('webp')
     await expect(page.locator('.ic-fs-panel #ic-quality')).toBeVisible()
@@ -889,9 +893,19 @@ test.describe('image compressor workflow', () => {
   // reporter hit on a phone. The encoder does not throw in that situation — it
   // returns PNG under the requested name — so the fake does exactly that.
   const withoutWebpEncoding = async (page: Page) => {
+    // Typed through `window` because this body is compiled with the Node lib,
+    // which has no OffscreenCanvas, even though it runs in the page.
     await page.addInitScript(() => {
-      const original = OffscreenCanvas.prototype.convertToBlob
-      OffscreenCanvas.prototype.convertToBlob = function (options) {
+      type Options = { type?: string } | undefined
+      const proto = (
+        globalThis as unknown as {
+          OffscreenCanvas: {
+            prototype: { convertToBlob: (options?: Options) => Promise<Blob> }
+          }
+        }
+      ).OffscreenCanvas.prototype
+      const original = proto.convertToBlob
+      proto.convertToBlob = function (options?: Options) {
         if (options?.type === 'image/webp') {
           return original.call(this, { ...options, type: 'image/png' })
         }
@@ -922,6 +936,39 @@ test.describe('image compressor workflow', () => {
     // The formats that do work are untouched.
     await expect(page.locator('#ic-format option[value="jpeg"]')).toBeEnabled()
     await expect(page.locator('#ic-format option[value="png"]')).toBeEnabled()
+  })
+
+  // The invariant the mobile layout broke: laying the settings out beneath the
+  // picture left a 254px stage on an 839px screen, smaller than the 285px the
+  // same picture gets in the page, so full screen made the picture worse.
+  test('full screen gives the picture more room, not less', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+
+    const stage = page.locator('.ic-stage')
+    const inPage = (await stage.boundingBox())!.height
+    await page.getByRole('button', { name: '全画面で比較' }).click()
+    const full = (await stage.boundingBox())!.height
+
+    expect(full).toBeGreaterThan(inPage)
+
+    const narrow = page.viewportSize()!.width <= 768
+    const panel = page.locator('.ic-fs-panel')
+    if (narrow) {
+      // Entering is a request to see the picture, so the settings wait.
+      await expect(panel).toBeHidden()
+      await page.getByRole('button', { name: '設定', exact: true }).click()
+      await expect(panel).toBeVisible()
+      // They slide over the image rather than pushing it out of the way.
+      expect(Math.round((await stage.boundingBox())!.height)).toBe(Math.round(full))
+      // The sheet's own control: the row's reveal button is underneath it.
+      await page.locator('.ic-fs-panel-close').click()
+      await expect(panel).toBeHidden()
+    } else {
+      // Wide screens have room beside the picture, so nothing is hidden.
+      await expect(panel).toBeVisible()
+    }
   })
 
   test('offers every format on a browser that can write them', async ({ page }) => {

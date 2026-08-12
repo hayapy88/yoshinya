@@ -722,14 +722,56 @@
   border-color: var(--border);
 }
 
-/* Narrow screens have no room beside the picture, so it becomes a sheet across
-   the bottom instead of covering the image. */
+/* The reveal control and the sheet's own close button belong to the narrow
+   layout; above it the settings are simply always there beside the picture. */
+.ic-fs-settings,
+.ic-fs-panel-head {
+  display: none;
+}
+
+/* Narrow screens have no room beside the picture. Laying the settings out below
+   it was measured at a 254px stage on a 839px screen — smaller than the 285px
+   the same picture gets in the page, so entering full screen made the picture
+   worse. They now slide over the image instead, and start closed: full screen on
+   a phone is a request to see the picture, not to see the controls. */
 @media (max-width: 48rem) {
+  .ic-fullscreen .ic-fs-settings {
+    display: inline-flex;
+  }
   .ic-fs-panel {
-    position: static;
+    position: absolute;
+    top: auto;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
     width: auto;
-    max-height: 45vh;
-    margin-top: 0.5rem;
+    max-height: 55vh;
+  }
+  .ic-fs-panel-closed {
+    display: none;
+  }
+  /* The sheet covers the row holding the reveal control, so it carries its own
+     way out rather than trapping the user behind it. */
+  .ic-fs-panel-head {
+    display: flex;
+    justify-content: flex-end;
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    padding-bottom: 0.25rem;
+  }
+  .ic-fs-panel-close {
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+  }
+  /* Every line the controls do not take is a line the picture gets. */
+  .ic-fullscreen .ic-zoom .ic-hint {
+    display: none;
   }
 }
 

@@ -125,6 +125,13 @@ disabled for any error, so the format control could not be touched, and
 retried one anyway. Two individually reasonable guards combined into a dead end.
 Both now turn on whether a setting could plausibly change the outcome.
 
+**Full screen made the picture smaller on a phone.** Measured on an 839px
+screen: the stage came out at 254px, against 285px for the same picture in the
+page. Laying the settings out beneath the image had them competing for the same
+column, so the one thing full screen exists to do was the one thing it undid.
+The settings now slide over the picture and start closed, which puts the stage
+at 697px. See *Full screen is an in-page overlay*.
+
 **WebP is now greyed out rather than absent when unavailable.** Asked for during
 review: a format that does not work here should still be visible, because the
 option is worth knowing about and a silently shorter menu reads as a missing
@@ -190,6 +197,16 @@ specificity and land on the same element, so source order alone decides. Adding
 `.ic-viewer { position: relative }` after the full-screen block silently
 cancelled `position: fixed`, and the overlay stopped covering anything — the
 page simply scrolled underneath it.
+
+On a narrow screen the panel cannot float beside the picture, and putting it
+below turned out to be worse than not offering full screen at all: the stage
+measured 254px on an 839px screen, where the page gives the same picture 285px.
+The panel is now an overlay there too, closed on entry and revealed by a
+control in the zoom row, which leaves the stage at 697px — 83% of the screen.
+Only the sheet's own close button changes state while it is open; the reveal
+control sits underneath it and keeps its label, because two buttons named
+"close the settings" with one of them unreachable is worse than one.
+
 
 ## Resize fields start from the image, not from nothing
 
