@@ -25,12 +25,18 @@ import {
   resolveFormat,
   supportsQuality,
 } from './lib/settings'
+import { probeEncodableFormats } from './lib/support'
 import { outputFileName, resolveDuplicateNames } from './lib/filename'
 import { compareSize, formatBytes, formatPercent, totalComparison } from './lib/format'
 import { classifyFiles } from './lib/validate'
 import { EncodeQueue, isCancelled } from './lib/queue'
 import { createImageZip, zipFileName } from './lib/zip'
-import { LIMITS, type CompressionSettings, type ImageItem } from './lib/types'
+import {
+  LIMITS,
+  type CompressionSettings,
+  type EncodableFormat,
+  type ImageItem,
+} from './lib/types'
 import './image-compressor.css'
 
 const TOOL = 'image-compressor' as const
@@ -52,7 +58,25 @@ function ImageCompressorTool() {
   const [toast, setToast] = useState<Toast | null>(null)
   const [zipProgress, setZipProgress] = useState<number | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  // null until the probe answers. Nothing is greyed out in the meantime: a
+  // format briefly marked unavailable and then restored is worse than one
+  // offered a moment before we can prove it works.
+  const [encodableFormats, setEncodableFormats] =
+    useState<ReadonlySet<EncodableFormat> | null>(null)
   const viewerRef = useRef<HTMLDivElement>(null)
+
+  // Runs once, on the client only — the server has no canvas to ask.
+  useEffect(() => {
+    let active = true
+    void probeEncodableFormats().then((formats) => {
+      if (active) {
+        setEncodableFormats(formats)
+      }
+    })
+    return () => {
+      active = false
+    }
+  }, [])
 
   // An in-page overlay, not the Fullscreen API. The API hides the browser
   // chrome and adds the OS's own exit overlay and Esc handling on top of ours,
@@ -408,6 +432,7 @@ function ImageCompressorTool() {
       bulkAllCount={allTargets.length}
       adjustedCount={state.items.filter((i) => i.settingsOverride !== null).length}
       totalCount={state.items.length}
+      encodableFormats={encodableFormats}
       // Locked only when no setting could help. When the error names a way out
       // — "choose JPEG or PNG" — the control that offers it has to stay live.
       disabled={

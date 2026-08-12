@@ -7,6 +7,7 @@ import {
 } from '../lib/settings'
 import type {
   CompressionSettings,
+  EncodableFormat,
   ImageItem,
   OutputFormat,
 } from '../lib/types'
@@ -22,6 +23,7 @@ export function SettingsPanel({
   bulkAllCount,
   adjustedCount,
   totalCount,
+  encodableFormats,
   disabled,
   onScopeChange,
   onChange,
@@ -39,6 +41,8 @@ export function SettingsPanel({
   /** Images pinned by their own settings, which the shared settings skip. */
   adjustedCount: number
   totalCount: number
+  /** What this browser can write. `null` while the probe is still running. */
+  encodableFormats: ReadonlySet<EncodableFormat> | null
   disabled: boolean
   onScopeChange: (scope: 'common' | 'image') => void
   onChange: (patch: Partial<CompressionSettings>) => void
@@ -51,6 +55,15 @@ export function SettingsPanel({
   const format = resolveFormat(settings.outputFormat, item.sourceType)
   const showQuality = supportsQuality(format)
   const showBackground = needsBackground(format, item.sourceType)
+  // An option is unavailable when the format it resolves to cannot be written.
+  // Going through resolveFormat covers "keep original format", which is the
+  // same dead end wearing a different name when the source is, say, a WebP on a
+  // browser that reads WebP but cannot write it.
+  const isUnavailable = (value: OutputFormat) =>
+    encodableFormats !== null &&
+    !encodableFormats.has(resolveFormat(value, item.sourceType))
+  const anyUnavailable = FORMATS.some(isUnavailable)
+
   const source =
     item.sourceWidth && item.sourceHeight
       ? { width: item.sourceWidth, height: item.sourceHeight }
@@ -121,11 +134,16 @@ export function SettingsPanel({
           onChange={(e) => onChange({ outputFormat: e.target.value as OutputFormat })}
         >
           {FORMATS.map((value) => (
-            <option key={value} value={value}>
-              {t.imageCompressor.formats[value]}
+            <option key={value} value={value} disabled={isUnavailable(value)}>
+              {isUnavailable(value)
+                ? t.imageCompressor.formatUnavailable(t.imageCompressor.formats[value])
+                : t.imageCompressor.formats[value]}
             </option>
           ))}
         </select>
+        {anyUnavailable && (
+          <p className="ic-hint">{t.imageCompressor.formatUnavailableHint}</p>
+        )}
       </div>
 
       {showBackground && (

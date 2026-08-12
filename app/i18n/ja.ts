@@ -457,6 +457,9 @@ export const ja: typeof en = {
       png: 'PNG',
       webp: 'WebP',
     },
+    formatUnavailable: (name: string) => `${name}（このブラウザは非対応）`,
+    formatUnavailableHint:
+      'グレー表示の形式は、このブラウザでは作成できません。別のブラウザや新しいバージョンでは利用できます。',
     backgroundLabel: '透過部分の背景色',
     backgroundHint:
       'JPEGは透過を扱えないため、透明な部分はこの色で塗りつぶされます。',

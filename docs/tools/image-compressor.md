@@ -111,6 +111,25 @@ word *upload* — the privacy note two lines below says images are never uploade
 **The English OGP had no brand.** `by Yoshinya` had been dropped so a long name
 would fit. Shrinking the type is the right trade; dropping the brand is not.
 
+**A format the browser could not write was offered, then silently faked.**
+`convertToBlob` does not throw when the encoder lacks the requested type: it
+falls back to PNG, and the only evidence is the type on the returned Blob.
+Unchecked, the tool handed back PNG bytes named `.webp` and called it a success.
+Checking the produced type turned that into an error — which then exposed a
+worse problem, below. See *Offering a format this browser cannot write*.
+
+**The error message named a way out that the UI refused to take.** Reported on a
+phone: "choose JPEG or PNG instead" appeared, but the settings panel was
+disabled for any error, so the format control could not be touched, and
+`invalidate()` returned errored items unchanged, so an edit would not have
+retried one anyway. Two individually reasonable guards combined into a dead end.
+Both now turn on whether a setting could plausibly change the outcome.
+
+**WebP is now greyed out rather than absent when unavailable.** Asked for during
+review: a format that does not work here should still be visible, because the
+option is worth knowing about and a silently shorter menu reads as a missing
+feature rather than as a limit of this browser.
+
 ## Where this departs from the specification
 
 | Item | Specification | Built | Why |
@@ -244,6 +263,38 @@ marked as adjusted forever.
 **The undo toast does not auto-dismiss.** Re-encoding the images a bulk apply
 just changed can outlast any timer, and an undo that disappears while the user
 is still checking the result is not an undo.
+
+## Offering a format this browser cannot write
+
+Canvas WebP encoding arrived in Safari 16. Before that the encoder does not
+refuse the request — the specification has it fall back to PNG — so a tool that
+trusts `convertToBlob` produces a PNG named `.webp` and reports success. That is
+worse than an error: nothing looks wrong until the file is opened somewhere
+else. The worker now compares the produced type against the requested one.
+
+Turning that into an error was necessary but not sufficient. The message said
+*choose JPEG or PNG instead* while the panel was disabled, and errored images
+were never re-queued, so the advice could not be acted on. Recoverability is now
+a property of the error: an unsupported format, a failed encode and an
+allocation failure can all be retried, and a file that will not decode cannot,
+because nothing in the panel changes how a file is read.
+
+Better still is not to offer the format at all — but *not offer* was the wrong
+reading of the request. WebP stays in the menu, disabled, labelled
+「WebP（このブラウザは非対応）」, with a line explaining that another browser
+will offer it. Someone who does not know WebP exists should still learn it does.
+
+Support is measured rather than inferred from the user agent: a 1×1
+`OffscreenCanvas` is encoded to each candidate type and the resulting Blob's
+type is checked. The probe runs on the main thread rather than through the
+encode queue, which keeps it clear of the queue's job-cancellation logic while
+still exercising the same encoder the worker uses. Nothing is greyed out until
+it answers, because a format briefly marked unavailable and then restored is
+worse than one offered a moment early.
+
+The runtime check stays regardless. The probe can only be wrong in one
+direction — reporting support that a specific image then fails to encode — and
+that path is still handled.
 
 ## WebP quality is not what people expect
 

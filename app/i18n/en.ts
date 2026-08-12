@@ -457,6 +457,12 @@ export const en = {
       png: 'PNG',
       webp: 'WebP',
     },
+    // Unavailable formats stay listed rather than disappearing: the option is
+    // worth knowing about, and a silently shorter menu reads as a missing
+    // feature rather than as a limit of this browser.
+    formatUnavailable: (name: string) => `${name} (not supported by this browser)`,
+    formatUnavailableHint:
+      'Greyed-out formats cannot be written by this browser. Another browser, or a newer version of this one, will offer them.',
     backgroundLabel: 'Background behind transparency',
     backgroundHint: 'JPEG has no transparency, so clear areas are filled with this colour.',
     qualityLabel: 'Quality',

@@ -884,4 +884,51 @@ test.describe('image compressor workflow', () => {
     ).toBeVisible()
     await expect(page.locator('.ic-thumb')).toHaveCount(1)
   })
+
+  // Reproduces a browser that reads WebP but cannot write it, which is what a
+  // reporter hit on a phone. The encoder does not throw in that situation — it
+  // returns PNG under the requested name — so the fake does exactly that.
+  const withoutWebpEncoding = async (page: Page) => {
+    await page.addInitScript(() => {
+      const original = OffscreenCanvas.prototype.convertToBlob
+      OffscreenCanvas.prototype.convertToBlob = function (options) {
+        if (options?.type === 'image/webp') {
+          return original.call(this, { ...options, type: 'image/png' })
+        }
+        return original.call(this, options)
+      }
+    })
+  }
+
+  test('keeps an unwritable format visible but unselectable, and says why', async ({
+    page,
+  }) => {
+    await withoutWebpEncoding(page)
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+
+    const webp = page.locator('#ic-format option[value="webp"]')
+    // Still listed — the point is that WebP exists, not that it works here.
+    await expect(webp).toHaveCount(1)
+    await expect(webp).toBeDisabled()
+    await expect(webp).toHaveText('WebP（このブラウザは非対応）')
+    await expect(
+      page.getByText('グレー表示の形式は、このブラウザでは作成できません', {
+        exact: false,
+      }),
+    ).toBeVisible()
+
+    // The formats that do work are untouched.
+    await expect(page.locator('#ic-format option[value="jpeg"]')).toBeEnabled()
+    await expect(page.locator('#ic-format option[value="png"]')).toBeEnabled()
+  })
+
+  test('offers every format on a browser that can write them', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    await expect(page.locator('#ic-format option[value="webp"]')).toBeEnabled()
+    await expect(page.locator('#ic-format option[value="webp"]')).toHaveText('WebP')
+  })
 })
