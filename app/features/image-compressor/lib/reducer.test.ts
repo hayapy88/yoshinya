@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   compressorReducer,
   currentItem,
+  isRecoverableError,
   downloadableItems,
   initialState,
   type CompressorState,
@@ -385,5 +386,91 @@ describe('removing images', () => {
     const after = compressorReducer(state, { type: 'remove_all' })
     expect(after.items).toEqual([])
     expect(after.common.quality).toBe(42)
+  })
+})
+
+describe('recovering from an encode error', () => {
+  // The reported dead end: a phone whose browser cannot encode WebP showed
+  // "choose JPEG or PNG instead", but the format control was disabled and an
+  // errored image was never re-queued, so the advice could not be followed.
+  const errored = (code: ImageItem['errorCode']) =>
+    item('a', {
+      processingState: 'error',
+      errorCode: code,
+      outputBlob: null,
+      outputUrl: null,
+    })
+
+  it('retries the image when the shared format changes', () => {
+    const state = stateWith([errored('format_unsupported')])
+    const after = compressorReducer(state, {
+      type: 'set_common',
+      patch: { outputFormat: 'jpeg' },
+    })
+    expect(after.items[0].processingState).toBe('queued')
+  })
+
+  it('retries when only this image changes format', () => {
+    const state = stateWith([errored('format_unsupported')], { scope: 'image' })
+    const after = compressorReducer(state, {
+      type: 'set_current_override',
+      patch: { outputFormat: 'png' },
+    })
+    expect(after.items[0].processingState).toBe('queued')
+  })
+
+  it('clears the message so a stale error cannot outlive the retry', () => {
+    const state = stateWith([errored('format_unsupported')])
+    const after = compressorReducer(state, {
+      type: 'set_common',
+      patch: { outputFormat: 'jpeg' },
+    })
+    expect(after.items[0].errorCode).toBeNull()
+  })
+
+  it('retries an allocation failure, which a smaller size can fix', () => {
+    const state = stateWith([errored('out_of_memory')])
+    const after = compressorReducer(state, {
+      type: 'set_common',
+      patch: { resizeEnabled: true, width: 800, height: 600 },
+    })
+    expect(after.items[0].processingState).toBe('queued')
+  })
+
+  // A file that will not decode is a different matter: no setting changes how
+  // it is read, so retrying would only flicker back to the same error.
+  it('leaves an undecodable file alone', () => {
+    const state = stateWith([errored('decode_failed')])
+    const after = compressorReducer(state, {
+      type: 'set_common',
+      patch: { outputFormat: 'jpeg' },
+    })
+    expect(after.items[0].processingState).toBe('error')
+    expect(after.items[0].errorCode).toBe('decode_failed')
+  })
+
+  it('does not retry every image, only the ones an edit reaches', () => {
+    const state = stateWith([
+      errored('format_unsupported'),
+      item('b', { settingsOverride: { outputFormat: 'png' } }),
+    ])
+    const after = compressorReducer(state, {
+      type: 'set_common',
+      patch: { outputFormat: 'jpeg' },
+    })
+    expect(after.items[0].processingState).toBe('queued')
+    expect(after.items[1].processingState).toBe('ready')
+  })
+})
+
+// The settings panel reads this directly to decide whether to stay usable, so
+// the mapping is pinned rather than left implicit in the reducer cases above.
+describe('isRecoverableError', () => {
+  it('offers a retry only where a setting could change the outcome', () => {
+    expect(isRecoverableError('format_unsupported')).toBe(true)
+    expect(isRecoverableError('encode_failed')).toBe(true)
+    expect(isRecoverableError('out_of_memory')).toBe(true)
+    expect(isRecoverableError('decode_failed')).toBe(false)
+    expect(isRecoverableError(null)).toBe(false)
   })
 })

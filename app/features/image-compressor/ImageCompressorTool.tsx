@@ -13,6 +13,7 @@ import {
   currentItem,
   downloadableItems,
   initialState,
+  isRecoverableError,
   pendingCount,
 } from './lib/reducer'
 import { bulkTargetIds, nextUndownloadedIndex } from './lib/navigation'
@@ -407,7 +408,11 @@ function ImageCompressorTool() {
       bulkAllCount={allTargets.length}
       adjustedCount={state.items.filter((i) => i.settingsOverride !== null).length}
       totalCount={state.items.length}
-      disabled={item.processingState === 'error'}
+      // Locked only when no setting could help. When the error names a way out
+      // — "choose JPEG or PNG" — the control that offers it has to stay live.
+      disabled={
+        item.processingState === 'error' && !isRecoverableError(item.errorCode)
+      }
       onScopeChange={(scope) => dispatch({ type: 'set_scope', scope })}
       onChange={(patch) => {
         if (state.scope === 'common') {

@@ -66,6 +66,24 @@ export type CompressorAction =
   | { type: 'set_zipping'; value: boolean }
 
 /**
+ * Whether a different setting could plausibly clear this error, which decides
+ * both whether the panel stays usable and whether an edit retries the image.
+ *
+ * A format the browser cannot encode is the case this exists for: the message
+ * names another format, so refusing to act on that choice strands the user.
+ * Encoding and allocation failures are worth one more attempt at a smaller
+ * size. A file that would not decode is not — nothing in the panel changes how
+ * it is read, so retrying only flickers through 'processing' back to here.
+ */
+export function isRecoverableError(code: ImageErrorCode | null): boolean {
+  return (
+    code === 'format_unsupported' ||
+    code === 'encode_failed' ||
+    code === 'out_of_memory'
+  )
+}
+
+/**
  * Settings changed, so the encoded output is stale — but it stays on screen
  * until the replacement arrives.
  *
@@ -75,10 +93,12 @@ export type CompressorAction =
  * Downloads are gated on processingState, so a stale blob can never be saved.
  */
 function invalidate(item: ImageItem): ImageItem {
-  if (item.processingState === 'error') {
+  if (item.processingState === 'error' && !isRecoverableError(item.errorCode)) {
     return item
   }
-  return { ...item, processingState: 'queued' }
+  // The code is cleared with the state: leaving it set would keep the previous
+  // message on screen through the retry and past a success.
+  return { ...item, processingState: 'queued', errorCode: null }
 }
 
 function mapItems(
