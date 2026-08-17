@@ -8,6 +8,7 @@ const PATHS = [
   '/image-sorter',
   '/pdf-title-editor',
   '/image-compressor',
+  '/csv-encoding-fixer',
   '/privacy',
   '/terms',
 ]

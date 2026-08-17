@@ -75,6 +75,11 @@ describe.each([
       expect(text).toContain(label)
     }
   })
+
+  it('csv encoding fixer names the button it tells people to press', () => {
+    const text = guideText(t, 'csvEncodingFixerGuide')
+    expect(text).toContain(t.csvEncodingFixer.download)
+  })
 })
 
 describe('every guide has the same shape in both locales', () => {
@@ -82,6 +87,7 @@ describe('every guide has the same shape in both locales', () => {
     'fileRenamerGuide',
     'imageSorterGuide',
     'pdfTitleEditorGuide',
+    'csvEncodingFixerGuide',
   ] as const
 
   it.each(keys)('%s has matching section and FAQ counts', (key) => {
