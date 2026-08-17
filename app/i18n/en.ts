@@ -157,6 +157,102 @@ export const en = {
         : `${n} created PDFs stay available until you reload the page.`,
     zipFailed: (message: string) => `Failed to create the ZIP: ${message}`,
   },
+  csvEncodingFixerGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'Why Excel garbles a file Google Sheets reads perfectly',
+        body: 'Nothing inside a CSV records which encoding it uses, so every program has to decide for itself. Google Sheets inspects the contents and defaults to UTF-8. Excel, when you double-click a .csv, inspects nothing — it uses the system code page, which on a Japanese Windows machine is Shift_JIS. A UTF-8 file read as Shift_JIS comes out as rows of meaningless characters, because UTF-8 spends three bytes on a Japanese character where Shift_JIS expects two. The file is not damaged: the same file opens correctly through Data > From Text/CSV, which does inspect the contents.',
+      },
+      {
+        heading: 'The words on this page',
+        body: 'Three terms cover everything this tool does.',
+        terms: [
+          {
+            term: 'UTF-8',
+            definition:
+              'The encoding used by nearly everything written today. It can represent every language at once, which is why it became the default.',
+          },
+          {
+            term: 'Shift_JIS',
+            definition:
+              'The older Japanese encoding, still produced by many business systems and by Excel when it saves a CSV. Modern tools no longer assume it, which is when the trouble starts.',
+          },
+          {
+            term: 'BOM',
+            definition:
+              'Three bytes at the start of a file that say "this is UTF-8". Excel needs them before it will believe it. They are invisible in an editor and change nothing about the data.',
+          },
+        ],
+      },
+      {
+        heading: 'What this tool cannot do',
+        body: 'If a file was already saved after being read with the wrong encoding, the original characters are gone and no tool can recover them — the export has to be run again. This tool says so when it sees that, rather than handing back a file that looks tidier but has the same holes in it. It also does not convert to Shift_JIS: if a system will only accept Shift_JIS, this is not the tool for it.',
+      },
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop your CSV files onto the upload area, or click to choose them. They are read inside your browser and never uploaded.',
+          'Read the verdict for each file. It names the encoding the file actually uses and says whether the data needs converting or only marking.',
+          'Open the preview to check the text is readable. If the preview looks right, the fix will be right.',
+          'Press *Download the fixed file*. The copy is saved as UTF-8 with the marker Excel looks for, alongside your original.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'A CSV exported from an accounting or e-commerce system opens as nonsense in Excel, while the same file reads perfectly in Google Sheets.',
+          'A colleague sends a CSV that opens correctly on their machine but not on yours.',
+          'An export from an older in-house system still comes out as Shift_JIS, and the system you are importing into wants UTF-8.',
+          'You want to know what encoding a file uses before sending it to a client.',
+          'You are about to import a file somewhere that only accepts UTF-8, and you would rather check than find out from the error message.',
+        ],
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'Reading, checking and converting all happen inside your browser. There is no upload, no account, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with customer lists and other confidential exports in workplaces where uploading to an online service is not allowed.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Are my files uploaded to a server?',
+        answer:
+          'No. The file is read and rewritten in your browser using your device\u2019s own memory. Neither the contents nor the file name is sent anywhere.',
+      },
+      {
+        question: 'Will this change my data?',
+        answer:
+          'A file that is already UTF-8 keeps its exact bytes and only gains the three-byte marker at the start. A file in another encoding is converted, which rewrites the bytes but not the text. Either way the original file on your disk is left untouched — a separate copy is downloaded.',
+      },
+      {
+        question: 'Why is the downloaded file named differently?',
+        answer:
+          'The fix is invisible from the outside: same rows, same columns. The _utf8 suffix is what stops the copy being confused with the original sitting next to it in your downloads folder.',
+      },
+      {
+        question: 'My Excel file (.xlsx) is garbled. Will this fix it?',
+        answer:
+          'No, and an .xlsx cannot have this problem: its text is always stored as UTF-8 inside the file. Garbled text in an .xlsx was already garbled when the file was saved, so it has to be produced again from the source.',
+      },
+      {
+        question: 'The preview still looks like nonsense. What now?',
+        answer:
+          'Then the file was most likely damaged before it reached you — saved after being read with the wrong encoding. Ask for the export to be run again, and if possible ask for it in UTF-8.',
+      },
+      {
+        question: 'Can it convert to Shift_JIS instead?',
+        answer:
+          'Not at present. Browsers can read the older Japanese encodings but can only write UTF-8, so this would need extra machinery. If your reason is opening the file in Excel, the marker this tool adds solves that without converting anything.',
+      },
+      {
+        question: 'How many files can I do at once?',
+        answer:
+          'Up to 50 files, 50 MB each. The work is small — this reads bytes rather than parsing spreadsheets — so a batch finishes almost instantly.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   fileRenamerGuide: {
     heading: 'Guide',
     sections: [
@@ -380,6 +476,61 @@ export const en = {
       },
     ],
     relatedHeading: 'Related tools',
+  },
+  csvEncodingFixerPage: {
+    metaTitle:
+      'Fix Garbled CSV in Excel - CSV Encoding Fixer by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'A CSV that reads fine in Google Sheets but turns to garbage in Excel is not broken — Excel is reading it with the wrong table. This tool works out the real encoding and saves a copy Excel opens correctly. Everything runs in your browser; your files are never uploaded.',
+    heading: 'CSV Encoding Fixer by Yoshinya',
+    toolName: 'CSV Encoding Fixer by Yoshinya',
+    toolDescription:
+      'Works out what encoding a CSV really uses and saves a copy Excel opens correctly.',
+    lead: 'Opened a CSV in Excel and found rows of meaningless characters — while the same file reads perfectly in Google Sheets? The file is almost certainly fine. Excel is guessing the wrong encoding, and this tool works out what the file really is and saves a copy Excel reads correctly.',
+    privacyNote:
+      'Your files are not sent to a server. All processing happens in your browser.',
+  },
+  csvEncodingFixer: {
+    // Input
+    addHeading: '\u2460 Add CSV files',
+    dropzone: 'Drop CSV files here, or click to choose',
+    dropzoneHint: 'Several at once is fine',
+    supportedFormats: 'Supported: .csv, .tsv, .txt',
+    addMore: '+ Add files',
+    rejectedHeading: 'Files that could not be added',
+    dismiss: 'Dismiss',
+    // Results
+    filesHeading: (n: number) => `\u2461 ${n} file${n === 1 ? '' : 's'} checked`,
+    detectedLabel: 'What this file really is',
+    encodings: {
+      'utf-8': 'UTF-8',
+      'utf-16le': 'UTF-16 (little endian)',
+      'utf-16be': 'UTF-16 (big endian)',
+      shift_jis: 'Shift_JIS',
+      'euc-jp': 'EUC-JP',
+    },
+    // The three verdicts. Each says what is wrong and what the download will do,
+    // because a tool that silently "fixes" a file teaches the user nothing.
+    verdictBomOnly:
+      'The text is already UTF-8, so nothing is wrong with it. Excel just needs a marker at the start of the file before it will read it that way. The download adds those three bytes and changes nothing else.',
+    verdictConvert: (from: string) =>
+      `The text is ${from}, which Excel and most modern tools no longer assume. The download converts it to UTF-8 and marks it so Excel reads it correctly.`,
+    verdictAlreadyFine:
+      'This file is UTF-8 and already carries the marker Excel looks for. It should open correctly as it is.',
+    damagedWarning:
+      'Some characters in this file could not be read under any encoding, which means they were already lost before the file reached here. Converting cannot bring them back — you would need the original export.',
+    previewHeading: 'Preview',
+    // Actions
+    download: 'Download the fixed file',
+    downloadAll: (n: number) => `Download all ${n}`,
+    removeOne: 'Remove',
+    removeAll: 'Remove all',
+    noChangeNeeded: 'No change needed',
+    errors: {
+      empty_file: 'This file is empty.',
+      file_too_large: 'This file is over the 50 MB limit.',
+      too_many_files: 'You can check up to 50 files at a time.',
+    },
   },
   imageCompressorPage: {
     metaTitle:

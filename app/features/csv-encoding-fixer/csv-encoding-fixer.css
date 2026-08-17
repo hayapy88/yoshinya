@@ -1,0 +1,209 @@
+/* Same palette and frame as the other tools; only the tokens the layout below
+   actually uses are declared. */
+.cef-page {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --error: #c22f2f;
+  --error-bg: #fdecec;
+  --warn-text: #9a3b12;
+  --warn-bg: #fdeee5;
+  --ok-text: #1c6b45;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  accent-color: var(--yoshinyan-orange);
+}
+
+@media (prefers-color-scheme: dark) {
+  .cef-page {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --error: #ef8080;
+    --error-bg: #3a1d1d;
+    --warn-text: #f2b28c;
+    --warn-bg: #3a2417;
+    --ok-text: #7fd3a8;
+  }
+}
+
+.cef-section {
+  margin-top: 2rem;
+  min-width: 0;
+}
+.cef-section h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+.cef-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+/* Input ------------------------------------------------------------------ */
+.cef-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px dashed var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+.cef-dropzone:focus-visible,
+.cef-over {
+  border-color: var(--accent);
+  outline: none;
+}
+.cef-compact {
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.cef-dropzone-label {
+  font-weight: 600;
+}
+.cef-dropzone-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Results ---------------------------------------------------------------- */
+.cef-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.cef-item {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 1rem;
+  /* Long file names must not push the card past the frame on a phone. */
+  min-width: 0;
+}
+.cef-item-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+.cef-name {
+  overflow-wrap: anywhere;
+}
+.cef-badge {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+/* The common case — right bytes, missing marker — is worth spotting at a
+   glance in a list of twenty files. */
+.cef-badge-bom {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cef-verdict {
+  margin: 0.6rem 0 0;
+  line-height: 1.7;
+}
+.cef-warn {
+  margin: 0.6rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.6rem;
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  line-height: 1.7;
+}
+.cef-preview {
+  margin: 0.75rem 0;
+}
+.cef-preview summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.cef-preview pre {
+  margin: 0.5rem 0 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  background: var(--accent-contrast);
+  color: inherit;
+  /* The preview is evidence, so it is shown as-is: wrapped, not truncated, and
+     scrolled rather than allowed to widen the page. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 14rem;
+  overflow: auto;
+  font-size: 0.85rem;
+}
+@media (prefers-color-scheme: dark) {
+  .cef-preview pre {
+    background: #17161a;
+  }
+}
+
+/* Buttons ---------------------------------------------------------------- */
+.cef-btn {
+  border-radius: 0.6rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.cef-btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+.cef-btn-secondary {
+  background: transparent;
+  color: inherit;
+}
+.cef-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.cef-linkbtn {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+}
+
+/* Rejected files --------------------------------------------------------- */
+.cef-rejected {
+  margin-top: 1.5rem;
+  border: 1px solid var(--error);
+  border-radius: 0.9rem;
+  background: var(--error-bg);
+  padding: 1rem;
+  color: var(--error);
+}
+.cef-rejected h2 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+.cef-rejected ul {
+  margin: 0 0 0.75rem;
+  padding-left: 1.2rem;
+}
