@@ -91,7 +91,7 @@ export default function Home() {
             <Link
               key={tool.slug}
               to={`/${locale}/${tool.slug}`}
-              className="flex flex-col rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
+              className="group flex flex-col rounded-2xl border border-[#d9d7de] p-6 no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
             >
               <span className="block text-lg font-bold text-[color:var(--text)]">
                 {tool.name}
@@ -99,7 +99,13 @@ export default function Home() {
               <span className="mt-1 block text-sm text-[color:var(--muted,#6f6b78)]">
                 {tool.description}
               </span>
-              <span className="mt-4 inline-block self-start rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-navy-strong">
+              {/* Navy on light, orange on dark: each theme uses the colour that
+                  separates from its own background. Navy sits at 1.38:1 against
+                  the dark page and would all but vanish, while white on this
+                  orange is 2.79:1 and fails AA — so neither pairing survives
+                  being used everywhere. Orange stays the accent on light, in
+                  the card border that lights up alongside this. */}
+              <span className="mt-4 inline-block self-start rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-navy-strong dark:bg-brand dark:text-navy-strong dark:group-hover:bg-brand-strong">
                 {t.home.cta}
               </span>
             </Link>
