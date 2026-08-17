@@ -78,6 +78,22 @@ async function dragTo(page: Page, sourceSelector: string, targetSelector: string
   await page.mouse.up()
 }
 
+/**
+ * Types into a text token and waits for the value to reach the preview.
+ *
+ * `fill` returns once the events are dispatched, not once React has re-rendered.
+ * Starting the next drag inside that gap makes the drop rebuild the token list
+ * from the state as it was before the edit, which silently discards what was
+ * typed — twice on CI this produced a rule of "Text 1" and "Index(01)" with an
+ * empty value and a preview reading "01.txt". A human cannot type and start a
+ * drag inside one frame, so waiting for the rendered result is what makes the
+ * test behave like a user.
+ */
+async function typeToken(page: Page, value: string, shownAs: string) {
+  await page.getByPlaceholder('e.g. campaign').fill(value)
+  await expect(page.getByText(shownAs).first()).toBeVisible()
+}
+
 test.describe('root language redirect', () => {
   test('sends a Japanese browser to /ja', async ({ browser }) => {
     const context = await browser.newContext({ locale: 'ja-JP' })
@@ -182,7 +198,10 @@ test.describe('file renamer workflow', () => {
 
     // Build a rule: a text token alone duplicates the two .txt files.
     await dragTo(page, '.palette-chip:has-text("Text")', '.rule-area')
-    await page.getByPlaceholder('e.g. campaign').fill('renamed')
+    // The duplicate warning alone cannot stand in for this: an empty value
+    // duplicates the two .txt files just as well, so the warning appears either
+    // way and the run would carry on with the text silently missing.
+    await typeToken(page, 'renamed', 'renamed.gz')
     await expect(
       page.getByText('Duplicate file names will occur', { exact: false }),
     ).toBeVisible()
@@ -220,7 +239,7 @@ test.describe('file renamer workflow', () => {
 
     // Rule: text "img" + separator + dimensions.
     await dragTo(page, '.palette-chip:has-text("Text")', '.rule-area')
-    await page.getByPlaceholder('e.g. campaign').fill('img')
+    await typeToken(page, 'img', 'img.png')
     await dragTo(page, '.palette-chip:has-text("Separator")', '.rule-area')
     await dragTo(page, '.palette-chip:has-text("Dimensions")', '.rule-area')
 
