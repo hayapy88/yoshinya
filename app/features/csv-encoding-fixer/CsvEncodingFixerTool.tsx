@@ -3,7 +3,7 @@ import { useLocale } from '~/i18n/locale'
 import { track } from '~/lib/analytics'
 import { ToolIntro } from '~/components/tool/ToolIntro'
 import { ToolGuide } from '~/components/tool/ToolGuide'
-import { analyze, toUtf8WithBom } from './lib/encoding'
+import { analyze, excelRisk, toUtf8WithBom } from './lib/encoding'
 import {
   classify,
   fixedFileName,
@@ -116,6 +116,7 @@ function CsvEncodingFixerTool() {
           file,
           bytes,
           diagnosis: analyze(bytes),
+          risk: excelRisk(bytes),
         }
       }),
     )
@@ -220,6 +221,17 @@ function CsvEncodingFixerTool() {
 
                   {diagnosis.damaged && (
                     <p className="cef-warn">{t.csvEncodingFixer.damagedWarning}</p>
+                  )}
+
+                  {/* Said even though the fix itself succeeded. Handing back a
+                      correctly encoded file that Excel still cannot open, with
+                      no explanation, is how a working tool looks broken. */}
+                  {item.risk.heavy && (
+                    <p className="cef-warn">
+                      {t.csvEncodingFixer.excelHeavyWarning(
+                        (item.risk.sizeBytes / 1024 / 1024).toFixed(1),
+                      )}
+                    </p>
                   )}
 
                   <details className="cef-preview">

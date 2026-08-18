@@ -1088,6 +1088,33 @@ test.describe('csv encoding fixer workflow', () => {
     await expect(page.locator('.cef-item')).toHaveCount(1)
   })
 
+  // A file large enough that Excel struggles with it whatever the encoding. The
+  // reported case was a 4.6 MB Webflow export whose rows carried whole HTML
+  // articles: the fix worked, and Excel then hung on the file it could finally
+  // read properly.
+  test('warns when a file is too heavy for Excel, whatever the encoding', async ({
+    page,
+  }) => {
+    await page.goto('/ja/csv-encoding-fixer')
+    const longRow = `"${'x'.repeat(60_000)}"\n`
+    await add(page, [
+      csv('huge.csv', Buffer.from('col\n' + longRow.repeat(50), 'utf8')),
+    ])
+    await expect(page.locator('.cef-badge')).toHaveText('UTF-8')
+    await expect(
+      page.getByText('Excelはこの種のファイルを開けないことが多く', { exact: false }),
+    ).toBeVisible()
+  })
+
+  test('stays quiet about a file Excel can handle', async ({ page }) => {
+    await page.goto('/ja/csv-encoding-fixer')
+    await add(page, [csv('small.csv', UTF8_NO_BOM)])
+    await expect(page.locator('.cef-badge')).toHaveText('UTF-8')
+    await expect(
+      page.getByText('Excelはこの種のファイルを開けないことが多く', { exact: false }),
+    ).toHaveCount(0)
+  })
+
   test('refuses an empty file and says why', async ({ page }) => {
     await page.goto('/ja/csv-encoding-fixer')
     await add(page, [csv('empty.csv', Buffer.alloc(0))])

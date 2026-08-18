@@ -151,3 +151,51 @@ export function toUtf8WithBom(bytes: Uint8Array): Uint8Array {
   out.set(body, UTF8_BOM.length)
   return out
 }
+
+/**
+ * Whether Excel is likely to fail on this file for reasons that have nothing to
+ * do with encoding.
+ *
+ * Measured on a Webflow content export that hung Excel after being fixed: 4.6 MB
+ * across 703 rows, one column holding whole HTML article bodies, longest line
+ * 53 KB. Cutting it to 50 rows opened fine, and so did all 703 rows with that
+ * one column removed — so neither row count nor long cells alone is the
+ * problem. Both together are.
+ *
+ * Hence the AND: an ordinary large CSV of numbers opens without complaint, and
+ * warning about it would be noise. The line length is measured between newline
+ * bytes rather than by parsing fields, which keeps the promise that this tool
+ * never interprets CSV structure.
+ */
+export const EXCEL_RISK = {
+  bytes: 2 * 1024 * 1024,
+  lineBytes: 8 * 1024,
+} as const
+
+export type ExcelRisk = {
+  heavy: boolean
+  sizeBytes: number
+  longestLineBytes: number
+}
+
+export function excelRisk(bytes: Uint8Array): ExcelRisk {
+  let longest = 0
+  let start = 0
+  for (let i = 0; i < bytes.length; i += 1) {
+    if (bytes[i] === 0x0a) {
+      if (i - start > longest) {
+        longest = i - start
+      }
+      start = i + 1
+    }
+  }
+  if (bytes.length - start > longest) {
+    longest = bytes.length - start
+  }
+  return {
+    heavy:
+      bytes.length > EXCEL_RISK.bytes && longest > EXCEL_RISK.lineBytes,
+    sizeBytes: bytes.length,
+    longestLineBytes: longest,
+  }
+}

@@ -1,4 +1,4 @@
-import type { Diagnosis } from './encoding'
+import type { Diagnosis, ExcelRisk } from './encoding'
 
 export const LIMITS = {
   maxFiles: 50,
@@ -12,6 +12,7 @@ export type CsvItem = {
   file: File
   bytes: Uint8Array
   diagnosis: Diagnosis
+  risk: ExcelRisk
 }
 
 export type RejectedFile = { id: string; name: string; errorCode: FileErrorCode }
