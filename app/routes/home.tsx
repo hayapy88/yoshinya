@@ -82,11 +82,6 @@ export default function Home() {
               name: t.imageCompressorPage.toolName,
               description: t.imageCompressorPage.toolDescription,
             },
-            {
-              slug: 'csv-encoding-fixer',
-              name: t.csvEncodingFixerPage.toolName,
-              description: t.csvEncodingFixerPage.toolDescription,
-            },
           ].map((tool) => (
             <Link
               key={tool.slug}

@@ -20,11 +20,11 @@ export type AnalyticsEvent =
   | 'batch_action'
   | 'language_changed'
 
-// Re-exported from the tool registry rather than repeated. Two copies of this
-// union drifted apart the moment a tool was added, and the failure mode is a
-// tool whose events silently do not typecheck.
-export type { ToolSlug } from '~/components/tool/types'
-import type { ToolSlug } from '~/components/tool/types'
+export type ToolSlug =
+  | 'file-renamer'
+  | 'image-sorter'
+  | 'pdf-title-editor'
+  | 'image-compressor'
 
 // Deliberately narrow. Adding a free-form string field here would be the way a
 // filename eventually ends up in an event, so new keys need a deliberate edit.

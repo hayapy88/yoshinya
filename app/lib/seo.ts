@@ -143,16 +143,6 @@ export function imageCompressorJsonLd(locale: Locale): Record<string, unknown> {
   )
 }
 
-export function csvEncodingFixerJsonLd(locale: Locale): Record<string, unknown> {
-  return toolJsonLd(
-    locale,
-    locale === 'ja'
-      ? 'よしにゃにCSV文字化け修復'
-      : 'CSV Encoding Fixer by Yoshinya',
-    '/csv-encoding-fixer',
-  )
-}
-
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 export function faqJsonLd(

@@ -8,7 +8,6 @@ export default [
     route('image-sorter', 'routes/image-sorter.tsx'),
     route('pdf-title-editor', 'routes/pdf-title-editor.tsx'),
     route('image-compressor', 'routes/image-compressor.tsx'),
-    route('csv-encoding-fixer', 'routes/csv-encoding-fixer.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -25,9 +24,6 @@ export default [
   }),
   route('image-compressor', 'routes/locale-redirect.tsx', {
     id: 'redirect-image-compressor',
-  }),
-  route('csv-encoding-fixer', 'routes/locale-redirect.tsx', {
-    id: 'redirect-csv-encoding-fixer',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

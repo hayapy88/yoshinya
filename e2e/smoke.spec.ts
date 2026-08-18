@@ -494,13 +494,12 @@ test.describe('pdf title editor workflow', () => {
 
 test.describe('shared tool page structure', () => {
   // Every tool must open and close the same way: same badges, same privacy
-  // note, a 使い方ガイド with an FAQ, and links to the other tools.
+  // note, a 使い方ガイド with an FAQ, and links to the other two tools.
   const tools = [
     { slug: 'file-renamer', heading: 'よしにゃにファイルリネーム' },
     { slug: 'image-sorter', heading: 'よしにゃに画像仕分け' },
     { slug: 'pdf-title-editor', heading: 'よしにゃにPDFタイトル変更' },
     { slug: 'image-compressor', heading: 'よしにゃにまとめて画像圧縮' },
-    { slug: 'csv-encoding-fixer', heading: 'よしにゃにCSV文字化け修復' },
   ]
 
   for (const tool of tools) {
@@ -529,7 +528,7 @@ test.describe('shared tool page structure', () => {
         ).toBeVisible()
       }
 
-      // Related tools links to every other tool, and never to itself.
+      // Related tools links to the other two, and never to itself.
       const related = page.locator('.tool-related a')
       await expect(related).toHaveCount(tools.length - 1)
       for (const other of tools.filter((t) => t.slug !== tool.slug)) {
@@ -550,9 +549,7 @@ test.describe('shared tool page structure', () => {
     await expect(
       page.getByRole('heading', { name: 'Guide', level: 2 }),
     ).toBeVisible()
-    // Derived from the list above rather than written out: a tool page links to
-    // every tool but itself, so a hardcoded number breaks on every release.
-    await expect(page.locator('.tool-related a')).toHaveCount(tools.length - 1)
+    await expect(page.locator('.tool-related a')).toHaveCount(3)
   })
 })
 
@@ -980,118 +977,5 @@ test.describe('image compressor workflow', () => {
     await waitForCompare(page)
     await expect(page.locator('#ic-format option[value="webp"]')).toBeEnabled()
     await expect(page.locator('#ic-format option[value="webp"]')).toHaveText('WebP')
-  })
-})
-
-test.describe('csv encoding fixer workflow', () => {
-  // Written out as bytes rather than produced by an encoder: browsers can only
-  // encode UTF-8, and these are the exact bytes a Japanese business system
-  // exports. 「名前,住所\n山田,東京\n」in Shift_JIS.
-  const SJIS = Buffer.from([
-    0x96, 0xbc, 0x91, 0x4f, 0x2c, 0x8f, 0x5a, 0x8f, 0x8a, 0x0a, 0x8e, 0x52,
-    0x93, 0x63, 0x2c, 0x93, 0x8c, 0x8b, 0x9e, 0x0a,
-  ])
-  const UTF8_NO_BOM = Buffer.from('名前,住所\n山田,東京\n', 'utf8')
-  const csv = (name: string, buffer: Buffer) => ({
-    name,
-    mimeType: 'text/csv',
-    buffer,
-  })
-  const add = (page: Page, files: { name: string; mimeType: string; buffer: Buffer }[]) =>
-    page.locator('input[type="file"]').first().setInputFiles(files)
-
-  test('tells a UTF-8 file it needs only the marker', async ({ page }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('utf8.csv', UTF8_NO_BOM)])
-    await expect(page.locator('.cef-badge')).toHaveText('UTF-8')
-    await expect(
-      page.getByText('中身は1バイトも変わりません', { exact: false }),
-    ).toBeVisible()
-  })
-
-  // The whole tool rests on the browser being able to read the legacy tables.
-  // TextEncoder cannot write them, so this cannot be checked by round-tripping.
-  test('decodes Shift_JIS in the browser and shows the recovered text', async ({
-    page,
-  }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('sjis.csv', SJIS)])
-    await expect(page.locator('.cef-badge')).toHaveText('Shift_JIS')
-    await page.locator('.cef-preview summary').click()
-    await expect(page.locator('.cef-preview pre')).toContainText('名前,住所')
-    await expect(page.locator('.cef-preview pre')).toContainText('山田,東京')
-  })
-
-  // The page promises the data is untouched. This reads the file that actually
-  // lands on disk, so the promise is checked rather than assumed.
-  test('downloads the marker followed by the original bytes, unchanged', async ({
-    page,
-  }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('utf8.csv', UTF8_NO_BOM)])
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.getByRole('button', { name: '修復したファイルをダウンロード' }).click(),
-    ])
-    expect(download.suggestedFilename()).toBe('utf8_utf8.csv')
-    const stream = await download.createReadStream()
-    const chunks: Buffer[] = []
-    for await (const chunk of stream) {
-      chunks.push(chunk as Buffer)
-    }
-    const saved = Buffer.concat(chunks)
-    expect([...saved.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf])
-    expect([...saved.subarray(3)]).toEqual([...UTF8_NO_BOM])
-  })
-
-  test('converts a Shift_JIS file to readable UTF-8 on disk', async ({ page }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('sjis.csv', SJIS)])
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.getByRole('button', { name: '修復したファイルをダウンロード' }).click(),
-    ])
-    const stream = await download.createReadStream()
-    const chunks: Buffer[] = []
-    for await (const chunk of stream) {
-      chunks.push(chunk as Buffer)
-    }
-    const saved = Buffer.concat(chunks)
-    expect(saved.subarray(3).toString('utf8')).toBe('名前,住所\n山田,東京\n')
-  })
-
-  test('handles several files at once and can drop one', async ({ page }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('a.csv', UTF8_NO_BOM), csv('b.csv', SJIS)])
-    await expect(page.locator('.cef-item')).toHaveCount(2)
-    await expect(page.locator('.cef-badge')).toHaveText(['UTF-8', 'Shift_JIS'])
-    await page.locator('.cef-item').first().getByRole('button', { name: '削除' }).click()
-    await expect(page.locator('.cef-item')).toHaveCount(1)
-  })
-
-  test('refuses an empty file and says why', async ({ page }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('empty.csv', Buffer.alloc(0))])
-    await expect(page.getByText('このファイルは空です', { exact: false })).toBeVisible()
-    await expect(page.locator('.cef-item')).toHaveCount(0)
-  })
-
-  test('never makes the page wider than the screen', async ({ page }) => {
-    await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('とても長い名前のファイル_売上データ_2026年04月分.csv', SJIS)])
-    await expect(page.locator('.cef-item')).toHaveCount(1)
-    // Reached through globalThis because this body is compiled with the Node
-    // lib, which has no document, even though it runs in the page.
-    const overflow = await page.evaluate(() => {
-      const el = (
-        globalThis as unknown as {
-          document: {
-            documentElement: { scrollWidth: number; clientWidth: number }
-          }
-        }
-      ).document.documentElement
-      return { scroll: el.scrollWidth, client: el.clientWidth }
-    })
-    expect(overflow.scroll).toBeLessThanOrEqual(overflow.client + 1)
   })
 })
