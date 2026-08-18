@@ -10,7 +10,6 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'image-sorter': 'imageSorterPage',
   'pdf-title-editor': 'pdfTitleEditorPage',
   'image-compressor': 'imageCompressorPage',
-  'csv-encoding-fixer': 'csvEncodingFixerPage',
 }
 
 function Section({ section }: { section: GuideSection }) {

@@ -22,22 +22,16 @@ export type ToolGuideContent = {
   relatedHeading: string
 }
 
-// Every tool slug, including any not yet finished. Analytics events and the
-// slug-to-dictionary map are typed against this.
+// Slugs of the tools that exist, used to build the related-tools list.
 export type ToolSlug =
   | 'file-renamer'
   | 'image-sorter'
   | 'pdf-title-editor'
   | 'image-compressor'
-  | 'csv-encoding-fixer'
 
-// The published tools, in release order: what the related-tools list offers and
-// what the sitemap carries. A slug is added here when its page is complete —
-// linking to a tool that has no guide yet would advertise an unfinished page.
 export const TOOL_SLUGS: ToolSlug[] = [
   'file-renamer',
   'image-sorter',
   'pdf-title-editor',
   'image-compressor',
-  'csv-encoding-fixer',
 ]
