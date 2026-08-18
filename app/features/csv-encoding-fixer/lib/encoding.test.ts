@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   analyze,
+  excelRisk,
   decodeText,
   detectEncoding,
   isValidUtf8,
@@ -144,5 +145,47 @@ describe('toUtf8WithBom', () => {
 
   it('leaves an empty file as just the marker', () => {
     expect([...toUtf8WithBom(new Uint8Array())]).toEqual([...UTF8_BOM])
+  })
+})
+
+describe('excelRisk', () => {
+  const build = (sizeBytes: number, lineBytes: number) => {
+    const out = new Uint8Array(sizeBytes).fill(0x61)
+    for (let i = lineBytes; i < sizeBytes; i += lineBytes + 1) {
+      out[i] = 0x0a
+    }
+    return out
+  }
+
+  // The reported file: 4.6 MB with a 53 KB line. Fixing the encoding was
+  // correct and still left Excel unable to open it.
+  it('flags a large file made of long lines', () => {
+    const risk = excelRisk(build(4_600_000, 53_000))
+    expect(risk.heavy).toBe(true)
+    expect(risk.longestLineBytes).toBe(53_000)
+  })
+
+  // Both of these opened fine when the reporter tested them, so neither may
+  // raise the warning.
+  it('does not flag long lines in a small file', () => {
+    expect(excelRisk(build(350_000, 53_000)).heavy).toBe(false)
+  })
+
+  it('does not flag a large file of ordinary short rows', () => {
+    expect(excelRisk(build(4_600_000, 200)).heavy).toBe(false)
+  })
+
+  it('measures the last line when the file does not end in a newline', () => {
+    const bytes = new Uint8Array(3_000_000).fill(0x61)
+    bytes[10] = 0x0a
+    expect(excelRisk(bytes).longestLineBytes).toBe(3_000_000 - 11)
+  })
+
+  it('reports a size for an empty file without dividing by anything', () => {
+    expect(excelRisk(new Uint8Array())).toEqual({
+      heavy: false,
+      sizeBytes: 0,
+      longestLineBytes: 0,
+    })
   })
 })

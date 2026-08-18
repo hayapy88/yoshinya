@@ -519,6 +519,11 @@ export const en = {
       'This file is UTF-8 and already carries the marker Excel looks for. It should open correctly as it is.',
     damagedWarning:
       'Some characters in this file could not be read under any encoding, which means they were already lost before the file reached here. Converting cannot bring them back — you would need the original export.',
+    // Shown when the file is too heavy for Excel regardless of encoding. Naming
+    // the real numbers matters: the user has just been told the file is fixed,
+    // and needs to know why Excel still will not open it.
+    excelHeavyWarning: (mb: string) =>
+      `This file is ${mb} MB and contains very long lines of text. Excel often cannot open files like this — it may hang or stop responding. That is separate from the encoding and fixing it will not change it. Google Sheets handles these files, and in Excel you can try Data > From Text/CSV rather than opening the file directly.`,
     previewHeading: 'Preview',
     // Actions
     download: 'Download the fixed file',

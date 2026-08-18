@@ -145,6 +145,34 @@ on.
 The last dot is the extension, so `2026.04.sales.csv` keeps its dots, and a
 leading dot is not an extension, so `.hidden` becomes `.hidden_utf8`.
 
+## When the encoding was never the problem
+
+A 4.6 MB Webflow content export was reported: garbled in Excel, fixed by this
+tool, and then Excel hung on the result and had to be killed.
+
+The fix was correct — the saved file was the original bytes with three bytes in
+front, verified byte for byte. What changed is that Excel could finally read the
+file, and the file is one Excel cannot cope with: 703 rows across 21 columns
+with one column holding whole HTML article bodies, up to 29,275 characters a
+cell and a longest line of 53 KB.
+
+Three cut-down versions isolated it. Fifty rows with that column opened fine.
+All 703 rows without that column opened fine. All 703 rows with it hung, and
+stripping the file's eleven emoji changed nothing. So neither the row count nor
+the long cells alone is the problem — the volume of long-text content is, and
+it was there before the encoding was touched.
+
+The tool now says so when a file is over 2 MB **and** has lines longer than
+8 KB. Both conditions, because an ordinary large CSV of numbers opens without
+complaint and warning about it would be noise. Line length is measured between
+newline bytes rather than by parsing fields, so the promise that this tool never
+interprets CSV structure still holds.
+
+The warning appears alongside a successful fix rather than instead of it. The
+file really was fixed, and other tools will now read it correctly; it is Excel
+specifically that will not. Handing back a correctly encoded file that Excel
+still cannot open, with no explanation, is how a working tool looks broken.
+
 ## What it does not do
 
 - **Convert to Shift_JIS.** Browsers can read the legacy Japanese encodings but
