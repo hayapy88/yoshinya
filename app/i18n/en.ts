@@ -637,6 +637,7 @@ export const en = {
     pngReduceLabel: 'Reduce the colours to shrink the file',
     pngReduceHint:
       'PNG compression is lossless and already applied, so the only way to make one smaller is to store fewer colours. This works well for logos, screenshots, illustrations and diagrams. Photographs may band — check the comparison.',
+    pngMoreSettings: 'More settings',
     pngColorsLabel: 'Colours',
     pngDitherLabel: 'Smooth the gradients (dithering)',
     pngDitherHint:

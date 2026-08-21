@@ -625,6 +625,7 @@ export const ja: typeof en = {
     pngReduceLabel: '色数を減らして軽くする',
     pngReduceHint:
       'PNGの圧縮は可逆で、すでに適用済みです。そのためPNGを軽くする方法は色数を減らすことだけです。ロゴ・スクリーンショット・イラスト・図版では効果が高く、写真では色の段差が出ることがあります。比較で確認してください。',
+    pngMoreSettings: 'その他の設定',
     pngColorsLabel: '色数',
     pngDitherLabel: 'グラデーションをなめらかにする（ディザ）',
     pngDitherHint:
