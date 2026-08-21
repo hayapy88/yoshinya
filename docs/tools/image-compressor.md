@@ -313,6 +313,66 @@ The runtime check stays regardless. The probe can only be wrong in one
 direction — reporting support that a specific image then fails to encode — and
 that path is still handled.
 
+## Compressing a PNG means reducing its colours
+
+PNG compression is lossless and has already been applied by whatever produced
+the file. There is nothing left to squeeze, so re-encoding one through
+`canvas.convertToBlob({ type: 'image/png' })` does not compress it — the canvas
+encoder always writes 8-bit RGBA with no palette and no filter selection, and on
+an already optimised source that is bigger than what it started from. Measured
+on this site's own files:
+
+| | Original | Canvas PNG |
+| --- | --- | --- |
+| `ogp-csv-encoding-fixer-ja.png` | 349 KB | 671 KB (192%) |
+| `logo-yoshinya.png` | 85 KB | 91 KB (107%) |
+| `ogp-default.png` | 177 KB | 90 KB (51%) |
+
+A tool that reliably enlarges the file it was given to compress is broken, and
+this was reported as exactly that. What services like iLoveIMG do instead is
+reduce the image to a small palette — a lossy step that PNG's own format
+supports and the browser does not offer.
+
+So the tool now does it: median-cut quantisation, optional Floyd–Steinberg
+dithering, and a hand-written palette PNG encoder. Same files, same measurement
+method:
+
+| | Original | 256 colours | 64 colours |
+| --- | --- | --- | --- |
+| `ogp-csv-encoding-fixer-ja.png` | 349 KB | 125 KB (36%) | 100 KB (29%) |
+| `logo-yoshinya.png` | 85 KB | 19 KB (23%) | 12 KB (14%) |
+| `ogp-default.png` | 177 KB | 25 KB (14%) | 18 KB (10%) |
+
+### Why it is written by hand
+
+`CompressionStream('deflate')` produces zlib-wrapped output, which is precisely
+what an IDAT chunk holds, so a palette PNG needs only chunk framing, a CRC-32
+and the palette itself. That is a few hundred lines against a WebAssembly
+dependency, and it keeps the tool free of one.
+
+Scanlines use filter 0. Filtering helps continuous-tone images by making
+neighbouring bytes similar, but palette indices are labels rather than
+quantities — the gap between index 7 and index 9 means nothing — so filtering
+them tends to enlarge the file.
+
+Fully transparent pixels are folded into a single palette entry rather than
+spending entries on invisible noise, and `tRNS` is written only up to the last
+entry that is not opaque, so an opaque image carries no transparency chunk at
+all.
+
+### Defaults, and why it is on
+
+It defaults to on at 256 colours. Leaving it off would preserve the reported
+bug as the default experience, and 256 colours is the mildest setting the
+control offers — for logos, screenshots and diagrams it is usually
+indistinguishable from the original. Photographs band, which is why dithering
+exists and why the before/after comparison earns its place here more than
+anywhere else in the tool.
+
+The control is a colour count, not a quality percentage. Labelling it "quality"
+would invite the same misreading the WebP curve already causes, and the number
+genuinely means something different.
+
 ## WebP quality is not what people expect
 
 Measured against a high-frequency test image, on Chrome's canvas encoder:

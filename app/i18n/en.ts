@@ -631,8 +631,18 @@ export const en = {
     useLossless: 'Use 100 (lossless)',
     qualityFlatTop:
       'Above roughly 90 the picture barely improves while the file keeps growing. If you want no loss at all, use 100.',
-    pngLossless:
-      'PNG is lossless, so there is no quality setting. To make a PNG smaller, resize it or switch the format to WebP.',
+    // Replaces the old note that PNG could not be made smaller here. It could
+    // not, while the canvas encoder was the only option — on an already
+    // optimised source that encoder produced a larger file than the original.
+    pngReduceLabel: 'Reduce the colours to shrink the file',
+    pngReduceHint:
+      'PNG compression is lossless and already applied, so the only way to make one smaller is to store fewer colours. This works well for logos, screenshots, illustrations and diagrams. Photographs may band — check the comparison.',
+    pngColorsLabel: 'Colours',
+    pngDitherLabel: 'Smooth the gradients (dithering)',
+    pngDitherHint:
+      'Blends colours with a fine speckle instead of hard bands. Better for gradients, slightly larger for flat artwork.',
+    pngLosslessOff:
+      'Colour reduction is off, so this PNG is saved exactly as it is. Note that re-encoding an already optimised PNG can produce a larger file than the original.',
     applyQualityToRest: (quality: number, count: number) =>
       `Apply quality ${quality} to the remaining ${count}`,
     applyRestNone: 'No later images are waiting to be saved.',

@@ -12,6 +12,15 @@ export type CompressionSettings = {
   keepAspectRatio: boolean
   preventUpscale: boolean
   jpegBackground: string
+  /**
+   * PNG's own compression is lossless and already applied, so the only way to
+   * make a PNG smaller is to store fewer colours. On by default: a compressor
+   * that reliably enlarges the file is the bug this exists to fix, and 256
+   * colours is the mildest setting there is.
+   */
+  pngReduce: boolean
+  pngColors: number
+  pngDither: boolean
 }
 
 export type ProcessingState = 'queued' | 'processing' | 'ready' | 'error'
@@ -87,6 +96,9 @@ export const DEFAULT_SETTINGS: CompressionSettings = {
   keepAspectRatio: true,
   preventUpscale: true,
   jpegBackground: '#ffffff',
+  pngReduce: true,
+  pngColors: 256,
+  pngDither: true,
 }
 
 // Starting points, to be revisited against real devices. Exceeding one of these
