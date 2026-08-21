@@ -373,6 +373,23 @@ The control is a colour count, not a quality percentage. Labelling it "quality"
 would invite the same misreading the WebP curve already causes, and the number
 genuinely means something different.
 
+The count and the dithering toggle are folded away under **More settings**. 256
+is the most a palette PNG can hold, so every value the control offers makes the
+picture worse, and at 256 the file is already a fraction of the original —
+because most of the saving comes from storing one byte per pixel instead of
+four, not from dropping colours. Putting a lever in front of someone when every
+position of it degrades their image is not a choice worth offering by default.
+
+It is folded rather than removed because the remaining savings are real for
+anyone tuning assets for a page:
+
+| Colours | `logo-yoshinya.png` (85 KB) | `ogp-csv-encoding-fixer-ja.png` (349 KB) |
+| --- | --- | --- |
+| 256 | 19 KB | 125 KB |
+| 64 | 12 KB | 100 KB |
+| 32 | 8 KB | 80 KB |
+| 16 | 7 KB | 62 KB |
+
 ## WebP quality is not what people expect
 
 Measured against a high-frequency test image, on Chrome's canvas encoder:

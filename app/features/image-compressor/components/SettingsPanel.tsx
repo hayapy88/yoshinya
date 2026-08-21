@@ -238,7 +238,14 @@ export function SettingsPanel({
           <p className="ic-hint">{t.imageCompressor.pngReduceHint}</p>
 
           {settings.pngReduce ? (
-            <>
+            /* Folded away on purpose. 256 is the most a palette PNG can hold,
+               so every value this control offers makes the picture worse — and
+               at 256 the file is already a fraction of the original, because
+               most of the saving comes from storing one byte per pixel instead
+               of four rather than from dropping colours. Someone tuning assets
+               for a page can still reach it. */
+            <details className="ic-details">
+              <summary>{t.imageCompressor.pngMoreSettings}</summary>
               <label htmlFor="ic-png-colors">
                 {t.imageCompressor.pngColorsLabel}{' '}
                 <strong>{settings.pngColors}</strong>
@@ -273,7 +280,7 @@ export function SettingsPanel({
                 {t.imageCompressor.pngDitherLabel}
               </label>
               <p className="ic-hint">{t.imageCompressor.pngDitherHint}</p>
-            </>
+            </details>
           ) : (
             <p className="ic-hint ic-lossless">{t.imageCompressor.pngLosslessOff}</p>
           )}

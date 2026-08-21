@@ -611,8 +611,12 @@ test.describe('image compressor workflow', () => {
     await addImages(page, ['a.png'])
     await waitForCompare(page)
     // Quality would mean nothing here: PNG's compression is lossless, so the
-    // only lever is how many colours are stored.
+    // only lever is how many colours are stored — and every value it offers
+    // makes the picture worse, so it waits behind a disclosure rather than
+    // sitting in front of someone who only wants a smaller file.
     await expect(page.locator('#ic-quality')).toHaveCount(0)
+    await expect(page.locator('#ic-png-colors')).toBeHidden()
+    await page.getByText('その他の設定').click()
     await expect(page.locator('#ic-png-colors')).toBeVisible()
   })
 
@@ -632,8 +636,9 @@ test.describe('image compressor workflow', () => {
 
     // A colour count, not a quality percentage — the number means something
     // different and is labelled accordingly.
-    await expect(page.locator('#ic-png-colors')).toBeVisible()
     await expect(page.locator('#ic-quality')).toHaveCount(0)
+    await page.getByText('その他の設定').click()
+    await expect(page.locator('#ic-png-colors')).toBeVisible()
 
     const [download] = await Promise.all([
       page.waitForEvent('download'),
