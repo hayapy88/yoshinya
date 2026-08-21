@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { readFileSync } from 'node:fs'
 import { deflateSync, crc32 } from 'node:zlib'
 import { PDFDocument } from 'pdf-lib'
 
@@ -603,13 +604,63 @@ test.describe('image compressor workflow', () => {
     await expect(page.locator('.ic-sizes')).toContainText('変換後')
   })
 
-  test('png output offers no quality slider, and says why', async ({ page }) => {
+  test('png output offers a colour count rather than a quality slider', async ({
+    page,
+  }) => {
     await page.goto('/ja/image-compressor')
     await addImages(page, ['a.png'])
     await waitForCompare(page)
-    // A png source kept in its original format is lossless: no quality to set.
+    // Quality would mean nothing here: PNG's compression is lossless, so the
+    // only lever is how many colours are stored.
     await expect(page.locator('#ic-quality')).toHaveCount(0)
-    await expect(page.locator('.ic-lossless')).toContainText('PNGは可逆圧縮')
+    await expect(page.locator('#ic-png-colors')).toBeVisible()
+  })
+
+  // PNG's own compression is lossless and already applied, so re-encoding an
+  // optimised PNG through the canvas produced a bigger file — 192% on this
+  // site's own OGP image. Colour reduction is the thing that shrinks a PNG.
+  test('png output offers colour reduction and actually shrinks the file', async ({
+    page,
+  }) => {
+    await page.goto('/ja/image-compressor')
+    await page
+      .locator('input[type="file"]')
+      .first()
+      .setInputFiles('public/brand/logo-yoshinya.png')
+    await waitForCompare(page)
+    await page.getByLabel('出力形式').selectOption('png')
+
+    // A colour count, not a quality percentage — the number means something
+    // different and is labelled accordingly.
+    await expect(page.locator('#ic-png-colors')).toBeVisible()
+    await expect(page.locator('#ic-quality')).toHaveCount(0)
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: /ダウンロード/ }).first().click(),
+    ])
+    const stream = await download.createReadStream()
+    const chunks: Buffer[] = []
+    for await (const chunk of stream) {
+      chunks.push(chunk as Buffer)
+    }
+    const saved = Buffer.concat(chunks)
+
+    // A real PNG the browser will accept, and smaller than what went in.
+    expect([...saved.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10])
+    expect(saved.length).toBeLessThan(readFileSync('public/brand/logo-yoshinya.png').length)
+  })
+
+  test('turning colour reduction off says what that means', async ({ page }) => {
+    await page.goto('/ja/image-compressor')
+    await addImages(page, ['a.png'])
+    await waitForCompare(page)
+    await page.getByLabel('出力形式').selectOption('png')
+    await page.getByLabel('色数を減らして軽くする').uncheck()
+    await expect(page.locator('#ic-png-colors')).toHaveCount(0)
+    await expect(
+      page.getByText('元より大きくなる場合があります', { exact: false }),
+    ).toBeVisible()
   })
 
   test('bulk quality applies only to later unsaved images, and undo restores them', async ({

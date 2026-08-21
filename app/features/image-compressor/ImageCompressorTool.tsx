@@ -202,6 +202,10 @@ function ImageCompressorTool() {
         mimeType: mimeForFormat(format),
         quality: active.quality,
         useQuality: supportsQuality(format),
+        png:
+          format === 'png' && active.pngReduce
+            ? { colors: active.pngColors, dither: active.pngDither }
+            : null,
         resize: {
           resizeEnabled: active.resizeEnabled,
           width: active.width,

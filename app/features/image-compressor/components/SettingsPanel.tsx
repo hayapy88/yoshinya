@@ -221,7 +221,63 @@ export function SettingsPanel({
           </button>
         </div>
       ) : (
-        <p className="ic-hint ic-lossless">{t.imageCompressor.pngLossless}</p>
+        // PNG gets its own control rather than the quality slider: the number
+        // being chosen is a count of colours, not a quality percentage, and
+        // labelling it "quality" would invite the same misreading that the WebP
+        // curve already causes.
+        <div className="ic-field">
+          <label className="ic-check">
+            <input
+              type="checkbox"
+              checked={settings.pngReduce}
+              disabled={disabled}
+              onChange={(e) => onChange({ pngReduce: e.target.checked })}
+            />
+            {t.imageCompressor.pngReduceLabel}
+          </label>
+          <p className="ic-hint">{t.imageCompressor.pngReduceHint}</p>
+
+          {settings.pngReduce ? (
+            <>
+              <label htmlFor="ic-png-colors">
+                {t.imageCompressor.pngColorsLabel}{' '}
+                <strong>{settings.pngColors}</strong>
+              </label>
+              <div className="ic-quality-row">
+                <input
+                  id="ic-png-colors"
+                  type="range"
+                  min={2}
+                  max={256}
+                  value={settings.pngColors}
+                  disabled={disabled}
+                  onChange={(e) => onChange({ pngColors: Number(e.target.value) })}
+                />
+                <input
+                  type="number"
+                  min={2}
+                  max={256}
+                  value={settings.pngColors}
+                  disabled={disabled}
+                  aria-label={t.imageCompressor.pngColorsLabel}
+                  onChange={(e) => onChange({ pngColors: Number(e.target.value) })}
+                />
+              </div>
+              <label className="ic-check">
+                <input
+                  type="checkbox"
+                  checked={settings.pngDither}
+                  disabled={disabled}
+                  onChange={(e) => onChange({ pngDither: e.target.checked })}
+                />
+                {t.imageCompressor.pngDitherLabel}
+              </label>
+              <p className="ic-hint">{t.imageCompressor.pngDitherHint}</p>
+            </>
+          ) : (
+            <p className="ic-hint ic-lossless">{t.imageCompressor.pngLosslessOff}</p>
+          )}
+        </div>
       )}
 
       <details className="ic-details">

@@ -37,6 +37,7 @@ function request(mimeType: string): EncodeRequest {
     mimeType,
     quality: 80,
     useQuality: true,
+    png: null,
     resize: {
       resizeEnabled: false,
       width: null,

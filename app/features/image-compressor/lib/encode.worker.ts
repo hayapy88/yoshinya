@@ -1,5 +1,7 @@
 /// <reference lib="webworker" />
 
+import { encodeIndexedPng } from './png'
+import { quantize } from './quantize'
 import { targetDimensions } from './resize'
 import type { CompressionSettings } from './types'
 
@@ -21,6 +23,8 @@ export type EncodeRequest = {
   mimeType: string
   quality: number
   useQuality: boolean
+  /** Colour reduction for PNG output; null leaves the canvas encoder to it. */
+  png: { colors: number; dither: boolean } | null
   // Resolved here rather than by the caller: the true pixel size is only known
   // once the image is decoded, and on the first pass the caller does not have it.
   resize: ResizeRequest
@@ -83,6 +87,37 @@ export async function encode(request: EncodeRequest): Promise<EncodeResponse> {
       context.fillRect(0, 0, target.width, target.height)
     }
     context.drawImage(bitmap, 0, 0, target.width, target.height)
+
+    // PNG takes its own path. The canvas encoder always writes 8-bit RGBA with
+    // no palette, which on an already-optimised source produces a bigger file
+    // than the one it started from — measured at 192% on this site's own OGP
+    // images. Reducing the colours and writing a palette PNG is the only thing
+    // that actually makes a PNG smaller.
+    if (request.png) {
+      const source = context.getImageData(0, 0, target.width, target.height)
+      const { indices, palette } = quantize(
+        source.data,
+        target.width,
+        target.height,
+        request.png.colors,
+        request.png.dither,
+      )
+      const bytes = await encodeIndexedPng(
+        indices,
+        palette,
+        target.width,
+        target.height,
+      )
+      return {
+        jobId: request.jobId,
+        ok: true,
+        blob: new Blob([bytes as BlobPart], { type: 'image/png' }),
+        width: target.width,
+        height: target.height,
+        sourceWidth: bitmap.width,
+        sourceHeight: bitmap.height,
+      }
+    }
 
     const blob = await canvas.convertToBlob(
       // Quality is omitted for PNG rather than passed and ignored: the encoder
