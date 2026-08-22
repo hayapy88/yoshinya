@@ -91,8 +91,19 @@ async function dragTo(page: Page, sourceSelector: string, targetSelector: string
  * test behave like a user.
  */
 async function typeToken(page: Page, value: string, shownAs: string) {
-  await page.getByPlaceholder('e.g. campaign').fill(value)
-  await expect(page.getByText(shownAs).first()).toBeVisible()
+  // Retried as a whole, because the fill itself is what goes missing. On a
+  // loaded runner the value never reaches the application: the preview keeps
+  // reading "01.txt", and six CI failures have shown exactly that. The rule
+  // tokens are keyed by id and React never remounts the field, so nothing in
+  // the app discards it — the events are dispatched into a page that is still
+  // settling from the drop that created the field.
+  //
+  // Typing again is what a person would do, and the assertion inside the block
+  // is what makes it stop: this cannot pass with the value missing.
+  await expect(async () => {
+    await page.getByPlaceholder('e.g. campaign').fill(value)
+    await expect(page.getByText(shownAs).first()).toBeVisible({ timeout: 2000 })
+  }).toPass({ timeout: 20000 })
 }
 
 test.describe('root language redirect', () => {
