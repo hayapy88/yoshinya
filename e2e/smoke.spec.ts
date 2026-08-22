@@ -1187,9 +1187,15 @@ test.describe('csv encoding fixer workflow', () => {
     await page.goto('/ja/csv-encoding-fixer');
     await add(page, [csv('utf8.csv', UTF8_NO_BOM)]);
     await expect(page.locator('.cef-badge')).toHaveText('UTF-8');
-    await expect(
-      page.getByText('中身は1バイトも変わりません', { exact: false }),
-    ).toBeVisible();
+    // The verdict answers first and the reason is folded away, which is the
+    // point of the wording: someone staring at a garbled export wants it
+    // fixed, not explained.
+    await expect(page.locator('.cef-verdict')).toHaveText(
+      'このファイルは直せます。下のボタンからダウンロードすれば、Excelで正しく開けます。',
+    );
+    await expect(page.locator('.cef-why')).toBeHidden();
+    await page.getByText('このファイルについて詳しく').click();
+    await expect(page.locator('.cef-why')).toBeVisible();
   });
 
   // The whole tool rests on the browser being able to read the legacy tables.
@@ -1200,7 +1206,7 @@ test.describe('csv encoding fixer workflow', () => {
     await page.goto('/ja/csv-encoding-fixer');
     await add(page, [csv('sjis.csv', SJIS)]);
     await expect(page.locator('.cef-badge')).toHaveText('Shift_JIS');
-    await page.locator('.cef-preview summary').click();
+    await page.getByText('中身を確認する').click();
     await expect(page.locator('.cef-preview pre')).toContainText('名前,住所');
     await expect(page.locator('.cef-preview pre')).toContainText('山田,東京');
   });

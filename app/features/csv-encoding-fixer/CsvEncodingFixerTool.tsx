@@ -193,7 +193,15 @@ function CsvEncodingFixerTool() {
                 ? t.csvEncodingFixer.verdictAlreadyFine
                 : diagnosis.bomOnly
                   ? t.csvEncodingFixer.verdictBomOnly
-                  : t.csvEncodingFixer.verdictConvert(
+                  : t.csvEncodingFixer.verdictConvert();
+              // The reason is folded away. Someone staring at a garbled export
+              // wants it fixed, not explained; the explanation is one click
+              // away for anyone who does want it.
+              const why = diagnosis.hasBom
+                ? t.csvEncodingFixer.verdictAlreadyFineWhy
+                : diagnosis.bomOnly
+                  ? t.csvEncodingFixer.verdictBomOnlyWhy
+                  : t.csvEncodingFixer.verdictConvertWhy(
                       t.csvEncodingFixer.encodings[diagnosis.encoding],
                     );
               return (
@@ -238,11 +246,8 @@ function CsvEncodingFixerTool() {
                     </p>
                   )}
 
-                  <details className="cef-preview">
-                    <summary>{t.csvEncodingFixer.previewHeading}</summary>
-                    <pre>{diagnosis.preview}</pre>
-                  </details>
-
+                  {/* The action comes before the details, so the quickest
+                      path through the page is read one line, press one button. */}
                   <button
                     type="button"
                     className="cef-btn cef-btn-primary"
@@ -250,6 +255,16 @@ function CsvEncodingFixerTool() {
                   >
                     {t.csvEncodingFixer.download}
                   </button>
+
+                  <details className="cef-preview">
+                    <summary>{t.csvEncodingFixer.previewHeading}</summary>
+                    <pre>{diagnosis.preview}</pre>
+                  </details>
+
+                  <details className="cef-preview">
+                    <summary>{t.csvEncodingFixer.whyHeading}</summary>
+                    <p className="cef-why">{why}</p>
+                  </details>
                 </li>
               );
             })}

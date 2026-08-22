@@ -87,7 +87,9 @@ describe('every guide has the same shape in both locales', () => {
     'fileRenamerGuide',
     'imageSorterGuide',
     'pdfTitleEditorGuide',
-    'csvEncodingFixerGuide',
+    // csvEncodingFixerGuide is not here on purpose: it opens with the steps and
+    // keeps the explanation near the end, because someone arriving with a
+    // garbled export wants it fixed rather than explained.
   ] as const;
 
   it.each(keys)('%s has matching section and FAQ counts', (key) => {
