@@ -2,36 +2,36 @@ import {
   fileNameFromTitle,
   resolveOutputName,
   titleFromFileName,
-} from './filename'
+} from './filename';
 import {
   emptyMetadata,
   normalizeTextField,
   parseKeywords,
   sanitizeInput,
-} from './metadata'
-import type { PdfItem, PdfMetadataForm } from './types'
+} from './metadata';
+import type { PdfItem, PdfMetadataForm } from './types';
 
-export type EditableField = keyof PdfMetadataForm
-export type ApplyMode = 'all' | 'blank'
+export type EditableField = keyof PdfMetadataForm;
+export type ApplyMode = 'all' | 'blank';
 // Everything a change marker can be attached to in the UI.
-export type ChangeMarker = EditableField | 'outputFileName'
+export type ChangeMarker = EditableField | 'outputFileName';
 
 // Items that failed to load have nothing to edit and must survive every bulk
 // action untouched.
 export function isEditable(item: PdfItem): boolean {
-  return item.status !== 'error' && item.editedMetadata !== undefined
+  return item.status !== 'error' && item.editedMetadata !== undefined;
 }
 
 export function currentMetadata(item: PdfItem): PdfMetadataForm {
-  return item.editedMetadata ?? item.originalMetadata ?? emptyMetadata()
+  return item.editedMetadata ?? item.originalMetadata ?? emptyMetadata();
 }
 
 export function isBlankField(
   metadata: PdfMetadataForm,
   field: EditableField,
 ): boolean {
-  const value = metadata[field]
-  return Array.isArray(value) ? value.length === 0 : value === ''
+  const value = metadata[field];
+  return Array.isArray(value) ? value.length === 0 : value === '';
 }
 
 // Exactly which values differ from the ones read out of the PDF. The card
@@ -41,46 +41,46 @@ export function isBlankField(
 // Comparison is on the trimmed value: while typing, a field holds untrimmed
 // text, and a lone trailing space is not a change worth flagging.
 export function changedFields(item: PdfItem): Set<ChangeMarker> {
-  const changed = new Set<ChangeMarker>()
+  const changed = new Set<ChangeMarker>();
   if (!isEditable(item)) {
-    return changed
+    return changed;
   }
   if (item.outputFileName !== item.originalFileName) {
-    changed.add('outputFileName')
+    changed.add('outputFileName');
   }
-  const original = item.originalMetadata
+  const original = item.originalMetadata;
   if (!original) {
-    return changed
+    return changed;
   }
-  const current = currentMetadata(item)
+  const current = currentMetadata(item);
   for (const field of ['title', 'author', 'subject'] as const) {
     if (
       normalizeTextField(current[field]) !== normalizeTextField(original[field])
     ) {
-      changed.add(field)
+      changed.add(field);
     }
   }
   const sameKeywords =
     current.keywords.length === original.keywords.length &&
-    current.keywords.every((keyword, i) => keyword === original.keywords[i])
+    current.keywords.every((keyword, i) => keyword === original.keywords[i]);
   if (!sameKeywords) {
-    changed.add('keywords')
+    changed.add('keywords');
   }
-  return changed
+  return changed;
 }
 
 // Editing back to the original values should return the row to "unchanged"
 // rather than leaving it permanently marked as modified.
 function statusAfterEdit(item: PdfItem, next: PdfItem): PdfItem['status'] {
   if (item.status === 'error') {
-    return 'error'
+    return 'error';
   }
-  return changedFields(next).size === 0 ? 'ready' : 'modified'
+  return changedFields(next).size === 0 ? 'ready' : 'modified';
 }
 
 function commit(item: PdfItem, patch: Partial<PdfItem>): PdfItem {
-  const next: PdfItem = { ...item, ...patch, outputBlob: undefined }
-  return { ...next, status: statusAfterEdit(item, next) }
+  const next: PdfItem = { ...item, ...patch, outputBlob: undefined };
+  return { ...next, status: statusAfterEdit(item, next) };
 }
 
 export function withField(
@@ -89,28 +89,28 @@ export function withField(
   value: string,
 ): PdfItem {
   if (!isEditable(item)) {
-    return item
+    return item;
   }
-  const metadata = currentMetadata(item)
+  const metadata = currentMetadata(item);
   const next: PdfMetadataForm =
     field === 'keywords'
       ? { ...metadata, keywords: parseKeywords(value) }
-      : { ...metadata, [field]: sanitizeInput(value) }
-  return commit(item, { editedMetadata: next })
+      : { ...metadata, [field]: sanitizeInput(value) };
+  return commit(item, { editedMetadata: next });
 }
 
 export function withOutputName(item: PdfItem, raw: string): PdfItem {
   if (item.status === 'error') {
-    return item
+    return item;
   }
   return commit(item, {
     outputFileName: resolveOutputName(raw, item.originalFileName),
-  })
+  });
 }
 
 export function resetItem(item: PdfItem): PdfItem {
   if (!isEditable(item)) {
-    return item
+    return item;
   }
   return {
     ...item,
@@ -118,7 +118,7 @@ export function resetItem(item: PdfItem): PdfItem {
     outputFileName: item.originalFileName,
     outputBlob: undefined,
     status: 'ready',
-  }
+  };
 }
 
 // Reported to the user before a bulk action runs, so "apply to blank only"
@@ -132,7 +132,7 @@ export function countAffected(
     (item) =>
       isEditable(item) &&
       (mode === 'all' || isBlankField(currentMetadata(item), field)),
-  ).length
+  ).length;
 }
 
 export function applyBatch(
@@ -143,13 +143,13 @@ export function applyBatch(
 ): PdfItem[] {
   return items.map((item) => {
     if (!isEditable(item)) {
-      return item
+      return item;
     }
     if (mode === 'blank' && !isBlankField(currentMetadata(item), field)) {
-      return item
+      return item;
     }
-    return withField(item, field, value)
-  })
+    return withField(item, field, value);
+  });
 }
 
 export function applyTitleFromFileName(items: PdfItem[]): PdfItem[] {
@@ -157,18 +157,21 @@ export function applyTitleFromFileName(items: PdfItem[]): PdfItem[] {
     isEditable(item)
       ? withField(item, 'title', titleFromFileName(item.originalFileName))
       : item,
-  )
+  );
 }
 
 export function applyFileNameFromTitle(items: PdfItem[]): PdfItem[] {
   return items.map((item) => {
     if (!isEditable(item)) {
-      return item
+      return item;
     }
-    const title = currentMetadata(item).title
+    const title = currentMetadata(item).title;
     if (title === '') {
-      return item
+      return item;
     }
-    return withOutputName(item, fileNameFromTitle(title, item.originalFileName))
-  })
+    return withOutputName(
+      item,
+      fileNameFromTitle(title, item.originalFileName),
+    );
+  });
 }

@@ -1,20 +1,20 @@
-import { useEffect } from 'react'
-import type { Route } from './+types/image-compressor'
-import { dictionaries, isLocale } from '~/i18n/locale'
+import { useEffect } from 'react';
+import type { Route } from './+types/image-compressor';
+import { dictionaries, isLocale } from '~/i18n/locale';
 import {
   breadcrumbJsonLd,
   faqJsonLd,
   imageCompressorJsonLd,
   isProductionHost,
   pageMeta,
-} from '~/lib/seo'
-import { track } from '~/lib/analytics'
-import ImageCompressorTool from '~/features/image-compressor/ImageCompressorTool'
+} from '~/lib/seo';
+import { track } from '~/lib/analytics';
+import ImageCompressorTool from '~/features/image-compressor/ImageCompressorTool';
 
 export function meta({ params, matches }: Route.MetaArgs) {
-  const locale = isLocale(params.locale) ? params.locale : 'en'
-  const t = dictionaries[locale]
-  const rootData = matches[0]?.loaderData
+  const locale = isLocale(params.locale) ? params.locale : 'en';
+  const t = dictionaries[locale];
+  const rootData = matches[0]?.loaderData;
   return pageMeta({
     locale,
     path: '/image-compressor',
@@ -30,13 +30,13 @@ export function meta({ params, matches }: Route.MetaArgs) {
         { name: t.imageCompressorPage.toolName, path: '/image-compressor' },
       ]),
     ],
-  })
+  });
 }
 
 export default function ImageCompressorPage() {
   useEffect(() => {
-    track('tool_opened', { tool: 'image-compressor' })
-  }, [])
+    track('tool_opened', { tool: 'image-compressor' });
+  }, []);
 
-  return <ImageCompressorTool />
+  return <ImageCompressorTool />;
 }

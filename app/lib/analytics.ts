@@ -18,33 +18,33 @@ export type AnalyticsEvent =
   // Which bulk action was used and how many rows it touched — never the value
   // that was applied, which is user input.
   | 'batch_action'
-  | 'language_changed'
+  | 'language_changed';
 
 // Re-exported from the tool registry rather than repeated. Two copies of this
 // union drifted apart the moment a tool was added, and the failure mode is a
 // tool whose events silently do not typecheck.
-export type { ToolSlug } from '~/components/tool/types'
-import type { ToolSlug } from '~/components/tool/types'
+export type { ToolSlug } from '~/components/tool/types';
+import type { ToolSlug } from '~/components/tool/types';
 
 // Deliberately narrow. Adding a free-form string field here would be the way a
 // filename eventually ends up in an event, so new keys need a deliberate edit.
 export type AnalyticsParams = {
-  tool?: ToolSlug
-  file_count?: number
-  action?: string
-  mode?: string
-  to?: string
-}
+  tool?: ToolSlug;
+  file_count?: number;
+  action?: string;
+  mode?: string;
+  to?: string;
+};
 
 declare global {
   interface Window {
-    dataLayer?: unknown[]
-    gtag?: (...args: unknown[]) => void
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
 export function isAnalyticsEnabled(): boolean {
-  return typeof window !== 'undefined' && typeof window.gtag === 'function'
+  return typeof window !== 'undefined' && typeof window.gtag === 'function';
 }
 
 /**
@@ -56,7 +56,7 @@ export function isAnalyticsEnabled(): boolean {
  */
 export function track(event: AnalyticsEvent, params?: AnalyticsParams): void {
   if (!isAnalyticsEnabled()) {
-    return
+    return;
   }
-  window.gtag?.('event', event, params)
+  window.gtag?.('event', event, params);
 }

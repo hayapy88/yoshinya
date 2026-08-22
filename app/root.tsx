@@ -7,12 +7,12 @@ import {
   ScrollRestoration,
   useMatches,
   useRouteLoaderData,
-} from 'react-router'
+} from 'react-router';
 
-import type { Route } from './+types/root'
-import { isProductionHost } from '~/lib/seo'
-import { isLocale } from '~/i18n/locale'
-import './app.css'
+import type { Route } from './+types/root';
+import { isProductionHost } from '~/lib/seo';
+import { isLocale } from '~/i18n/locale';
+import './app.css';
 
 // GA4 measurement id. Overridable via VITE_GA4_ID (build-time); defaults to the
 // site's property. Analytics only loads on the production domain so preview
@@ -24,10 +24,10 @@ import './app.css'
 // lighter, since a Tag Manager container loads this same library on top of
 // itself. See docs/analytics.md.
 const GA4_ID =
-  (import.meta.env.VITE_GA4_ID as string | undefined) ?? 'G-5M9ZWGZJ0J'
+  (import.meta.env.VITE_GA4_ID as string | undefined) ?? 'G-5M9ZWGZJ0J';
 
 function analyticsEnabled(host: string | undefined): boolean {
-  return GA4_ID.length > 0 && isProductionHost(host)
+  return GA4_ID.length > 0 && isProductionHost(host);
 }
 
 function AnalyticsScripts() {
@@ -46,7 +46,7 @@ function AnalyticsScripts() {
         }}
       />
     </>
-  )
+  );
 }
 
 export const links: Route.LinksFunction = () => [
@@ -70,12 +70,12 @@ export const links: Route.LinksFunction = () => [
     href: '/icons/icon-192.png',
   },
   { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-]
+];
 
 // Exposes the request host so page meta functions can mark non-production
 // deployments (workers.dev previews, local dev) as noindex.
 export function loader({ request }: Route.LoaderArgs) {
-  return { host: new URL(request.url).host }
+  return { host: new URL(request.url).host };
 }
 
 // Fallback document head. Every real page exports its own meta (which takes
@@ -85,29 +85,29 @@ export function meta(_: Route.MetaArgs) {
   return [
     { title: 'Page not found | YOSHINYA' },
     { name: 'robots', content: 'noindex' },
-  ]
+  ];
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   // Routes under /:locale expose their locale via handle so the html lang
   // attribute always matches the page language. Non-localized routes (the
   // redirects and 404) fall back to "en".
-  const matches = useMatches()
+  const matches = useMatches();
   const localeMatch = matches.find(
     (match) =>
       typeof match.handle === 'object' &&
       match.handle !== null &&
       'locale' in match.handle,
-  )
+  );
   // Only trust the locale param when it is actually a supported locale;
   // otherwise (e.g. a 404 like /foobar matching :locale) fall back to English
   // so the html lang attribute is always a valid BCP 47 code.
   const lang = isLocale(localeMatch?.params.locale)
     ? localeMatch.params.locale
-    : 'en'
+    : 'en';
 
-  const rootData = useRouteLoaderData('root') as { host?: string } | undefined
-  const showAnalytics = analyticsEnabled(rootData?.host)
+  const rootData = useRouteLoaderData('root') as { host?: string } | undefined;
+  const showAnalytics = analyticsEnabled(rootData?.host);
 
   return (
     <html lang={lang}>
@@ -124,27 +124,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }
 
 export default function App() {
-  return <Outlet />
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = 'Oops!'
-  let details = 'An unexpected error occurred.'
-  let stack: string | undefined
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
+  let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? '404' : 'Error'
+    message = error.status === 404 ? '404' : 'Error';
     details =
       error.status === 404
         ? 'The requested page could not be found. / お探しのページは見つかりませんでした。'
-        : error.statusText || details
+        : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message
-    stack = error.stack
+    details = error.message;
+    stack = error.stack;
   }
 
   return (
@@ -160,5 +160,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
-  )
+  );
 }

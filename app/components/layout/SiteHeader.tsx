@@ -1,16 +1,16 @@
-import { Link, useLocation } from 'react-router'
-import { otherLocale, storeLocaleChoice, useLocale } from '~/i18n/locale'
-import { track } from '~/lib/analytics'
+import { Link, useLocation } from 'react-router';
+import { otherLocale, storeLocaleChoice, useLocale } from '~/i18n/locale';
+import { track } from '~/lib/analytics';
 
 export function SiteHeader() {
-  const { locale, t } = useLocale()
-  const location = useLocation()
-  const target = otherLocale(locale)
+  const { locale, t } = useLocale();
+  const location = useLocation();
+  const target = otherLocale(locale);
   // Switch languages on the equivalent page, not the homepage.
   const switchPath = location.pathname.replace(
     /^\/(ja|en)(?=\/|$)/,
     `/${target}`,
-  )
+  );
 
   return (
     <header className="border-b border-[#d9d7de] dark:border-[#3a3841]">
@@ -48,8 +48,8 @@ export function SiteHeader() {
           title={t.nav.switchLocaleTitle}
           aria-label={t.nav.switchLocaleTitle}
           onClick={() => {
-            storeLocaleChoice(target)
-            track('language_changed', { to: target })
+            storeLocaleChoice(target);
+            track('language_changed', { to: target });
           }}
           className="rounded-lg border border-[#d9d7de] px-3 py-1.5 text-sm text-[color:var(--text)] no-underline transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-[#3a3841]"
         >
@@ -57,5 +57,5 @@ export function SiteHeader() {
         </Link>
       </div>
     </header>
-  )
+  );
 }

@@ -1,12 +1,12 @@
-import { Link } from 'react-router'
-import { useLocale, type Dictionary } from '~/i18n/locale'
+import { Link } from 'react-router';
+import { useLocale, type Dictionary } from '~/i18n/locale';
 import {
   TOOL_SLUGS,
   type GuideSection,
   type ToolGuideContent,
   type ToolSlug,
-} from './types'
-import './tool-shared.css'
+} from './types';
+import './tool-shared.css';
 
 // Maps a slug to the dictionary entry that names and describes it, so the
 // related-tools list stays correct without each tool repeating the others.
@@ -16,7 +16,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'pdf-title-editor': 'pdfTitleEditorPage',
   'image-compressor': 'imageCompressorPage',
   'csv-encoding-fixer': 'csvEncodingFixerPage',
-}
+};
 
 function Section({ section }: { section: GuideSection }) {
   return (
@@ -48,7 +48,7 @@ function Section({ section }: { section: GuideSection }) {
         </ul>
       )}
     </>
-  )
+  );
 }
 
 /**
@@ -60,11 +60,11 @@ export function ToolGuide({
   guide,
   current,
 }: {
-  guide: ToolGuideContent
+  guide: ToolGuideContent;
   // Excluded from the related-tools list: a tool should not link to itself.
-  current: ToolSlug
+  current: ToolSlug;
 }) {
-  const { locale, t } = useLocale()
+  const { locale, t } = useLocale();
 
   return (
     <section className="tool-guide" aria-labelledby="tool-guide-heading">
@@ -90,18 +90,18 @@ export function ToolGuide({
       <ul className="tool-related">
         {TOOL_SLUGS.filter((slug) => slug !== current).map((slug) => {
           const page = t[PAGE_KEY[slug]] as {
-            toolName: string
-            toolDescription: string
-          }
+            toolName: string;
+            toolDescription: string;
+          };
           return (
             <li key={slug}>
               <Link to={`/${locale}/${slug}`}>{page.toolName}</Link>
               {' — '}
               {page.toolDescription}
             </li>
-          )
+          );
         })}
       </ul>
     </section>
-  )
+  );
 }

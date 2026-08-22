@@ -1,31 +1,31 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { track } from '~/lib/analytics'
-import { applyRename, formatDate, formatTime } from './lib/rename'
-import { validateTextValue } from './lib/validate'
-import { createZipBlob } from './lib/zip'
-import type { RenameToken } from './lib/types'
-import { useLocale } from '~/i18n/locale'
-import { FilesSection, type LoadedFile } from './components/FilesSection'
-import { RuleSection } from './components/RuleSection'
-import { PreviewSection } from './components/PreviewSection'
-import { ToolIntro } from '~/components/tool/ToolIntro'
-import { ToolGuide } from '~/components/tool/ToolGuide'
-import './file-renamer.css'
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { track } from '~/lib/analytics';
+import { applyRename, formatDate, formatTime } from './lib/rename';
+import { validateTextValue } from './lib/validate';
+import { createZipBlob } from './lib/zip';
+import type { RenameToken } from './lib/types';
+import { useLocale } from '~/i18n/locale';
+import { FilesSection, type LoadedFile } from './components/FilesSection';
+import { RuleSection } from './components/RuleSection';
+import { PreviewSection } from './components/PreviewSection';
+import { ToolIntro } from '~/components/tool/ToolIntro';
+import { ToolGuide } from '~/components/tool/ToolGuide';
+import './file-renamer.css';
 
 // Tagged on every analytics event so GA4 can segment by tool.
-const TOOL = 'file-renamer' as const
+const TOOL = 'file-renamer' as const;
 
 function FileRenamerTool() {
-  const { t } = useLocale()
-  const [files, setFiles] = useState<LoadedFile[]>([])
-  const [tokens, setTokens] = useState<RenameToken[]>([])
-  const [thumbSize, setThumbSize] = useState(44)
-  const [isZipping, setIsZipping] = useState(false)
-  const [zipError, setZipError] = useState<string | null>(null)
+  const { t } = useLocale();
+  const [files, setFiles] = useState<LoadedFile[]>([]);
+  const [tokens, setTokens] = useState<RenameToken[]>([]);
+  const [thumbSize, setThumbSize] = useState(44);
+  const [isZipping, setIsZipping] = useState(false);
+  const [zipError, setZipError] = useState<string | null>(null);
 
   const results = useMemo(() => {
     if (files.length === 0 || tokens.length === 0) {
-      return null
+      return null;
     }
     return applyRename(
       files.map(({ file, width, height }) => ({
@@ -36,13 +36,13 @@ function FileRenamerTool() {
       })),
       tokens,
       { now: new Date() },
-    )
-  }, [files, tokens])
+    );
+  }, [files, tokens]);
 
   // Load pixel dimensions for image files so the dimensions token can use them.
   // Done here (not in the add handler) with a functional state update so it
   // works regardless of how files were added and avoids racing on the list.
-  const measuring = useRef(new Set<string>())
+  const measuring = useRef(new Set<string>());
   useEffect(() => {
     for (const item of files) {
       if (
@@ -50,51 +50,51 @@ function FileRenamerTool() {
         item.width !== undefined ||
         measuring.current.has(item.id)
       ) {
-        continue
+        continue;
       }
-      measuring.current.add(item.id)
-      const image = new Image()
+      measuring.current.add(item.id);
+      const image = new Image();
       image.onload = () => {
-        const { naturalWidth, naturalHeight } = image
+        const { naturalWidth, naturalHeight } = image;
         setFiles((prev) =>
           prev.map((f) =>
             f.id === item.id
               ? { ...f, width: naturalWidth, height: naturalHeight }
               : f,
           ),
-        )
-      }
-      image.onerror = () => measuring.current.delete(item.id)
-      image.src = item.previewUrl
+        );
+      };
+      image.onerror = () => measuring.current.delete(item.id);
+      image.src = item.previewUrl;
     }
-  }, [files])
+  }, [files]);
 
   // Analytics events carry only counts — never file names or contents.
   const handleFilesChange = (next: LoadedFile[]) => {
     if (next.length > files.length) {
-      track('files_added', { tool: TOOL, file_count: next.length })
+      track('files_added', { tool: TOOL, file_count: next.length });
     }
-    setFiles(next)
-  }
+    setFiles(next);
+  };
 
-  const hadPreview = useRef(false)
+  const hadPreview = useRef(false);
   useEffect(() => {
     if (results && !hadPreview.current) {
-      hadPreview.current = true
+      hadPreview.current = true;
       track('rename_preview_generated', {
         tool: TOOL,
         file_count: results.length,
-      })
+      });
     }
     if (!results) {
-      hadPreview.current = false
+      hadPreview.current = false;
     }
-  }, [results])
+  }, [results]);
 
   const hasTextError = tokens.some(
     (token) => token.kind === 'text' && validateTextValue(token.value) !== null,
-  )
-  const hasDuplicates = results?.some((r) => r.isDuplicate) ?? false
+  );
+  const hasDuplicates = results?.some((r) => r.isDuplicate) ?? false;
 
   const disabledReason =
     files.length === 0
@@ -105,36 +105,36 @@ function FileRenamerTool() {
           ? t.download.fixTextErrors
           : hasDuplicates
             ? t.download.duplicatesBlock
-            : null
+            : null;
 
   const handleDownload = async () => {
     if (!results || disabledReason || isZipping) {
-      return
+      return;
     }
-    setIsZipping(true)
-    setZipError(null)
+    setIsZipping(true);
+    setZipError(null);
     try {
       const blob = await createZipBlob(
         results.map((r, i) => ({ name: r.newName, file: files[i].file })),
-      )
-      const url = URL.createObjectURL(blob)
-      const anchor = document.createElement('a')
-      anchor.href = url
-      const now = new Date()
-      anchor.download = `renamed_${formatDate(now, 'yyyy-mm-dd')}-${formatTime(now, 'hh-mm-ss')}.zip`
-      anchor.click()
-      URL.revokeObjectURL(url)
-      track('download_completed', { tool: TOOL, file_count: results.length })
+      );
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      const now = new Date();
+      anchor.download = `renamed_${formatDate(now, 'yyyy-mm-dd')}-${formatTime(now, 'hh-mm-ss')}.zip`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      track('download_completed', { tool: TOOL, file_count: results.length });
     } catch (error) {
       setZipError(
         t.download.zipFailed(
           error instanceof Error ? error.message : String(error),
         ),
-      )
+      );
     } finally {
-      setIsZipping(false)
+      setIsZipping(false);
     }
-  }
+  };
 
   return (
     <main style={{ '--thumb-size': `${thumbSize}px` } as React.CSSProperties}>
@@ -186,7 +186,7 @@ function FileRenamerTool() {
 
       <ToolGuide guide={t.fileRenamerGuide} current="file-renamer" />
     </main>
-  )
+  );
 }
 
-export default FileRenamerTool
+export default FileRenamerTool;

@@ -1,6 +1,6 @@
-import { redirect } from 'react-router'
-import type { Route } from './+types/root-redirect'
-import { negotiateLocale } from '~/i18n/locale'
+import { redirect } from 'react-router';
+import type { Route } from './+types/root-redirect';
+import { negotiateLocale } from '~/i18n/locale';
 
 // Sends the bare root to the visitor's language: an explicit earlier choice
 // (cookie) wins, otherwise the browser's Accept-Language decides. The header
@@ -18,9 +18,9 @@ export function loader({ request }: Route.LoaderArgs) {
       Vary: 'Accept-Language, Cookie',
       'Cache-Control': 'private, no-store',
     },
-  })
+  });
 }
 
 export default function RootRedirect() {
-  return null
+  return null;
 }

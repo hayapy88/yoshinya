@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test';
 
 // End-to-end smoke tests run against the production build served by the
 // Cloudflare Workers runtime (vite preview).
@@ -11,7 +11,7 @@ import { defineConfig, devices } from '@playwright/test'
 // and `--project=firefox` picks one. Note that naming a project on the command
 // line cannot resurrect one this array leaves out, which is why the switch is
 // here rather than left to the caller.
-const allBrowsers = Boolean(process.env.ALL_BROWSERS)
+const allBrowsers = Boolean(process.env.ALL_BROWSERS);
 
 export default defineConfig({
   testDir: './e2e',
@@ -54,4 +54,4 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
-})
+});

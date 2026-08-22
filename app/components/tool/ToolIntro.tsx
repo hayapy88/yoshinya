@@ -1,5 +1,5 @@
-import { useLocale } from '~/i18n/locale'
-import './tool-shared.css'
+import { useLocale } from '~/i18n/locale';
+import './tool-shared.css';
 
 /**
  * The heading block every tool page opens with: title, one-paragraph lead, the
@@ -12,13 +12,13 @@ export function ToolIntro({
   lead,
   privacyNote,
 }: {
-  heading: string
-  lead: string
+  heading: string;
+  lead: string;
   // Each tool names what it processes ("your PDFs", "your images"), so the
   // sentence itself stays per-tool while the presentation is shared.
-  privacyNote: string
+  privacyNote: string;
 }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
 
   return (
     <header className="tool-intro">
@@ -31,5 +31,5 @@ export function ToolIntro({
       </ul>
       <p className="tool-privacy">🔒 {privacyNote}</p>
     </header>
-  )
+  );
 }

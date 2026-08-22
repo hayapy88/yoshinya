@@ -1,4 +1,4 @@
-import type { LocalizedLegalDocument } from './types'
+import type { LocalizedLegalDocument } from './types';
 
 // Initial concise terms of use for a free browser-based utility service.
 // These are a starting draft, not professional legal advice.
@@ -107,4 +107,4 @@ export const termsContent: LocalizedLegalDocument = {
       },
     ],
   },
-}
+};

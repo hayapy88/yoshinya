@@ -3,11 +3,11 @@ import {
   SUPPORTED_INPUT_TYPES,
   type ImageErrorCode,
   type RejectedFile,
-} from './types'
+} from './types';
 
-export type ValidationInput = { name: string; type: string; size: number }
+export type ValidationInput = { name: string; type: string; size: number };
 
-const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
+const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 
 /**
  * Accepts what the browser can decode for this tool. The MIME type leads,
@@ -16,13 +16,13 @@ const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
  */
 export function isSupportedImage(file: ValidationInput): boolean {
   if ((SUPPORTED_INPUT_TYPES as readonly string[]).includes(file.type)) {
-    return true
+    return true;
   }
   if (file.type !== '') {
-    return false
+    return false;
   }
-  const lower = file.name.toLowerCase()
-  return EXTENSIONS.some((ext) => lower.endsWith(ext))
+  const lower = file.name.toLowerCase();
+  return EXTENSIONS.some((ext) => lower.endsWith(ext));
 }
 
 function rejectionCode(
@@ -30,21 +30,21 @@ function rejectionCode(
   totals: { count: number; bytes: number },
 ): ImageErrorCode | null {
   if (!isSupportedImage(file)) {
-    return 'unsupported_type'
+    return 'unsupported_type';
   }
   if (file.size === 0) {
-    return 'empty_file'
+    return 'empty_file';
   }
   if (file.size > LIMITS.maxFileBytes) {
-    return 'file_too_large'
+    return 'file_too_large';
   }
   if (totals.count + 1 > LIMITS.maxFiles) {
-    return 'too_many_files'
+    return 'too_many_files';
   }
   if (totals.bytes + file.size > LIMITS.maxTotalBytes) {
-    return 'total_too_large'
+    return 'total_too_large';
   }
-  return null
+  return null;
 }
 
 /**
@@ -57,20 +57,20 @@ export function classifyFiles<T extends ValidationInput>(
   existing: { count: number; bytes: number },
   makeId: () => string,
 ): { accepted: T[]; rejected: RejectedFile[] } {
-  const accepted: T[] = []
-  const rejected: RejectedFile[] = []
-  const totals = { ...existing }
+  const accepted: T[] = [];
+  const rejected: RejectedFile[] = [];
+  const totals = { ...existing };
 
   for (const file of files) {
-    const code = rejectionCode(file, totals)
+    const code = rejectionCode(file, totals);
     if (code) {
-      rejected.push({ id: makeId(), name: file.name, errorCode: code })
-      continue
+      rejected.push({ id: makeId(), name: file.name, errorCode: code });
+      continue;
     }
-    accepted.push(file)
-    totals.count += 1
-    totals.bytes += file.size
+    accepted.push(file);
+    totals.count += 1;
+    totals.bytes += file.size;
   }
 
-  return { accepted, rejected }
+  return { accepted, rejected };
 }

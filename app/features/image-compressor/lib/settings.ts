@@ -4,19 +4,19 @@ import {
   type EncodableFormat,
   type ImageItem,
   type OutputFormat,
-} from './types'
+} from './types';
 
 const MIME_BY_FORMAT: Record<EncodableFormat, string> = {
   jpeg: 'image/jpeg',
   png: 'image/png',
   webp: 'image/webp',
-}
+};
 
 const FORMAT_BY_MIME: Record<string, EncodableFormat> = {
   'image/jpeg': 'jpeg',
   'image/png': 'png',
   'image/webp': 'webp',
-}
+};
 
 /**
  * The settings actually in force for one image: the common settings with the
@@ -28,14 +28,14 @@ export function effectiveSettings(
   common: CompressionSettings,
   item: Pick<ImageItem, 'settingsOverride'>,
 ): CompressionSettings {
-  return { ...common, ...(item.settingsOverride ?? {}) }
+  return { ...common, ...(item.settingsOverride ?? {}) };
 }
 
 export function hasOverride(
   item: Pick<ImageItem, 'settingsOverride'>,
 ): boolean {
-  const override = item.settingsOverride
-  return override !== null && Object.keys(override).length > 0
+  const override = item.settingsOverride;
+  return override !== null && Object.keys(override).length > 0;
 }
 
 /** Resolves "original" against the source type. */
@@ -44,20 +44,20 @@ export function resolveFormat(
   sourceType: string,
 ): EncodableFormat {
   if (outputFormat !== 'original') {
-    return outputFormat
+    return outputFormat;
   }
   // A source the browser decoded but cannot re-encode falls back to PNG, which
   // is lossless and universally supported.
-  return FORMAT_BY_MIME[sourceType] ?? 'png'
+  return FORMAT_BY_MIME[sourceType] ?? 'png';
 }
 
 export function mimeForFormat(format: EncodableFormat): string {
-  return MIME_BY_FORMAT[format]
+  return MIME_BY_FORMAT[format];
 }
 
 /** Only JPEG and WebP have a meaningful quality setting. */
 export function supportsQuality(format: EncodableFormat): boolean {
-  return format === 'jpeg' || format === 'webp'
+  return format === 'jpeg' || format === 'webp';
 }
 
 /** JPEG has no alpha channel, so transparency has to be flattened onto a colour. */
@@ -65,14 +65,14 @@ export function needsBackground(
   format: EncodableFormat,
   sourceType: string,
 ): boolean {
-  return format === 'jpeg' && sourceType !== 'image/jpeg'
+  return format === 'jpeg' && sourceType !== 'image/jpeg';
 }
 
 export function clampQuality(value: number): number {
   if (!Number.isFinite(value)) {
-    return DEFAULT_SETTINGS.quality
+    return DEFAULT_SETTINGS.quality;
   }
-  return Math.min(100, Math.max(1, Math.round(value)))
+  return Math.min(100, Math.max(1, Math.round(value)));
 }
 
 /**
@@ -86,11 +86,11 @@ export function withOverride(
   override: Partial<CompressionSettings> | null,
   patch: Partial<CompressionSettings>,
 ): Partial<CompressionSettings> | null {
-  const next: Partial<CompressionSettings> = { ...(override ?? {}), ...patch }
+  const next: Partial<CompressionSettings> = { ...(override ?? {}), ...patch };
   for (const key of Object.keys(next) as (keyof CompressionSettings)[]) {
     if (next[key] === common[key]) {
-      delete next[key]
+      delete next[key];
     }
   }
-  return Object.keys(next).length === 0 ? null : next
+  return Object.keys(next).length === 0 ? null : next;
 }

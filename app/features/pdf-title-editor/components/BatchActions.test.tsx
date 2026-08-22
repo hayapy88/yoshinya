@@ -1,11 +1,11 @@
 /** @vitest-environment jsdom */
-import { describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom/vitest'
-import { BatchActions } from './BatchActions'
-import { LocaleContext } from '~/i18n/locale'
-import { en } from '~/i18n/en'
-import type { PdfItem, PdfMetadataForm } from '../lib/types'
+import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+import { BatchActions } from './BatchActions';
+import { LocaleContext } from '~/i18n/locale';
+import { en } from '~/i18n/en';
+import type { PdfItem, PdfMetadataForm } from '../lib/types';
 
 const metadata = (over: Partial<PdfMetadataForm> = {}): PdfMetadataForm => ({
   title: '',
@@ -13,10 +13,10 @@ const metadata = (over: Partial<PdfMetadataForm> = {}): PdfMetadataForm => ({
   subject: '',
   keywords: [],
   ...over,
-})
+});
 
 const item = (id: string, over: Partial<PdfItem> = {}): PdfItem => {
-  const original = over.originalMetadata ?? metadata()
+  const original = over.originalMetadata ?? metadata();
   return {
     id,
     sourceFile: new File([], `${id}.pdf`),
@@ -28,14 +28,14 @@ const item = (id: string, over: Partial<PdfItem> = {}): PdfItem => {
     editedMetadata: original,
     status: 'ready',
     ...over,
-  }
-}
+  };
+};
 
 function renderBatch(
   items: PdfItem[],
   props: Partial<Parameters<typeof BatchActions>[0]> = {},
 ) {
-  const onApply = vi.fn()
+  const onApply = vi.fn();
   render(
     <LocaleContext.Provider value={{ locale: 'en', t: en }}>
       <BatchActions
@@ -49,28 +49,28 @@ function renderBatch(
         {...props}
       />
     </LocaleContext.Provider>,
-  )
-  return { onApply }
+  );
+  return { onApply };
 }
 
 describe('BatchActions', () => {
   it('shows how many files a bulk action would touch', () => {
-    renderBatch([item('a'), item('b')])
+    renderBatch([item('a'), item('b')]);
     expect(
       screen.getByRole('button', { name: 'Apply to 2 files' }),
-    ).toBeInTheDocument()
-  })
+    ).toBeInTheDocument();
+  });
 
   it('counts only blank fields in "blank fields only" mode', () => {
     renderBatch([
       item('a', { originalMetadata: metadata({ author: 'Set' }) }),
       item('b'),
-    ])
-    fireEvent.click(screen.getByLabelText('Blank fields only'))
+    ]);
+    fireEvent.click(screen.getByLabelText('Blank fields only'));
     expect(
       screen.getByRole('button', { name: 'Apply to 1 file' }),
-    ).toBeInTheDocument()
-  })
+    ).toBeInTheDocument();
+  });
 
   it('excludes files that failed to load from the count', () => {
     renderBatch([
@@ -80,11 +80,11 @@ describe('BatchActions', () => {
         errorCode: 'corrupted',
         editedMetadata: undefined,
       }),
-    ])
+    ]);
     expect(
       screen.getByRole('button', { name: 'Apply to 1 file' }),
-    ).toBeInTheDocument()
-  })
+    ).toBeInTheDocument();
+  });
 
   it('disables apply when nothing would change', () => {
     renderBatch([
@@ -93,27 +93,27 @@ describe('BatchActions', () => {
         errorCode: 'corrupted',
         editedMetadata: undefined,
       }),
-    ])
-    expect(screen.getByRole('button', { name: /Apply to/ })).toBeDisabled()
-  })
+    ]);
+    expect(screen.getByRole('button', { name: /Apply to/ })).toBeDisabled();
+  });
 
   it('passes the chosen field, value, and mode to the caller', () => {
-    const { onApply } = renderBatch([item('a'), item('b')])
+    const { onApply } = renderBatch([item('a'), item('b')]);
     fireEvent.change(screen.getByLabelText('Field'), {
       target: { value: 'subject' },
-    })
+    });
     fireEvent.change(screen.getByLabelText('Value'), {
       target: { value: 'Quarterly' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: /Apply to/ }))
-    expect(onApply).toHaveBeenCalledWith('subject', 'Quarterly', 'all')
-  })
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Apply to/ }));
+    expect(onApply).toHaveBeenCalledWith('subject', 'Quarterly', 'all');
+  });
 
   it('disables every control while a run is in progress', () => {
-    renderBatch([item('a'), item('b')], { disabled: true })
+    renderBatch([item('a'), item('b')], { disabled: true });
     expect(
       screen.getByRole('button', { name: 'Use filename as title' }),
-    ).toBeDisabled()
-    expect(screen.getByLabelText('Value')).toBeDisabled()
-  })
-})
+    ).toBeDisabled();
+    expect(screen.getByLabelText('Value')).toBeDisabled();
+  });
+});

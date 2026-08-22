@@ -1,4 +1,4 @@
-import type { en } from './en'
+import type { en } from './en';
 
 export const ja: typeof en = {
   site: {
@@ -936,4 +936,4 @@ export const ja: typeof en = {
     duplicatesBlock: '同名のファイルが発生するためダウンロードできません',
     zipFailed: (message: string) => `zipの生成に失敗しました: ${message}`,
   },
-}
+};

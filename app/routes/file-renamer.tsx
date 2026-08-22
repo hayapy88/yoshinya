@@ -1,20 +1,20 @@
-import { useEffect } from 'react'
-import type { Route } from './+types/file-renamer'
-import { dictionaries, isLocale } from '~/i18n/locale'
+import { useEffect } from 'react';
+import type { Route } from './+types/file-renamer';
+import { dictionaries, isLocale } from '~/i18n/locale';
 import {
   breadcrumbJsonLd,
   faqJsonLd,
   fileRenamerJsonLd,
   isProductionHost,
   pageMeta,
-} from '~/lib/seo'
-import { track } from '~/lib/analytics'
-import FileRenamerTool from '~/features/file-renamer/FileRenamerTool'
+} from '~/lib/seo';
+import { track } from '~/lib/analytics';
+import FileRenamerTool from '~/features/file-renamer/FileRenamerTool';
 
 export function meta({ params, matches }: Route.MetaArgs) {
-  const locale = isLocale(params.locale) ? params.locale : 'en'
-  const t = dictionaries[locale]
-  const rootData = matches[0]?.loaderData
+  const locale = isLocale(params.locale) ? params.locale : 'en';
+  const t = dictionaries[locale];
+  const rootData = matches[0]?.loaderData;
   return pageMeta({
     locale,
     path: '/file-renamer',
@@ -30,13 +30,13 @@ export function meta({ params, matches }: Route.MetaArgs) {
         { name: t.fileRenamerPage.toolName, path: '/file-renamer' },
       ]),
     ],
-  })
+  });
 }
 
 export default function FileRenamerPage() {
   useEffect(() => {
-    track('tool_opened', { tool: 'file-renamer' })
-  }, [])
+    track('tool_opened', { tool: 'file-renamer' });
+  }, []);
 
-  return <FileRenamerTool />
+  return <FileRenamerTool />;
 }

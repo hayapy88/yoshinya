@@ -1,9 +1,13 @@
-import { useState } from 'react'
-import { useLocale } from '~/i18n/locale'
-import { countAffected, type ApplyMode, type EditableField } from '../lib/edits'
-import type { PdfItem } from '../lib/types'
+import { useState } from 'react';
+import { useLocale } from '~/i18n/locale';
+import {
+  countAffected,
+  type ApplyMode,
+  type EditableField,
+} from '../lib/edits';
+import type { PdfItem } from '../lib/types';
 
-const FIELDS: EditableField[] = ['title', 'author', 'subject', 'keywords']
+const FIELDS: EditableField[] = ['title', 'author', 'subject', 'keywords'];
 
 export function BatchActions({
   items,
@@ -14,21 +18,21 @@ export function BatchActions({
   onResetAll,
   onRemoveAll,
 }: {
-  items: PdfItem[]
-  disabled: boolean
-  onApply: (field: EditableField, value: string, mode: ApplyMode) => void
-  onTitleFromFileName: () => void
-  onFileNameFromTitle: () => void
-  onResetAll: () => void
-  onRemoveAll: () => void
+  items: PdfItem[];
+  disabled: boolean;
+  onApply: (field: EditableField, value: string, mode: ApplyMode) => void;
+  onTitleFromFileName: () => void;
+  onFileNameFromTitle: () => void;
+  onResetAll: () => void;
+  onRemoveAll: () => void;
 }) {
-  const { t } = useLocale()
-  const [field, setField] = useState<EditableField>('author')
-  const [value, setValue] = useState('')
-  const [mode, setMode] = useState<ApplyMode>('all')
+  const { t } = useLocale();
+  const [field, setField] = useState<EditableField>('author');
+  const [value, setValue] = useState('');
+  const [mode, setMode] = useState<ApplyMode>('all');
 
   // Shown before applying so "blank fields only" never looks like a no-op.
-  const affected = countAffected(items, field, mode)
+  const affected = countAffected(items, field, mode);
 
   return (
     <section className="pte-batch" aria-labelledby="pte-batch-heading">
@@ -143,5 +147,5 @@ export function BatchActions({
         </button>
       </div>
     </section>
-  )
+  );
 }
