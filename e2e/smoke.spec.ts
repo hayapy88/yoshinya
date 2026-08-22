@@ -272,12 +272,14 @@ test.describe('file renamer workflow', () => {
     await page.goto('/en/file-renamer');
     await page.locator('input[type="file"]').setInputFiles([textFile('a.txt')]);
     await dragTo(page, '.palette-chip:has-text("Text")', '.rule-area');
-    await page.getByPlaceholder('e.g. campaign').fill('bad/name');
-    await expect(
-      page.getByText('Contains characters not allowed in file names', {
-        exact: false,
-      }),
-    ).toBeVisible();
+    // Through the same helper as the other two: this was the last bare fill
+    // left, and it failed on CI for the same reason — the value never reached
+    // the application, so the warning it should have triggered never appeared.
+    await typeToken(
+      page,
+      'bad/name',
+      'Contains characters not allowed in file names',
+    );
     await expect(
       page.getByRole('button', { name: 'Confirm and download' }),
     ).toBeDisabled();
