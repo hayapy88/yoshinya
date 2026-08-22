@@ -14,6 +14,7 @@
     "e2e": "playwright test",
     "preview": "npm run build && vite preview",
     "deploy": "npm run build && wrangler deploy",
+    "announce": "node scripts/announce.mjs",
     "cf-typegen": "wrangler types",
     "postinstall": "wrangler types"
   },
