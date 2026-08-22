@@ -1,18 +1,18 @@
-import { useLocale } from '~/i18n/locale'
-import { pairedDimension, targetDimensions } from '../lib/resize'
+import { useLocale } from '~/i18n/locale';
+import { pairedDimension, targetDimensions } from '../lib/resize';
 import {
   needsBackground,
   resolveFormat,
   supportsQuality,
-} from '../lib/settings'
+} from '../lib/settings';
 import type {
   CompressionSettings,
   EncodableFormat,
   ImageItem,
   OutputFormat,
-} from '../lib/types'
+} from '../lib/types';
 
-const FORMATS: OutputFormat[] = ['original', 'jpeg', 'png', 'webp']
+const FORMATS: OutputFormat[] = ['original', 'jpeg', 'png', 'webp'];
 
 export function SettingsPanel({
   settings,
@@ -32,57 +32,57 @@ export function SettingsPanel({
   onApplyAllToRest,
   onApplyToAll,
 }: {
-  settings: CompressionSettings
-  item: ImageItem
-  scope: 'common' | 'image'
-  hasOverride: boolean
-  bulkQualityCount: number
-  bulkAllCount: number
+  settings: CompressionSettings;
+  item: ImageItem;
+  scope: 'common' | 'image';
+  hasOverride: boolean;
+  bulkQualityCount: number;
+  bulkAllCount: number;
   /** Images pinned by their own settings, which the shared settings skip. */
-  adjustedCount: number
-  totalCount: number
+  adjustedCount: number;
+  totalCount: number;
   /** What this browser can write. `null` while the probe is still running. */
-  encodableFormats: ReadonlySet<EncodableFormat> | null
-  disabled: boolean
-  onScopeChange: (scope: 'common' | 'image') => void
-  onChange: (patch: Partial<CompressionSettings>) => void
-  onResetToCommon: () => void
-  onApplyQualityToRest: () => void
-  onApplyAllToRest: () => void
-  onApplyToAll: () => void
+  encodableFormats: ReadonlySet<EncodableFormat> | null;
+  disabled: boolean;
+  onScopeChange: (scope: 'common' | 'image') => void;
+  onChange: (patch: Partial<CompressionSettings>) => void;
+  onResetToCommon: () => void;
+  onApplyQualityToRest: () => void;
+  onApplyAllToRest: () => void;
+  onApplyToAll: () => void;
 }) {
-  const { t } = useLocale()
-  const format = resolveFormat(settings.outputFormat, item.sourceType)
-  const showQuality = supportsQuality(format)
-  const showBackground = needsBackground(format, item.sourceType)
+  const { t } = useLocale();
+  const format = resolveFormat(settings.outputFormat, item.sourceType);
+  const showQuality = supportsQuality(format);
+  const showBackground = needsBackground(format, item.sourceType);
   // An option is unavailable when the format it resolves to cannot be written.
   // Going through resolveFormat covers "keep original format", which is the
   // same dead end wearing a different name when the source is, say, a WebP on a
   // browser that reads WebP but cannot write it.
   const isUnavailable = (value: OutputFormat) =>
     encodableFormats !== null &&
-    !encodableFormats.has(resolveFormat(value, item.sourceType))
-  const anyUnavailable = FORMATS.some(isUnavailable)
+    !encodableFormats.has(resolveFormat(value, item.sourceType));
+  const anyUnavailable = FORMATS.some(isUnavailable);
 
   const source =
     item.sourceWidth && item.sourceHeight
       ? { width: item.sourceWidth, height: item.sourceHeight }
-      : null
-  const target = source ? targetDimensions(source, settings) : null
+      : null;
+  const target = source ? targetDimensions(source, settings) : null;
 
   const changeDimension = (edited: 'width' | 'height', raw: string) => {
-    const value = raw === '' ? null : Number(raw)
+    const value = raw === '' ? null : Number(raw);
     if (settings.keepAspectRatio && source && value !== null) {
-      const partner = pairedDimension(source, edited, value)
+      const partner = pairedDimension(source, edited, value);
       onChange(
         edited === 'width'
           ? { width: value, height: partner }
           : { height: value, width: partner },
-      )
-      return
+      );
+      return;
     }
-    onChange(edited === 'width' ? { width: value } : { height: value })
-  }
+    onChange(edited === 'width' ? { width: value } : { height: value });
+  };
 
   return (
     <section className="ic-settings" aria-labelledby="ic-settings-heading">
@@ -432,5 +432,5 @@ export function SettingsPanel({
 
       <p className="ic-hint">{t.imageCompressor.metadataNote}</p>
     </section>
-  )
+  );
 }

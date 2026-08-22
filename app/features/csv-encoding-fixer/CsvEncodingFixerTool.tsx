@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
-import { useLocale } from '~/i18n/locale'
-import { track } from '~/lib/analytics'
-import { ToolIntro } from '~/components/tool/ToolIntro'
-import { ToolGuide } from '~/components/tool/ToolGuide'
-import { analyze, excelRisk, toUtf8WithBom } from './lib/encoding'
+import { useEffect, useRef, useState } from 'react';
+import { useLocale } from '~/i18n/locale';
+import { track } from '~/lib/analytics';
+import { ToolIntro } from '~/components/tool/ToolIntro';
+import { ToolGuide } from '~/components/tool/ToolGuide';
+import { analyze, excelRisk, toUtf8WithBom } from './lib/encoding';
 import {
   classify,
   fixedFileName,
   type CsvItem,
   type RejectedFile,
-} from './lib/files'
-import './csv-encoding-fixer.css'
+} from './lib/files';
+import './csv-encoding-fixer.css';
 
-const TOOL = 'csv-encoding-fixer' as const
+const TOOL = 'csv-encoding-fixer' as const;
 
 function save(bytes: Uint8Array, name: string) {
   // text/csv rather than the original type: some systems export CSV as
@@ -20,30 +20,30 @@ function save(bytes: Uint8Array, name: string) {
   // unknown binary.
   const url = URL.createObjectURL(
     new Blob([bytes as BlobPart], { type: 'text/csv' }),
-  )
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = name
-  anchor.click()
-  URL.revokeObjectURL(url)
+  );
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = name;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }
 
 function Dropzone({
   onFiles,
   compact = false,
 }: {
-  onFiles: (files: File[]) => void
-  compact?: boolean
+  onFiles: (files: File[]) => void;
+  compact?: boolean;
 }) {
-  const { t } = useLocale()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [isOver, setIsOver] = useState(false)
+  const { t } = useLocale();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isOver, setIsOver] = useState(false);
 
   const handle = (list: FileList | null) => {
     if (list && list.length > 0) {
-      onFiles(Array.from(list))
+      onFiles(Array.from(list));
     }
-  }
+  };
 
   return (
     <div
@@ -53,19 +53,19 @@ function Dropzone({
       onClick={() => inputRef.current?.click()}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          inputRef.current?.click()
+          e.preventDefault();
+          inputRef.current?.click();
         }
       }}
       onDragOver={(e) => {
-        e.preventDefault()
-        setIsOver(true)
+        e.preventDefault();
+        setIsOver(true);
       }}
       onDragLeave={() => setIsOver(false)}
       onDrop={(e) => {
-        e.preventDefault()
-        setIsOver(false)
-        handle(e.dataTransfer.files)
+        e.preventDefault();
+        setIsOver(false);
+        handle(e.dataTransfer.files);
       }}
     >
       <span className="cef-dropzone-label">
@@ -86,52 +86,52 @@ function Dropzone({
         multiple
         hidden
         onChange={(e) => {
-          handle(e.target.files)
-          e.target.value = ''
+          handle(e.target.files);
+          e.target.value = '';
         }}
       />
     </div>
-  )
+  );
 }
 
 function CsvEncodingFixerTool() {
-  const { t } = useLocale()
-  const [items, setItems] = useState<CsvItem[]>([])
-  const [rejected, setRejected] = useState<RejectedFile[]>([])
+  const { t } = useLocale();
+  const [items, setItems] = useState<CsvItem[]>([]);
+  const [rejected, setRejected] = useState<RejectedFile[]>([]);
 
   useEffect(() => {
-    track('tool_opened', { tool: TOOL })
-  }, [])
+    track('tool_opened', { tool: TOOL });
+  }, []);
 
   const addFiles = async (files: File[]) => {
     const { accepted, rejected: refused } = classify(files, items.length, () =>
       crypto.randomUUID(),
-    )
+    );
     if (refused.length > 0) {
-      setRejected((current) => [...current, ...refused])
+      setRejected((current) => [...current, ...refused]);
     }
     const loaded = await Promise.all(
       accepted.map(async (file) => {
-        const bytes = new Uint8Array(await file.arrayBuffer())
+        const bytes = new Uint8Array(await file.arrayBuffer());
         return {
           id: crypto.randomUUID(),
           file,
           bytes,
           diagnosis: analyze(bytes),
           risk: excelRisk(bytes),
-        }
+        };
       }),
-    )
+    );
     if (loaded.length > 0) {
-      setItems((current) => [...current, ...loaded])
-      track('files_added', { tool: TOOL, file_count: loaded.length })
+      setItems((current) => [...current, ...loaded]);
+      track('files_added', { tool: TOOL, file_count: loaded.length });
     }
-  }
+  };
 
   const downloadOne = (item: CsvItem) => {
-    save(toUtf8WithBom(item.bytes), fixedFileName(item.file.name))
-    track('download_completed', { tool: TOOL, file_count: 1 })
-  }
+    save(toUtf8WithBom(item.bytes), fixedFileName(item.file.name));
+    track('download_completed', { tool: TOOL, file_count: 1 });
+  };
 
   return (
     <main className="cef-page">
@@ -184,7 +184,7 @@ function CsvEncodingFixerTool() {
 
           <ul className="cef-list">
             {items.map((item) => {
-              const { diagnosis } = item
+              const { diagnosis } = item;
               // Three states, and each one is told to the user rather than
               // silently acted on: a file that needs nothing, a file whose
               // bytes are right but unlabelled, and a file that needs
@@ -195,7 +195,7 @@ function CsvEncodingFixerTool() {
                   ? t.csvEncodingFixer.verdictBomOnly
                   : t.csvEncodingFixer.verdictConvert(
                       t.csvEncodingFixer.encodings[diagnosis.encoding],
-                    )
+                    );
               return (
                 <li key={item.id} className="cef-item">
                   <div className="cef-item-head">
@@ -251,7 +251,7 @@ function CsvEncodingFixerTool() {
                     {t.csvEncodingFixer.download}
                   </button>
                 </li>
-              )
+              );
             })}
           </ul>
 
@@ -261,7 +261,7 @@ function CsvEncodingFixerTool() {
 
       <ToolGuide guide={t.csvEncodingFixerGuide} current={TOOL} />
     </main>
-  )
+  );
 }
 
-export default CsvEncodingFixerTool
+export default CsvEncodingFixerTool;

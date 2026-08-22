@@ -1,25 +1,25 @@
-import type { Diagnosis, ExcelRisk } from './encoding'
+import type { Diagnosis, ExcelRisk } from './encoding';
 
 export const LIMITS = {
   maxFiles: 50,
   maxBytes: 50 * 1024 * 1024,
-} as const
+} as const;
 
-export type FileErrorCode = 'empty_file' | 'file_too_large' | 'too_many_files'
+export type FileErrorCode = 'empty_file' | 'file_too_large' | 'too_many_files';
 
 export type CsvItem = {
-  id: string
-  file: File
-  bytes: Uint8Array
-  diagnosis: Diagnosis
-  risk: ExcelRisk
-}
+  id: string;
+  file: File;
+  bytes: Uint8Array;
+  diagnosis: Diagnosis;
+  risk: ExcelRisk;
+};
 
 export type RejectedFile = {
-  id: string
-  name: string
-  errorCode: FileErrorCode
-}
+  id: string;
+  name: string;
+  errorCode: FileErrorCode;
+};
 
 /**
  * Splits an incoming batch into what can be checked and what cannot, counting
@@ -30,9 +30,9 @@ export function classify(
   alreadyLoaded: number,
   newId: () => string,
 ): { accepted: File[]; rejected: RejectedFile[] } {
-  const accepted: File[] = []
-  const rejected: RejectedFile[] = []
-  let count = alreadyLoaded
+  const accepted: File[] = [];
+  const rejected: RejectedFile[] = [];
+  let count = alreadyLoaded;
 
   for (const file of files) {
     if (count >= LIMITS.maxFiles) {
@@ -40,25 +40,25 @@ export function classify(
         id: newId(),
         name: file.name,
         errorCode: 'too_many_files',
-      })
-      continue
+      });
+      continue;
     }
     if (file.size === 0) {
-      rejected.push({ id: newId(), name: file.name, errorCode: 'empty_file' })
-      continue
+      rejected.push({ id: newId(), name: file.name, errorCode: 'empty_file' });
+      continue;
     }
     if (file.size > LIMITS.maxBytes) {
       rejected.push({
         id: newId(),
         name: file.name,
         errorCode: 'file_too_large',
-      })
-      continue
+      });
+      continue;
     }
-    accepted.push(file)
-    count += 1
+    accepted.push(file);
+    count += 1;
   }
-  return { accepted, rejected }
+  return { accepted, rejected };
 }
 
 /**
@@ -67,8 +67,8 @@ export function classify(
  * for, the original sitting next to it in the downloads folder.
  */
 export function fixedFileName(name: string): string {
-  const dot = name.lastIndexOf('.')
+  const dot = name.lastIndexOf('.');
   return dot > 0
     ? `${name.slice(0, dot)}_utf8${name.slice(dot)}`
-    : `${name}_utf8`
+    : `${name}_utf8`;
 }

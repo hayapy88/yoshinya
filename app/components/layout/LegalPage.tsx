@@ -1,10 +1,10 @@
-import type { LocalizedLegalDocument } from '~/legal/types'
-import { useLocale } from '~/i18n/locale'
+import type { LocalizedLegalDocument } from '~/legal/types';
+import { useLocale } from '~/i18n/locale';
 
 // One shared renderer for both legal pages in both languages.
 export function LegalPage({ content }: { content: LocalizedLegalDocument }) {
-  const { locale } = useLocale()
-  const doc = content[locale]
+  const { locale } = useLocale();
+  const doc = content[locale];
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-12">
@@ -30,5 +30,5 @@ export function LegalPage({ content }: { content: LocalizedLegalDocument }) {
         ))}
       </div>
     </main>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useLocale } from '~/i18n/locale'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocale } from '~/i18n/locale';
 
-type Point = { x: number; y: number }
+type Point = { x: number; y: number };
 
-const MIN_SCALE = 0.1
-const MAX_SCALE = 8
+const MIN_SCALE = 0.1;
+const MAX_SCALE = 8;
 
 /**
  * Before and after in the same place, revealed by a draggable divider.
@@ -24,142 +24,142 @@ export function CompareView({
   onToggleSettings,
   isSettingsOpen = false,
 }: {
-  beforeUrl: string
-  afterUrl: string | null
-  alt: string
-  isBusy: boolean
-  isFullscreen?: boolean
-  onToggleFullscreen?: () => void
+  beforeUrl: string;
+  afterUrl: string | null;
+  alt: string;
+  isBusy: boolean;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
   /** Only supplied in full screen; the row hides it above the narrow layout. */
-  onToggleSettings?: () => void
-  isSettingsOpen?: boolean
+  onToggleSettings?: () => void;
+  isSettingsOpen?: boolean;
 }) {
-  const { t } = useLocale()
-  const stageRef = useRef<HTMLDivElement>(null)
-  const [divider, setDivider] = useState(50)
-  const [scale, setScale] = useState(1)
-  const [offset, setOffset] = useState<Point>({ x: 0, y: 0 })
+  const { t } = useLocale();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [divider, setDivider] = useState(50);
+  const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
   // Space held down shows the original full-frame, for a quick sanity check.
-  const [peeking, setPeeking] = useState(false)
+  const [peeking, setPeeking] = useState(false);
 
   const fit = useCallback(() => {
-    setScale(1)
-    setOffset({ x: 0, y: 0 })
-  }, [])
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
+  }, []);
 
   // A new image starts fitted rather than inheriting the previous zoom, which
   // would drop the user into an arbitrary corner of a differently sized photo.
   useEffect(() => {
-    fit()
-    setDivider(50)
-  }, [beforeUrl, fit])
+    fit();
+    setDivider(50);
+  }, [beforeUrl, fit]);
 
   const zoomBy = useCallback((factor: number) => {
     setScale((current) =>
       Math.min(MAX_SCALE, Math.max(MIN_SCALE, current * factor)),
-    )
-  }, [])
+    );
+  }, []);
 
   // Dragging: the divider when grabbing the handle, otherwise panning.
   const dragState = useRef<{
-    mode: 'divider' | 'pan'
-    start: Point
-    origin: Point
-  } | null>(null)
+    mode: 'divider' | 'pan';
+    start: Point;
+    origin: Point;
+  } | null>(null);
 
   const moveDivider = (clientX: number) => {
-    const rect = stageRef.current?.getBoundingClientRect()
+    const rect = stageRef.current?.getBoundingClientRect();
     if (!rect) {
-      return
+      return;
     }
-    const ratio = ((clientX - rect.left) / rect.width) * 100
-    setDivider(Math.min(100, Math.max(0, ratio)))
-  }
+    const ratio = ((clientX - rect.left) / rect.width) * 100;
+    setDivider(Math.min(100, Math.max(0, ratio)));
+  };
 
   const onPointerDown = (event: React.PointerEvent) => {
-    const target = event.target as HTMLElement
-    const mode = target.dataset.role === 'divider' ? 'divider' : 'pan'
+    const target = event.target as HTMLElement;
+    const mode = target.dataset.role === 'divider' ? 'divider' : 'pan';
     dragState.current = {
       mode,
       start: { x: event.clientX, y: event.clientY },
       origin: offset,
-    }
-    ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+    };
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
     if (mode === 'divider') {
-      moveDivider(event.clientX)
+      moveDivider(event.clientX);
     }
-  }
+  };
 
   const onPointerMove = (event: React.PointerEvent) => {
-    const drag = dragState.current
+    const drag = dragState.current;
     if (!drag) {
-      return
+      return;
     }
     if (drag.mode === 'divider') {
-      moveDivider(event.clientX)
-      return
+      moveDivider(event.clientX);
+      return;
     }
     setOffset({
       x: drag.origin.x + (event.clientX - drag.start.x),
       y: drag.origin.y + (event.clientY - drag.start.y),
-    })
-  }
+    });
+  };
 
   const endDrag = (event: React.PointerEvent) => {
-    dragState.current = null
-    ;(event.currentTarget as HTMLElement).releasePointerCapture?.(
+    dragState.current = null;
+    (event.currentTarget as HTMLElement).releasePointerCapture?.(
       event.pointerId,
-    )
-  }
+    );
+  };
 
   // Global shortcuts, suppressed while a form control has focus so typing a
   // width or dragging the quality slider never moves the picture instead.
   useEffect(() => {
     const isTyping = () => {
-      const active = document.activeElement
+      const active = document.activeElement;
       if (!active) {
-        return false
+        return false;
       }
       return (
         active instanceof HTMLInputElement ||
         active instanceof HTMLSelectElement ||
         active instanceof HTMLTextAreaElement ||
         (active as HTMLElement).isContentEditable
-      )
-    }
+      );
+    };
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (isTyping()) {
-        return
+        return;
       }
       if (event.key === ' ' && !event.repeat) {
-        event.preventDefault()
-        setPeeking(true)
-        return
+        event.preventDefault();
+        setPeeking(true);
+        return;
       }
       if (event.key === '+' || event.key === '=') {
-        zoomBy(1.25)
+        zoomBy(1.25);
       } else if (event.key === '-') {
-        zoomBy(0.8)
+        zoomBy(0.8);
       } else if (event.key === '0') {
-        fit()
+        fit();
       }
-    }
+    };
     const onKeyUp = (event: KeyboardEvent) => {
       if (event.key === ' ') {
-        setPeeking(false)
+        setPeeking(false);
       }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
+    };
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
     return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
-    }
-  }, [fit, zoomBy])
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+    };
+  }, [fit, zoomBy]);
 
-  const transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`
-  const reveal = peeking ? 100 : divider
+  const transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`;
+  const reveal = peeking ? 100 : divider;
 
   return (
     <div className="ic-compare">
@@ -172,8 +172,8 @@ export function CompareView({
         onPointerCancel={endDrag}
         onWheel={(event) => {
           if (event.ctrlKey || event.metaKey) {
-            event.preventDefault()
-            zoomBy(event.deltaY < 0 ? 1.1 : 0.9)
+            event.preventDefault();
+            zoomBy(event.deltaY < 0 ? 1.1 : 0.9);
           }
         }}
       >
@@ -219,13 +219,13 @@ export function CompareView({
             aria-valuetext={t.imageCompressor.dividerValue(Math.round(divider))}
             onKeyDown={(event) => {
               if (event.key === 'ArrowLeft') {
-                event.preventDefault()
-                event.stopPropagation()
-                setDivider((v) => Math.max(0, v - (event.shiftKey ? 10 : 2)))
+                event.preventDefault();
+                event.stopPropagation();
+                setDivider((v) => Math.max(0, v - (event.shiftKey ? 10 : 2)));
               } else if (event.key === 'ArrowRight') {
-                event.preventDefault()
-                event.stopPropagation()
-                setDivider((v) => Math.min(100, v + (event.shiftKey ? 10 : 2)))
+                event.preventDefault();
+                event.stopPropagation();
+                setDivider((v) => Math.min(100, v + (event.shiftKey ? 10 : 2)));
               }
             }}
           >
@@ -308,5 +308,5 @@ export function CompareView({
         </span>
       </div>
     </div>
-  )
+  );
 }

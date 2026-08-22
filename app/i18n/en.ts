@@ -956,4 +956,4 @@ export const en = {
     duplicatesBlock: 'Duplicate file names must be resolved before downloading',
     zipFailed: (message: string) => `Failed to generate the zip: ${message}`,
   },
-}
+};

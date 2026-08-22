@@ -1,12 +1,12 @@
-import { Link } from 'react-router'
-import type { Route } from './+types/home'
-import { dictionaries, isLocale, useLocale } from '~/i18n/locale'
-import { isProductionHost, pageMeta, websiteJsonLd } from '~/lib/seo'
+import { Link } from 'react-router';
+import type { Route } from './+types/home';
+import { dictionaries, isLocale, useLocale } from '~/i18n/locale';
+import { isProductionHost, pageMeta, websiteJsonLd } from '~/lib/seo';
 
 export function meta({ params, matches }: Route.MetaArgs) {
-  const locale = isLocale(params.locale) ? params.locale : 'en'
-  const t = dictionaries[locale]
-  const rootData = matches[0]?.loaderData
+  const locale = isLocale(params.locale) ? params.locale : 'en';
+  const t = dictionaries[locale];
+  const rootData = matches[0]?.loaderData;
   return pageMeta({
     locale,
     path: '',
@@ -14,11 +14,11 @@ export function meta({ params, matches }: Route.MetaArgs) {
     description: t.home.metaDescription,
     noindex: !isProductionHost(rootData?.host),
     jsonLd: [websiteJsonLd(locale)],
-  })
+  });
 }
 
 export default function Home() {
-  const { locale, t } = useLocale()
+  const { locale, t } = useLocale();
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-12">
@@ -110,5 +110,5 @@ export default function Home() {
         </div>
       </section>
     </main>
-  )
+  );
 }

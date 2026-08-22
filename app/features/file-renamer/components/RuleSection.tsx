@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react';
 import {
   DndContext,
   PointerSensor,
@@ -11,31 +11,31 @@ import {
   type DragEndEvent,
   type DragMoveEvent,
   type DragStartEvent,
-} from '@dnd-kit/core'
+} from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
   horizontalListSortingStrategy,
   useSortable,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { formatAlphaIndex, formatNumericIndex } from '../lib/rename'
-import { validateTextValue } from '../lib/validate'
-import { useLocale, type Dictionary } from '~/i18n/locale'
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { formatAlphaIndex, formatNumericIndex } from '../lib/rename';
+import { validateTextValue } from '../lib/validate';
+import { useLocale, type Dictionary } from '~/i18n/locale';
 import type {
   DateFormat,
   DimensionsFormat,
   IndexStyle,
   RenameToken,
   TimeFormat,
-} from '../lib/types'
+} from '../lib/types';
 
 type Props = {
-  tokens: RenameToken[]
-  onChange: (tokens: RenameToken[]) => void
-}
+  tokens: RenameToken[];
+  onChange: (tokens: RenameToken[]) => void;
+};
 
-type TokenKind = RenameToken['kind']
+type TokenKind = RenameToken['kind'];
 
 const PALETTE_KINDS: TokenKind[] = [
   'text',
@@ -44,58 +44,58 @@ const PALETTE_KINDS: TokenKind[] = [
   'time',
   'index',
   'dimensions',
-]
+];
 
 const DATE_FORMATS: DateFormat[] = [
   'yyyy-mm-dd',
   'yyyymmdd',
   'yyyy-mm',
   'yyyymm',
-]
-const TIME_FORMATS: TimeFormat[] = ['hh-mm-ss', 'hh-mm']
-const DIMENSIONS_FORMATS: DimensionsFormat[] = ['wxh', 'w', 'h']
+];
+const TIME_FORMATS: TimeFormat[] = ['hh-mm-ss', 'hh-mm'];
+const DIMENSIONS_FORMATS: DimensionsFormat[] = ['wxh', 'w', 'h'];
 
 const SEPARATOR_CHARS: {
-  value: string
-  labelKey: 'underscore' | 'hyphen' | 'dot'
+  value: string;
+  labelKey: 'underscore' | 'hyphen' | 'dot';
 }[] = [
   { value: '_', labelKey: 'underscore' },
   { value: '-', labelKey: 'hyphen' },
   { value: '.', labelKey: 'dot' },
-]
+];
 
 const INDEX_STYLES: {
-  value: keyof Dictionary['rule']['indexStyles']
-  style: IndexStyle
+  value: keyof Dictionary['rule']['indexStyles'];
+  style: IndexStyle;
 }[] = [
   { value: 'num1', style: { type: 'numeric', padding: 1 } },
   { value: 'num2', style: { type: 'numeric', padding: 2 } },
   { value: 'num3', style: { type: 'numeric', padding: 3 } },
   { value: 'alphaLower', style: { type: 'alpha', letterCase: 'lower' } },
   { value: 'alphaUpper', style: { type: 'alpha', letterCase: 'upper' } },
-]
+];
 
 function pad2(n: number): string {
-  return String(n).padStart(2, '0')
+  return String(n).padStart(2, '0');
 }
 
 function todayISO(): string {
-  const d = new Date()
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 }
 
 function currentTime(): string {
-  const d = new Date()
-  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`
+  const d = new Date();
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
 }
 
 function createToken(kind: TokenKind): RenameToken {
-  const id = crypto.randomUUID()
+  const id = crypto.randomUUID();
   switch (kind) {
     case 'text':
-      return { id, kind, value: '' }
+      return { id, kind, value: '' };
     case 'separator':
-      return { id, kind, char: '_' }
+      return { id, kind, char: '_' };
     case 'date':
       return {
         id,
@@ -103,7 +103,7 @@ function createToken(kind: TokenKind): RenameToken {
         format: 'yyyy-mm-dd',
         source: 'fixed',
         fixedDate: todayISO(),
-      }
+      };
     case 'time':
       return {
         id,
@@ -111,11 +111,11 @@ function createToken(kind: TokenKind): RenameToken {
         format: 'hh-mm',
         source: 'fixed',
         fixedTime: currentTime(),
-      }
+      };
     case 'index':
-      return { id, kind, style: { type: 'numeric', padding: 2 }, start: 1 }
+      return { id, kind, style: { type: 'numeric', padding: 2 }, start: 1 };
     case 'dimensions':
-      return { id, kind, format: 'wxh' }
+      return { id, kind, format: 'wxh' };
   }
 }
 
@@ -123,26 +123,26 @@ function indexStyleValue(
   style: IndexStyle,
 ): keyof Dictionary['rule']['indexStyles'] {
   if (style.type === 'numeric') {
-    return `num${style.padding}`
+    return `num${style.padding}`;
   }
-  return style.letterCase === 'lower' ? 'alphaLower' : 'alphaUpper'
+  return style.letterCase === 'lower' ? 'alphaLower' : 'alphaUpper';
 }
 
 function indexSample(style: IndexStyle): string {
   return style.type === 'numeric'
     ? formatNumericIndex(1, style.padding)
-    : formatAlphaIndex(1, style.letterCase)
+    : formatAlphaIndex(1, style.letterCase);
 }
 
 // A short label for the dimensions chip (actual pixel values vary per file).
 function dimensionsSample(format: DimensionsFormat): string {
   switch (format) {
     case 'wxh':
-      return 'WxH'
+      return 'WxH';
     case 'w':
-      return 'W'
+      return 'W';
     case 'h':
-      return 'H'
+      return 'H';
   }
 }
 
@@ -151,15 +151,15 @@ function kindNumbers(
   tokens: RenameToken[],
   kind: TokenKind,
 ): Map<string, number> {
-  const numbers = new Map<string, number>()
-  let n = 0
+  const numbers = new Map<string, number>();
+  let n = 0;
   for (const token of tokens) {
     if (token.kind === kind) {
-      n += 1
-      numbers.set(token.id, n)
+      n += 1;
+      numbers.set(token.id, n);
     }
   }
-  return numbers
+  return numbers;
 }
 
 function tokenChipLabel(
@@ -169,17 +169,17 @@ function tokenChipLabel(
 ): string {
   switch (token.kind) {
     case 'text':
-      return t.tokens.textNumbered(textNumber ?? 1)
+      return t.tokens.textNumbered(textNumber ?? 1);
     case 'separator':
-      return token.char
+      return token.char;
     case 'date':
-      return `${t.tokens.date}(${token.format})`
+      return `${t.tokens.date}(${token.format})`;
     case 'time':
-      return `${t.tokens.time}(${token.format})`
+      return `${t.tokens.time}(${token.format})`;
     case 'index':
-      return `${t.tokens.index}(${indexSample(token.style)})`
+      return `${t.tokens.index}(${indexSample(token.style)})`;
     case 'dimensions':
-      return `${t.tokens.dimensions}(${dimensionsSample(token.format)})`
+      return `${t.tokens.dimensions}(${dimensionsSample(token.format)})`;
   }
 }
 
@@ -189,11 +189,11 @@ function tokenChipLabel(
 // reports the token's original spot in the palette), which skewed the left/
 // right decision for every palette token except the leftmost one.
 function pointerX(event: DragMoveEvent | DragEndEvent): number | null {
-  const activator = event.activatorEvent
+  const activator = event.activatorEvent;
   if (activator && 'clientX' in activator) {
-    return (activator as PointerEvent).clientX + event.delta.x
+    return (activator as PointerEvent).clientX + event.delta.x;
   }
-  return null
+  return null;
 }
 
 // When dragging a token in from the palette, pick the rule token nearest the
@@ -202,32 +202,32 @@ function pointerX(event: DragMoveEvent | DragEndEvent): number | null {
 // tokens resolve to the wrong target (usually the end). Reordering existing
 // tokens keeps the default closestCenter behavior.
 const collisionDetection: CollisionDetection = (args) => {
-  const fromPalette = args.active?.data.current?.from === 'palette'
-  const pointer = args.pointerCoordinates
+  const fromPalette = args.active?.data.current?.from === 'palette';
+  const pointer = args.pointerCoordinates;
   if (!fromPalette || !pointer) {
-    return closestCenter(args)
+    return closestCenter(args);
   }
-  const chips = args.droppableContainers.filter((c) => c.id !== 'rule-area')
+  const chips = args.droppableContainers.filter((c) => c.id !== 'rule-area');
   if (chips.length === 0) {
-    return closestCenter(args)
+    return closestCenter(args);
   }
-  let nearest = chips[0]
-  let nearestDistance = Infinity
+  let nearest = chips[0];
+  let nearestDistance = Infinity;
   for (const chip of chips) {
-    const rect = args.droppableRects.get(chip.id)
+    const rect = args.droppableRects.get(chip.id);
     if (!rect) {
-      continue
+      continue;
     }
-    const cx = rect.left + rect.width / 2
-    const cy = rect.top + rect.height / 2
-    const distance = Math.hypot(pointer.x - cx, pointer.y - cy)
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const distance = Math.hypot(pointer.x - cx, pointer.y - cy);
     if (distance < nearestDistance) {
-      nearestDistance = distance
-      nearest = chip
+      nearestDistance = distance;
+      nearest = chip;
     }
   }
-  return [{ id: nearest.id }]
-}
+  return [{ id: nearest.id }];
+};
 
 // Decides where a token dragged from the palette should land, using the left/
 // right half of whichever rule token the pointer is over so the drop matches
@@ -237,51 +237,51 @@ function computeInsertIndex(
   tokens: RenameToken[],
   event: DragMoveEvent | DragEndEvent,
 ): number | null {
-  const { over } = event
+  const { over } = event;
   if (!over) {
-    return null
+    return null;
   }
-  const overIndex = tokens.findIndex((token) => token.id === over.id)
+  const overIndex = tokens.findIndex((token) => token.id === over.id);
   if (overIndex < 0) {
     // Over the rule area itself (e.g. empty space): append to the end.
-    return over.id === 'rule-area' ? tokens.length : null
+    return over.id === 'rule-area' ? tokens.length : null;
   }
-  const x = pointerX(event)
+  const x = pointerX(event);
   if (x !== null) {
-    const overCenter = over.rect.left + over.rect.width / 2
-    return x > overCenter ? overIndex + 1 : overIndex
+    const overCenter = over.rect.left + over.rect.width / 2;
+    return x > overCenter ? overIndex + 1 : overIndex;
   }
-  return overIndex
+  return overIndex;
 }
 
 export function RuleSection({ tokens, onChange }: Props) {
-  const { t } = useLocale()
+  const { t } = useLocale();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-  )
-  const numbers = kindNumbers(tokens, 'text')
-  const separatorNumbers = kindNumbers(tokens, 'separator')
+  );
+  const numbers = kindNumbers(tokens, 'text');
+  const separatorNumbers = kindNumbers(tokens, 'separator');
 
   // While a palette token is being dragged, this is the index the new token
   // will be inserted at; null when not dragging from the palette (reordering
   // existing tokens is handled by the sortable strategy instead).
-  const [insertIndex, setInsertIndex] = useState<number | null>(null)
+  const [insertIndex, setInsertIndex] = useState<number | null>(null);
   const isFromPalette = (event: { active: DragStartEvent['active'] }) =>
-    event.active.data.current?.from === 'palette'
+    event.active.data.current?.from === 'palette';
 
   const updateToken = (id: string, patch: Partial<RenameToken>) => {
     onChange(
       tokens.map((token) =>
         token.id === id ? ({ ...token, ...patch } as RenameToken) : token,
       ),
-    )
-  }
+    );
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     if (isFromPalette(event)) {
-      setInsertIndex(tokens.length)
+      setInsertIndex(tokens.length);
     }
-  }
+  };
 
   // Uses onDragMove (fires on every pointer move) rather than onDragOver (fires
   // only when the hovered container changes). The custom collision always
@@ -289,35 +289,35 @@ export function RuleSection({ tokens, onChange }: Props) {
   // the left/right insertion point as the pointer moves within that chip.
   const handleDragMove = (event: DragMoveEvent) => {
     if (!isFromPalette(event)) {
-      return
+      return;
     }
-    setInsertIndex(computeInsertIndex(tokens, event) ?? tokens.length)
-  }
+    setInsertIndex(computeInsertIndex(tokens, event) ?? tokens.length);
+  };
 
-  const clearDrag = () => setInsertIndex(null)
+  const clearDrag = () => setInsertIndex(null);
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+    const { active, over } = event;
     if (isFromPalette(event)) {
-      const index = computeInsertIndex(tokens, event) ?? insertIndex
-      clearDrag()
+      const index = computeInsertIndex(tokens, event) ?? insertIndex;
+      clearDrag();
       if (index === null) {
-        return
+        return;
       }
-      const token = createToken(active.data.current?.kind as TokenKind)
-      onChange([...tokens.slice(0, index), token, ...tokens.slice(index)])
-      return
+      const token = createToken(active.data.current?.kind as TokenKind);
+      onChange([...tokens.slice(0, index), token, ...tokens.slice(index)]);
+      return;
     }
-    clearDrag()
+    clearDrag();
     if (!over || active.id === over.id) {
-      return
+      return;
     }
-    const oldIndex = tokens.findIndex((t) => t.id === active.id)
-    const newIndex = tokens.findIndex((t) => t.id === over.id)
+    const oldIndex = tokens.findIndex((t) => t.id === active.id);
+    const newIndex = tokens.findIndex((t) => t.id === over.id);
     if (oldIndex >= 0 && newIndex >= 0) {
-      onChange(arrayMove(tokens, oldIndex, newIndex))
+      onChange(arrayMove(tokens, oldIndex, newIndex));
     }
-  }
+  };
 
   return (
     <div>
@@ -356,12 +356,12 @@ export function RuleSection({ tokens, onChange }: Props) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function PaletteToken({ kind, label }: { kind: TokenKind; label: string }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id: `palette-${kind}`, data: { from: 'palette', kind } })
+    useDraggable({ id: `palette-${kind}`, data: { from: 'palette', kind } });
 
   return (
     <button
@@ -374,7 +374,7 @@ function PaletteToken({ kind, label }: { kind: TokenKind; label: string }) {
     >
       {label}
     </button>
-  )
+  );
 }
 
 function RuleArea({
@@ -383,14 +383,14 @@ function RuleArea({
   insertIndex,
   onRemove,
 }: {
-  tokens: RenameToken[]
-  numbers: Map<string, number>
-  insertIndex: number | null
-  onRemove: (id: string) => void
+  tokens: RenameToken[];
+  numbers: Map<string, number>;
+  insertIndex: number | null;
+  onRemove: (id: string) => void;
 }) {
-  const { t } = useLocale()
-  const { setNodeRef, isOver } = useDroppable({ id: 'rule-area' })
-  const isDraggingFromPalette = insertIndex !== null
+  const { t } = useLocale();
+  const { setNodeRef, isOver } = useDroppable({ id: 'rule-area' });
+  const isDraggingFromPalette = insertIndex !== null;
 
   const dropSlot = (
     <span
@@ -398,7 +398,7 @@ function RuleArea({
       role="presentation"
       aria-label={t.rule.dropSlotLabel}
     />
-  )
+  );
 
   return (
     <div
@@ -426,7 +426,7 @@ function RuleArea({
       </SortableContext>
       <span className="token-chip ext-chip">{t.rule.extChip}</span>
     </div>
-  )
+  );
 }
 
 function SortableRuleToken({
@@ -434,11 +434,11 @@ function SortableRuleToken({
   textNumber,
   onRemove,
 }: {
-  token: RenameToken
-  textNumber?: number
-  onRemove: (id: string) => void
+  token: RenameToken;
+  textNumber?: number;
+  onRemove: (id: string) => void;
 }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
   const {
     attributes,
     listeners,
@@ -446,8 +446,8 @@ function SortableRuleToken({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: token.id, data: { from: 'rule' } })
-  const label = tokenChipLabel(token, t, textNumber)
+  } = useSortable({ id: token.id, data: { from: 'rule' } });
+  const label = tokenChipLabel(token, t, textNumber);
 
   return (
     <span
@@ -467,7 +467,7 @@ function SortableRuleToken({
         ✕
       </button>
     </span>
-  )
+  );
 }
 
 function TokenSettings({
@@ -476,12 +476,12 @@ function TokenSettings({
   separatorNumber,
   onUpdate,
 }: {
-  token: RenameToken
-  textNumber?: number
-  separatorNumber?: number
-  onUpdate: (id: string, patch: Partial<RenameToken>) => void
+  token: RenameToken;
+  textNumber?: number;
+  separatorNumber?: number;
+  onUpdate: (id: string, patch: Partial<RenameToken>) => void;
 }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
 
   switch (token.kind) {
     case 'separator':
@@ -502,9 +502,9 @@ function TokenSettings({
             ))}
           </select>
         </div>
-      )
+      );
     case 'text': {
-      const error = validateTextValue(token.value)
+      const error = validateTextValue(token.value);
       return (
         <div className="settings-panel">
           <label className="settings-label" htmlFor={`text-${token.id}`}>
@@ -521,7 +521,7 @@ function TokenSettings({
             <p className="field-error">{t.rule.textError(error.chars)}</p>
           )}
         </div>
-      )
+      );
     }
     case 'date':
       return (
@@ -586,7 +586,7 @@ function TokenSettings({
             )}
           </div>
         </div>
-      )
+      );
     case 'time':
       return (
         <div className="settings-panel">
@@ -651,7 +651,7 @@ function TokenSettings({
             )}
           </div>
         </div>
-      )
+      );
     case 'index':
       return (
         <div className="settings-panel">
@@ -664,9 +664,9 @@ function TokenSettings({
             onChange={(e) => {
               const chosen = INDEX_STYLES.find(
                 (s) => s.value === e.target.value,
-              )
+              );
               if (chosen) {
-                onUpdate(token.id, { style: chosen.style })
+                onUpdate(token.id, { style: chosen.style });
               }
             }}
           >
@@ -677,7 +677,7 @@ function TokenSettings({
             ))}
           </select>
         </div>
-      )
+      );
     case 'dimensions':
       return (
         <div className="settings-panel">
@@ -701,6 +701,6 @@ function TokenSettings({
           </select>
           <p className="hint">{t.rule.dimensionsHint}</p>
         </div>
-      )
+      );
   }
 }

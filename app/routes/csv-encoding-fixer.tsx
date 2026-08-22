@@ -1,18 +1,18 @@
-import type { Route } from './+types/csv-encoding-fixer'
-import { dictionaries, isLocale } from '~/i18n/locale'
+import type { Route } from './+types/csv-encoding-fixer';
+import { dictionaries, isLocale } from '~/i18n/locale';
 import {
   breadcrumbJsonLd,
   csvEncodingFixerJsonLd,
   faqJsonLd,
   isProductionHost,
   pageMeta,
-} from '~/lib/seo'
-import CsvEncodingFixerTool from '~/features/csv-encoding-fixer/CsvEncodingFixerTool'
+} from '~/lib/seo';
+import CsvEncodingFixerTool from '~/features/csv-encoding-fixer/CsvEncodingFixerTool';
 
 export function meta({ params, matches }: Route.MetaArgs) {
-  const locale = isLocale(params.locale) ? params.locale : 'en'
-  const t = dictionaries[locale]
-  const rootData = matches[0]?.loaderData
+  const locale = isLocale(params.locale) ? params.locale : 'en';
+  const t = dictionaries[locale];
+  const rootData = matches[0]?.loaderData;
   return pageMeta({
     locale,
     path: '/csv-encoding-fixer',
@@ -28,9 +28,9 @@ export function meta({ params, matches }: Route.MetaArgs) {
         { name: t.csvEncodingFixerPage.toolName, path: '/csv-encoding-fixer' },
       ]),
     ],
-  })
+  });
 }
 
 export default function CsvEncodingFixerPage() {
-  return <CsvEncodingFixerTool />
+  return <CsvEncodingFixerTool />;
 }

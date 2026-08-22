@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -11,29 +11,29 @@ import {
   useSensors,
   type DragEndEvent,
   type DragStartEvent,
-} from '@dnd-kit/core'
-import { useLocale } from '~/i18n/locale'
-import type { ImageItem, SortingState } from '../lib/types'
-import { folderNumber, counts } from '../lib/reducer'
+} from '@dnd-kit/core';
+import { useLocale } from '~/i18n/locale';
+import type { ImageItem, SortingState } from '../lib/types';
+import { folderNumber, counts } from '../lib/reducer';
 
 type Props = {
-  state: SortingState
-  onMove: (imageIds: string[], folderId: string | null) => void
-  onBackToSorting: () => void
-  onDownload: () => void
-  isZipping: boolean
-  zipError: string | null
-}
+  state: SortingState;
+  onMove: (imageIds: string[], folderId: string | null) => void;
+  onBackToSorting: () => void;
+  onDownload: () => void;
+  isZipping: boolean;
+  zipError: string | null;
+};
 
 type Group = {
-  id: string | null // null = unsorted
-  dropId: string // droppable id ('__unsorted__' or folderId)
-  name: string
-  number: number | null
-  images: ImageItem[]
-}
+  id: string | null; // null = unsorted
+  dropId: string; // droppable id ('__unsorted__' or folderId)
+  name: string;
+  number: number | null;
+  images: ImageItem[];
+};
 
-const UNSORTED_DROP = '__unsorted__'
+const UNSORTED_DROP = '__unsorted__';
 
 // One selectable + draggable image row.
 function ImageRow({
@@ -42,12 +42,12 @@ function ImageRow({
   isDragging,
   onToggle,
 }: {
-  image: ImageItem
-  isSelected: boolean
-  isDragging: boolean
-  onToggle: (image: ImageItem, shiftKey: boolean) => void
+  image: ImageItem;
+  isSelected: boolean;
+  isDragging: boolean;
+  onToggle: (image: ImageItem, shiftKey: boolean) => void;
 }) {
-  const { attributes, listeners, setNodeRef } = useDraggable({ id: image.id })
+  const { attributes, listeners, setNodeRef } = useDraggable({ id: image.id });
   return (
     <button
       ref={setNodeRef}
@@ -71,7 +71,7 @@ function ImageRow({
       />
       <span className="is-row-name">{image.name}</span>
     </button>
-  )
+  );
 }
 
 // A folder (or unsorted) section that accepts dropped images.
@@ -79,10 +79,10 @@ function FolderGroup({
   group,
   children,
 }: {
-  group: Group
-  children: React.ReactNode
+  group: Group;
+  children: React.ReactNode;
 }) {
-  const { setNodeRef, isOver } = useDroppable({ id: group.dropId })
+  const { setNodeRef, isOver } = useDroppable({ id: group.dropId });
   return (
     <div
       ref={setNodeRef}
@@ -92,7 +92,7 @@ function FolderGroup({
     >
       {children}
     </div>
-  )
+  );
 }
 
 export function ReviewView({
@@ -103,14 +103,14 @@ export function ReviewView({
   isZipping,
   zipError,
 }: Props) {
-  const { t } = useLocale()
-  const ordered = [...state.folders].sort((a, b) => a.order - b.order)
-  const { total, sorted, unsorted } = counts(state)
+  const { t } = useLocale();
+  const ordered = [...state.folders].sort((a, b) => a.order - b.order);
+  const { total, sorted, unsorted } = counts(state);
 
-  const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [target, setTarget] = useState<string>('') // folderId or '__unsorted__'
-  const [lastClicked, setLastClicked] = useState<number | null>(null)
-  const [activeDragId, setActiveDragId] = useState<string | null>(null)
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [target, setTarget] = useState<string>(''); // folderId or '__unsorted__'
+  const [lastClicked, setLastClicked] = useState<number | null>(null);
+  const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
   // Press-and-hold on touch so normal scrolling still works; small move on mouse.
   const sensors = useSensors(
@@ -118,19 +118,19 @@ export function ReviewView({
     useSensor(TouchSensor, {
       activationConstraint: { delay: 200, tolerance: 8 },
     }),
-  )
+  );
 
   // Groups top to bottom: unsorted first (only if it has images), then every
   // folder in order (even empty ones, so the structure stays visible).
   const groups: Group[] = useMemo(() => {
-    const unsortedImages = state.images.filter((i) => i.folderId === null)
+    const unsortedImages = state.images.filter((i) => i.folderId === null);
     const folderGroups: Group[] = ordered.map((folder) => ({
       id: folder.id,
       dropId: folder.id,
       name: folder.name,
       number: folderNumber(state.folders, folder.id),
       images: state.images.filter((i) => i.folderId === folder.id),
-    }))
+    }));
     // The unsorted group is always shown (even when empty) so images can be
     // dragged back to it.
     return [
@@ -142,69 +142,69 @@ export function ReviewView({
         images: unsortedImages,
       },
       ...folderGroups,
-    ]
-  }, [state.images, state.folders, ordered, t])
+    ];
+  }, [state.images, state.folders, ordered, t]);
 
-  const flat = useMemo(() => groups.flatMap((g) => g.images), [groups])
+  const flat = useMemo(() => groups.flatMap((g) => g.images), [groups]);
 
   // Images that a drag will move: the whole selection if the dragged image is
   // selected, otherwise just the dragged image.
   const dragImageIds = (draggedId: string): string[] =>
-    selected.has(draggedId) ? [...selected] : [draggedId]
+    selected.has(draggedId) ? [...selected] : [draggedId];
 
-  const draggingIds = new Set(activeDragId ? dragImageIds(activeDragId) : [])
+  const draggingIds = new Set(activeDragId ? dragImageIds(activeDragId) : []);
 
   const toggle = (image: ImageItem, shiftKey: boolean) => {
-    const index = flat.findIndex((i) => i.id === image.id)
+    const index = flat.findIndex((i) => i.id === image.id);
     setSelected((prev) => {
-      const next = new Set(prev)
+      const next = new Set(prev);
       if (shiftKey && lastClicked !== null) {
-        const [from, to] = [lastClicked, index].sort((a, b) => a - b)
+        const [from, to] = [lastClicked, index].sort((a, b) => a - b);
         for (let i = from; i <= to; i += 1) {
           if (flat[i]) {
-            next.add(flat[i].id)
+            next.add(flat[i].id);
           }
         }
       } else if (next.has(image.id)) {
-        next.delete(image.id)
+        next.delete(image.id);
       } else {
-        next.add(image.id)
+        next.add(image.id);
       }
-      return next
-    })
-    setLastClicked(index)
-  }
+      return next;
+    });
+    setLastClicked(index);
+  };
 
   const applyMove = () => {
     if (selected.size === 0 || target === '') {
-      return
+      return;
     }
-    onMove([...selected], target === UNSORTED_DROP ? null : target)
-    setSelected(new Set())
-  }
+    onMove([...selected], target === UNSORTED_DROP ? null : target);
+    setSelected(new Set());
+  };
 
   const handleDragStart = (event: DragStartEvent) =>
-    setActiveDragId(String(event.active.id))
+    setActiveDragId(String(event.active.id));
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const draggedId = activeDragId
-    setActiveDragId(null)
+    const draggedId = activeDragId;
+    setActiveDragId(null);
     if (!event.over || !draggedId) {
-      return
+      return;
     }
-    const ids = dragImageIds(draggedId)
+    const ids = dragImageIds(draggedId);
     const folderId =
-      event.over.id === UNSORTED_DROP ? null : String(event.over.id)
-    onMove(ids, folderId)
+      event.over.id === UNSORTED_DROP ? null : String(event.over.id);
+    onMove(ids, folderId);
     if (selected.has(draggedId)) {
-      setSelected(new Set())
+      setSelected(new Set());
     }
-  }
+  };
 
-  const activeCount = activeDragId ? dragImageIds(activeDragId).length : 0
+  const activeCount = activeDragId ? dragImageIds(activeDragId).length : 0;
   const activeImage = activeDragId
     ? state.images.find((i) => i.id === activeDragId)
-    : null
+    : null;
 
   return (
     <div>
@@ -336,5 +336,5 @@ export function ReviewView({
         </p>
       )}
     </div>
-  )
+  );
 }

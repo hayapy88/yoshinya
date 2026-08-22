@@ -1,8 +1,8 @@
-import { Link } from 'react-router'
-import { useLocale } from '~/i18n/locale'
+import { Link } from 'react-router';
+import { useLocale } from '~/i18n/locale';
 
 export function SiteFooter() {
-  const { locale, t } = useLocale()
+  const { locale, t } = useLocale();
 
   return (
     <footer className="border-t border-[#d9d7de] dark:border-[#3a3841]">
@@ -32,5 +32,5 @@ export function SiteFooter() {
         </nav>
       </div>
     </footer>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { mimeForFormat } from './settings'
-import type { EncodableFormat } from './types'
+import { mimeForFormat } from './settings';
+import type { EncodableFormat } from './types';
 
 // Which output formats this browser can actually write.
 //
@@ -14,25 +14,25 @@ import type { EncodableFormat } from './types'
 // thing it claims to measure and needs none of the queue's job plumbing.
 
 /** PNG is required of every canvas implementation, so it is never in doubt. */
-const ALWAYS_AVAILABLE: EncodableFormat = 'png'
+const ALWAYS_AVAILABLE: EncodableFormat = 'png';
 
-const PROBED: EncodableFormat[] = ['jpeg', 'webp']
+const PROBED: EncodableFormat[] = ['jpeg', 'webp'];
 
 async function canEncode(mimeType: string): Promise<boolean> {
   try {
     // 1×1: the question is whether the encoder exists, not how it performs.
-    const canvas = new OffscreenCanvas(1, 1)
-    const context = canvas.getContext('2d')
+    const canvas = new OffscreenCanvas(1, 1);
+    const context = canvas.getContext('2d');
     if (!context) {
-      return false
+      return false;
     }
-    context.fillRect(0, 0, 1, 1)
-    const blob = await canvas.convertToBlob({ type: mimeType })
-    return blob.type === mimeType
+    context.fillRect(0, 0, 1, 1);
+    const blob = await canvas.convertToBlob({ type: mimeType });
+    return blob.type === mimeType;
   } catch {
     // A browser without OffscreenCanvas cannot run this tool at all, so there
     // is nothing useful to report beyond "not this format".
-    return false
+    return false;
   }
 }
 
@@ -42,17 +42,17 @@ async function canEncode(mimeType: string): Promise<boolean> {
  * error if the answer was wrong.
  */
 export async function probeEncodableFormats(): Promise<Set<EncodableFormat>> {
-  const available = new Set<EncodableFormat>([ALWAYS_AVAILABLE])
+  const available = new Set<EncodableFormat>([ALWAYS_AVAILABLE]);
   const results = await Promise.all(
     PROBED.map(
       async (format) =>
         [format, await canEncode(mimeForFormat(format))] as const,
     ),
-  )
+  );
   for (const [format, ok] of results) {
     if (ok) {
-      available.add(format)
+      available.add(format);
     }
   }
-  return available
+  return available;
 }

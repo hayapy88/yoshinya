@@ -1,5 +1,5 @@
-import type { Route } from './+types/sitemap'
-import { SITE_ORIGIN } from '~/lib/seo'
+import type { Route } from './+types/sitemap';
+import { SITE_ORIGIN } from '~/lib/seo';
 
 // Localized page paths (without the locale prefix). Add new tools here.
 const PATHS = [
@@ -11,19 +11,19 @@ const PATHS = [
   '/csv-encoding-fixer',
   '/privacy',
   '/terms',
-]
+];
 
 function urlEntry(path: string): string {
-  const ja = `${SITE_ORIGIN}/ja${path}`
-  const en = `${SITE_ORIGIN}/en${path}`
+  const ja = `${SITE_ORIGIN}/ja${path}`;
+  const en = `${SITE_ORIGIN}/en${path}`;
   const alternates = [
     `    <xhtml:link rel="alternate" hreflang="ja" href="${ja}"/>`,
     `    <xhtml:link rel="alternate" hreflang="en" href="${en}"/>`,
     `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_ORIGIN}/"/>`,
-  ].join('\n')
+  ].join('\n');
   return [ja, en]
     .map((loc) => `  <url>\n    <loc>${loc}</loc>\n${alternates}\n  </url>`)
-    .join('\n')
+    .join('\n');
 }
 
 export function loader(_: Route.LoaderArgs) {
@@ -34,12 +34,12 @@ export function loader(_: Route.LoaderArgs) {
     ...PATHS.map(urlEntry),
     '</urlset>',
     '',
-  ].join('\n')
+  ].join('\n');
 
   return new Response(body, {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
       'Cache-Control': 'public, max-age=3600',
     },
-  })
+  });
 }

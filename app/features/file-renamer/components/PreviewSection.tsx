@@ -1,24 +1,24 @@
-import type { RenameResult } from '../lib/types'
-import { useLocale } from '~/i18n/locale'
-import { FileThumb, type LoadedFile } from './FilesSection'
+import type { RenameResult } from '../lib/types';
+import { useLocale } from '~/i18n/locale';
+import { FileThumb, type LoadedFile } from './FilesSection';
 
 type Props = {
-  files: LoadedFile[]
-  hasTokens: boolean
-  results: RenameResult[] | null
-}
+  files: LoadedFile[];
+  hasTokens: boolean;
+  results: RenameResult[] | null;
+};
 
 export function PreviewSection({ files, hasTokens, results }: Props) {
-  const { t } = useLocale()
+  const { t } = useLocale();
 
   if (files.length === 0) {
-    return <p className="hint">{t.preview.addFilesGuide}</p>
+    return <p className="hint">{t.preview.addFilesGuide}</p>;
   }
   if (!hasTokens || !results) {
-    return <p className="hint">{t.preview.buildRuleGuide}</p>
+    return <p className="hint">{t.preview.buildRuleGuide}</p>;
   }
 
-  const hasDuplicates = results.some((r) => r.isDuplicate)
+  const hasDuplicates = results.some((r) => r.isDuplicate);
 
   return (
     <div>
@@ -55,5 +55,5 @@ export function PreviewSection({ files, hasTokens, results }: Props) {
         </tbody>
       </table>
     </div>
-  )
+  );
 }

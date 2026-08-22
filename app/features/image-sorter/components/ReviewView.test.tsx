@@ -1,10 +1,10 @@
 /** @vitest-environment jsdom */
-import { describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom/vitest'
-import { LocaleProvider } from '~/i18n/LocaleContext'
-import type { ImageItem, SortingState } from '../lib/types'
-import { ReviewView } from './ReviewView'
+import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+import { LocaleProvider } from '~/i18n/LocaleContext';
+import type { ImageItem, SortingState } from '../lib/types';
+import { ReviewView } from './ReviewView';
 
 function img(id: string, folderId: string | null): ImageItem {
   return {
@@ -15,7 +15,7 @@ function img(id: string, folderId: string | null): ImageItem {
     previewUrl: `blob:${id}`,
     folderId,
     error: false,
-  }
+  };
 }
 
 function baseState(): SortingState {
@@ -27,7 +27,7 @@ function baseState(): SortingState {
     ],
     currentIndex: 0,
     history: [],
-  }
+  };
 }
 
 function renderReview(
@@ -41,51 +41,51 @@ function renderReview(
     isZipping: false,
     zipError: null,
     ...overrides,
-  }
+  };
   render(
     <LocaleProvider locale="en">
       <ReviewView {...props} />
     </LocaleProvider>,
-  )
-  return props
+  );
+  return props;
 }
 
 describe('ReviewView', () => {
   it('shows every file name', () => {
-    renderReview()
-    expect(screen.getByText('a.jpg')).toBeInTheDocument()
-    expect(screen.getByText('b.jpg')).toBeInTheDocument()
-    expect(screen.getByText('c.jpg')).toBeInTheDocument()
-  })
+    renderReview();
+    expect(screen.getByText('a.jpg')).toBeInTheDocument();
+    expect(screen.getByText('b.jpg')).toBeInTheDocument();
+    expect(screen.getByText('c.jpg')).toBeInTheDocument();
+  });
 
   it('groups images by folder and always shows the unsorted group', () => {
-    renderReview()
-    expect(screen.getByRole('heading', { name: 'Main' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Detail' })).toBeInTheDocument()
+    renderReview();
+    expect(screen.getByRole('heading', { name: 'Main' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Detail' })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Unsorted' }),
-    ).toBeInTheDocument()
-  })
+    ).toBeInTheDocument();
+  });
 
   it('moves the selected images to the chosen folder', () => {
-    const { onMove } = renderReview()
-    fireEvent.click(screen.getByText('a.jpg'))
+    const { onMove } = renderReview();
+    fireEvent.click(screen.getByText('a.jpg'));
     fireEvent.change(screen.getByLabelText('Move to…'), {
       target: { value: 'f2' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: 'Move' }))
-    expect(onMove).toHaveBeenCalledWith(['a'], 'f2')
-  })
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Move' }));
+    expect(onMove).toHaveBeenCalledWith(['a'], 'f2');
+  });
 
   it('can move images back to unsorted', () => {
-    const { onMove } = renderReview()
-    fireEvent.click(screen.getByText('a.jpg'))
+    const { onMove } = renderReview();
+    fireEvent.click(screen.getByText('a.jpg'));
     fireEvent.change(screen.getByLabelText('Move to…'), {
       target: { value: '__unsorted__' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: 'Move' }))
-    expect(onMove).toHaveBeenCalledWith(['a'], null)
-  })
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Move' }));
+    expect(onMove).toHaveBeenCalledWith(['a'], null);
+  });
 
   it('disables download until at least one image is sorted', () => {
     render(
@@ -104,7 +104,7 @@ describe('ReviewView', () => {
           zipError={null}
         />
       </LocaleProvider>,
-    )
-    expect(screen.getByRole('button', { name: 'Download zip' })).toBeDisabled()
-  })
-})
+    );
+    expect(screen.getByRole('button', { name: 'Download zip' })).toBeDisabled();
+  });
+});

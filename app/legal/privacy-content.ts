@@ -1,4 +1,4 @@
-import type { LocalizedLegalDocument } from './types'
+import type { LocalizedLegalDocument } from './types';
 
 // Concise privacy policy for a free browser-based utility service. The wording
 // reflects the actual implementation: tools process files inside the browser,
@@ -99,4 +99,4 @@ export const privacyContent: LocalizedLegalDocument = {
       },
     ],
   },
-}
+};

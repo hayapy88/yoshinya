@@ -1,29 +1,29 @@
-import type { MetaDescriptor } from 'react-router'
-import type { Locale } from '~/i18n/locale'
+import type { MetaDescriptor } from 'react-router';
+import type { Locale } from '~/i18n/locale';
 
-export const SITE_ORIGIN = 'https://yoshinya.com'
-export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com']
-export const X_HANDLE = '@yoshinya_com'
-export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp/ogp-default.png`
-export const BRAND_ICON = `${SITE_ORIGIN}/brand/yoshinyan-face-512.png`
+export const SITE_ORIGIN = 'https://yoshinya.com';
+export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com'];
+export const X_HANDLE = '@yoshinya_com';
+export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp/ogp-default.png`;
+export const BRAND_ICON = `${SITE_ORIGIN}/brand/yoshinyan-face-512.png`;
 
 export function isProductionHost(host: string | undefined): boolean {
-  return host !== undefined && PRODUCTION_HOSTS.includes(host)
+  return host !== undefined && PRODUCTION_HOSTS.includes(host);
 }
 
 type PageMetaArgs = {
-  locale: Locale
+  locale: Locale;
   // Path without the locale prefix, e.g. '' or '/file-renamer'.
-  path: string
-  title: string
-  description: string
+  path: string;
+  title: string;
+  description: string;
   // Preview/staging hosts set this to keep non-production URLs unindexed.
-  noindex?: boolean
+  noindex?: boolean;
   // Tool slug for a per-tool OGP image at
   // /brand/ogp/ogp-<slug>-<locale>.png. Falls back to the shared image.
-  ogImageSlug?: string
-  jsonLd?: Record<string, unknown>[]
-}
+  ogImageSlug?: string;
+  jsonLd?: Record<string, unknown>[];
+};
 
 // Builds the full head for a localized page: title, description,
 // self-referencing canonical, hreflang alternates (ja / en / x-default → the
@@ -38,10 +38,10 @@ export function pageMeta({
   ogImageSlug,
   jsonLd = [],
 }: PageMetaArgs): MetaDescriptor[] {
-  const canonical = `${SITE_ORIGIN}/${locale}${path}`
+  const canonical = `${SITE_ORIGIN}/${locale}${path}`;
   const ogImage = ogImageSlug
     ? `${SITE_ORIGIN}/brand/ogp/ogp-${ogImageSlug}-${locale}.png`
-    : OGP_IMAGE
+    : OGP_IMAGE;
 
   return [
     { title },
@@ -86,7 +86,7 @@ export function pageMeta({
     { name: 'twitter:image', content: ogImage },
     ...(noindex ? [{ name: 'robots', content: 'noindex, nofollow' }] : []),
     ...jsonLd.map((data) => ({ 'script:ld+json': data })),
-  ]
+  ];
 }
 
 export function websiteJsonLd(locale: Locale): Record<string, unknown> {
@@ -98,7 +98,7 @@ export function websiteJsonLd(locale: Locale): Record<string, unknown> {
     url: `${SITE_ORIGIN}/${locale}`,
     inLanguage: locale,
     image: BRAND_ICON,
-  }
+  };
 }
 
 function toolJsonLd(
@@ -121,7 +121,7 @@ function toolJsonLd(
       price: '0',
       priceCurrency: locale === 'ja' ? 'JPY' : 'USD',
     },
-  }
+  };
 }
 
 export function fileRenamerJsonLd(locale: Locale): Record<string, unknown> {
@@ -129,7 +129,7 @@ export function fileRenamerJsonLd(locale: Locale): Record<string, unknown> {
     locale,
     locale === 'ja' ? 'よしにゃにファイルリネーム' : 'File Renamer by Yoshinya',
     '/file-renamer',
-  )
+  );
 }
 
 export function imageSorterJsonLd(locale: Locale): Record<string, unknown> {
@@ -137,7 +137,7 @@ export function imageSorterJsonLd(locale: Locale): Record<string, unknown> {
     locale,
     locale === 'ja' ? 'よしにゃに画像仕分け' : 'Image Sorter by Yoshinya',
     '/image-sorter',
-  )
+  );
 }
 
 export function pdfTitleEditorJsonLd(locale: Locale): Record<string, unknown> {
@@ -147,7 +147,7 @@ export function pdfTitleEditorJsonLd(locale: Locale): Record<string, unknown> {
       ? 'よしにゃにPDFタイトル変更'
       : 'PDF Title Editor by Yoshinya',
     '/pdf-title-editor',
-  )
+  );
 }
 
 export function imageCompressorJsonLd(locale: Locale): Record<string, unknown> {
@@ -157,7 +157,7 @@ export function imageCompressorJsonLd(locale: Locale): Record<string, unknown> {
       ? 'よしにゃにまとめて画像圧縮'
       : 'Batch Image Compressor by Yoshinya',
     '/image-compressor',
-  )
+  );
 }
 
 export function csvEncodingFixerJsonLd(
@@ -169,7 +169,7 @@ export function csvEncodingFixerJsonLd(
       ? 'よしにゃにCSV文字化け修復'
       : 'CSV Encoding Fixer by Yoshinya',
     '/csv-encoding-fixer',
-  )
+  );
 }
 
 // Only ever call this with questions and answers that are also rendered on the
@@ -185,7 +185,7 @@ export function faqJsonLd(
       name: entry.question,
       acceptedAnswer: { '@type': 'Answer', text: entry.answer },
     })),
-  }
+  };
 }
 
 export function breadcrumbJsonLd(
@@ -197,7 +197,7 @@ export function breadcrumbJsonLd(
     position: 1,
     name: locale === 'ja' ? 'よしにゃ' : 'YOSHINYA',
     item: `${SITE_ORIGIN}/${locale}`,
-  }
+  };
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -210,5 +210,5 @@ export function breadcrumbJsonLd(
         item: `${SITE_ORIGIN}/${locale}${entry.path}`,
       })),
     ],
-  }
+  };
 }

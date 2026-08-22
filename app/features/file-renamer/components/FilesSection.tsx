@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   DndContext,
   PointerSensor,
@@ -7,36 +7,36 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from '@dnd-kit/core'
+} from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { useLocale } from '~/i18n/locale'
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useLocale } from '~/i18n/locale';
 
 export type LoadedFile = {
-  id: string
-  file: File
-  previewUrl: string | null // object URL for image thumbnails, null for non-images
+  id: string;
+  file: File;
+  previewUrl: string | null; // object URL for image thumbnails, null for non-images
   // Image pixel dimensions, loaded asynchronously from previewUrl.
   // Undefined for non-images or until the image has loaded.
-  width?: number
-  height?: number
-}
+  width?: number;
+  height?: number;
+};
 
-const THUMB_MIN = 24
-const THUMB_MAX = 164
-const THUMB_STEP = 20
+const THUMB_MIN = 24;
+const THUMB_MAX = 164;
+const THUMB_STEP = 20;
 
 type Props = {
-  files: LoadedFile[]
-  onChange: (files: LoadedFile[]) => void
-  thumbSize: number
-  onThumbSizeChange: (size: number) => void
-}
+  files: LoadedFile[];
+  onChange: (files: LoadedFile[]) => void;
+  thumbSize: number;
+  onThumbSizeChange: (size: number) => void;
+};
 
 export function FilesSection({
   files,
@@ -44,16 +44,16 @@ export function FilesSection({
   thumbSize,
   onThumbSizeChange,
 }: Props) {
-  const { t } = useLocale()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [isDragOver, setIsDragOver] = useState(false)
+  const { t } = useLocale();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-  )
+  );
 
   const addFiles = (added: FileList | null) => {
     if (!added || added.length === 0) {
-      return
+      return;
     }
     const loaded = Array.from(added).map((file) => ({
       id: crypto.randomUUID(),
@@ -61,28 +61,28 @@ export function FilesSection({
       previewUrl: file.type.startsWith('image/')
         ? URL.createObjectURL(file)
         : null,
-    }))
-    onChange([...files, ...loaded])
-  }
+    }));
+    onChange([...files, ...loaded]);
+  };
 
   const removeFile = (id: string) => {
-    const removed = files.find((f) => f.id === id)
+    const removed = files.find((f) => f.id === id);
     if (removed?.previewUrl) {
-      URL.revokeObjectURL(removed.previewUrl)
+      URL.revokeObjectURL(removed.previewUrl);
     }
-    onChange(files.filter((f) => f.id !== id))
-  }
+    onChange(files.filter((f) => f.id !== id));
+  };
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) {
-      return
+      return;
     }
-    const oldIndex = files.findIndex((f) => f.id === active.id)
-    const newIndex = files.findIndex((f) => f.id === over.id)
+    const oldIndex = files.findIndex((f) => f.id === active.id);
+    const newIndex = files.findIndex((f) => f.id === over.id);
     if (oldIndex >= 0 && newIndex >= 0) {
-      onChange(arrayMove(files, oldIndex, newIndex))
+      onChange(arrayMove(files, oldIndex, newIndex));
     }
-  }
+  };
 
   return (
     <div>
@@ -93,19 +93,19 @@ export function FilesSection({
         onClick={() => inputRef.current?.click()}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            inputRef.current?.click()
+            e.preventDefault();
+            inputRef.current?.click();
           }
         }}
         onDragOver={(e) => {
-          e.preventDefault()
-          setIsDragOver(true)
+          e.preventDefault();
+          setIsDragOver(true);
         }}
         onDragLeave={() => setIsDragOver(false)}
         onDrop={(e) => {
-          e.preventDefault()
-          setIsDragOver(false)
-          addFiles(e.dataTransfer.files)
+          e.preventDefault();
+          setIsDragOver(false);
+          addFiles(e.dataTransfer.files);
         }}
       >
         {t.upload.dropzone}
@@ -115,8 +115,8 @@ export function FilesSection({
           multiple
           hidden
           onChange={(e) => {
-            addFiles(e.target.files)
-            e.target.value = ''
+            addFiles(e.target.files);
+            e.target.value = '';
           }}
         />
       </div>
@@ -175,19 +175,19 @@ export function FilesSection({
         </>
       )}
     </div>
-  )
+  );
 }
 
 export function FileThumb({ file }: { file: LoadedFile }) {
-  const { t } = useLocale()
-  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useLocale();
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!file.previewUrl) {
     return (
       <span className="thumb thumb-placeholder" aria-hidden="true">
         📄
       </span>
-    )
+    );
   }
   return (
     <>
@@ -201,27 +201,27 @@ export function FileThumb({ file }: { file: LoadedFile }) {
       </button>
       {isOpen && <Lightbox file={file} onClose={() => setIsOpen(false)} />}
     </>
-  )
+  );
 }
 
 function Lightbox({
   file,
   onClose,
 }: {
-  file: LoadedFile
-  onClose: () => void
+  file: LoadedFile;
+  onClose: () => void;
 }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [onClose])
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
 
   return createPortal(
     <div
@@ -246,7 +246,7 @@ function Lightbox({
       </button>
     </div>,
     document.body,
-  )
+  );
 }
 
 function SortableFileItem({
@@ -254,11 +254,11 @@ function SortableFileItem({
   position,
   onRemove,
 }: {
-  item: LoadedFile
-  position: number
-  onRemove: (id: string) => void
+  item: LoadedFile;
+  position: number;
+  onRemove: (id: string) => void;
 }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
   const {
     attributes,
     listeners,
@@ -266,7 +266,7 @@ function SortableFileItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: item.id })
+  } = useSortable({ id: item.id });
 
   return (
     <li
@@ -288,5 +288,5 @@ function SortableFileItem({
         ✕
       </button>
     </li>
-  )
+  );
 }

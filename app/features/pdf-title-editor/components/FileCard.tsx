@@ -1,14 +1,14 @@
-import { useLocale } from '~/i18n/locale'
+import { useLocale } from '~/i18n/locale';
 import {
   changedFields,
   currentMetadata,
   isEditable,
   type ChangeMarker,
   type EditableField,
-} from '../lib/edits'
-import { formatKeywords } from '../lib/metadata'
-import { formatBytes } from '../lib/format'
-import { LIMITS, type PdfItem } from '../lib/types'
+} from '../lib/edits';
+import { formatKeywords } from '../lib/metadata';
+import { formatBytes } from '../lib/format';
+import { LIMITS, type PdfItem } from '../lib/types';
 
 // Status is never signalled by colour alone: every state carries a symbol and
 // a word.
@@ -20,7 +20,7 @@ const STATUS_MARK: Record<PdfItem['status'], string> = {
   completed: '✓',
   warning: '!',
   error: '×',
-}
+};
 
 export function FileCard({
   item,
@@ -32,22 +32,22 @@ export function FileCard({
   disabled,
   showCreate,
 }: {
-  item: PdfItem
-  onField: (field: EditableField, value: string) => void
-  onOutputName: (value: string) => void
-  onReset: () => void
-  onRemove: () => void
-  onCreate: () => void
-  disabled: boolean
+  item: PdfItem;
+  onField: (field: EditableField, value: string) => void;
+  onOutputName: (value: string) => void;
+  onReset: () => void;
+  onRemove: () => void;
+  onCreate: () => void;
+  disabled: boolean;
   // Hidden when this is the only file: the button at the bottom of the page
   // already does exactly the same thing.
-  showCreate: boolean
+  showCreate: boolean;
 }) {
-  const { t } = useLocale()
-  const metadata = currentMetadata(item)
-  const editable = isEditable(item) && !disabled
-  const changed = changedFields(item)
-  const fieldId = (name: string) => `pte-${item.id}-${name}`
+  const { t } = useLocale();
+  const metadata = currentMetadata(item);
+  const editable = isEditable(item) && !disabled;
+  const changed = changedFields(item);
+  const fieldId = (name: string) => `pte-${item.id}-${name}`;
 
   // The dot marks which value differs. Presence of the glyph carries the
   // meaning, not its colour, and it is labelled for screen readers.
@@ -60,11 +60,11 @@ export function FileCard({
       >
         ●
       </span>
-    ) : null
+    ) : null;
 
   const otherChanged = (['author', 'subject', 'keywords'] as const).some(
     (field) => changed.has(field),
-  )
+  );
 
   return (
     <li className={`pte-card pte-card-${item.status}`}>
@@ -235,5 +235,5 @@ export function FileCard({
         </button>
       </div>
     </li>
-  )
+  );
 }

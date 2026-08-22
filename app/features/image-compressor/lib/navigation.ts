@@ -1,5 +1,5 @@
-import { effectiveSettings, resolveFormat, supportsQuality } from './settings'
-import type { CompressionSettings, ImageItem, ListFilter } from './types'
+import { effectiveSettings, resolveFormat, supportsQuality } from './settings';
+import type { CompressionSettings, ImageItem, ListFilter } from './types';
 
 /**
  * Where "download & next" goes: the next image still needing attention,
@@ -12,19 +12,19 @@ export function nextUndownloadedIndex(
   from: number,
 ): number {
   const usable = (item: ImageItem) =>
-    !item.downloaded && item.processingState !== 'error'
+    !item.downloaded && item.processingState !== 'error';
 
   for (let i = from + 1; i < items.length; i += 1) {
     if (usable(items[i]!)) {
-      return i
+      return i;
     }
   }
   for (let i = 0; i <= from && i < items.length; i += 1) {
     if (usable(items[i]!)) {
-      return i
+      return i;
     }
   }
-  return -1
+  return -1;
 }
 
 /**
@@ -47,32 +47,32 @@ export function bulkTargetIds(
     .slice(currentIndex + 1)
     .filter((item) => {
       if (item.downloaded || item.processingState === 'error') {
-        return false
+        return false;
       }
       if (kind === 'all-settings') {
-        return true
+        return true;
       }
-      const settings = effectiveSettings(common, item)
+      const settings = effectiveSettings(common, item);
       return supportsQuality(
         resolveFormat(settings.outputFormat, item.sourceType),
-      )
+      );
     })
-    .map((item) => item.id)
+    .map((item) => item.id);
 }
 
 export function matchesFilter(item: ImageItem, filter: ListFilter): boolean {
   switch (filter) {
     case 'all':
-      return true
+      return true;
     case 'not-downloaded':
-      return !item.downloaded && item.processingState !== 'error'
+      return !item.downloaded && item.processingState !== 'error';
     case 'customized':
-      return item.settingsOverride !== null
+      return item.settingsOverride !== null;
     case 'downloaded':
-      return item.downloaded
+      return item.downloaded;
     case 'error':
-      return item.processingState === 'error'
+      return item.processingState === 'error';
     default:
-      return true
+      return true;
   }
 }

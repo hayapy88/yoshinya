@@ -1,7 +1,7 @@
-import { useLocale } from '~/i18n/locale'
-import { compareSize, formatBytes, formatPercent } from '../lib/format'
-import { matchesFilter } from '../lib/navigation'
-import type { ImageItem, ListFilter } from '../lib/types'
+import { useLocale } from '~/i18n/locale';
+import { compareSize, formatBytes, formatPercent } from '../lib/format';
+import { matchesFilter } from '../lib/navigation';
+import type { ImageItem, ListFilter } from '../lib/types';
 
 const FILTERS: ListFilter[] = [
   'all',
@@ -9,38 +9,38 @@ const FILTERS: ListFilter[] = [
   'customized',
   'downloaded',
   'error',
-]
+];
 
 function StateBadge({ item }: { item: ImageItem }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
   // Symbol plus word: never colour alone.
   if (item.processingState === 'error') {
     return (
       <span className="ic-badge ic-badge-error">
         × {t.imageCompressor.stateError}
       </span>
-    )
+    );
   }
   if (item.downloaded) {
     return (
       <span className="ic-badge ic-badge-done">
         ✓ {t.imageCompressor.stateDownloaded}
       </span>
-    )
+    );
   }
   if (item.processingState !== 'ready') {
     return (
       <span className="ic-badge">… {t.imageCompressor.stateProcessing}</span>
-    )
+    );
   }
   if (item.settingsOverride !== null) {
     return (
       <span className="ic-badge ic-badge-custom">
         ● {t.imageCompressor.stateCustomized}
       </span>
-    )
+    );
   }
-  return null
+  return null;
 }
 
 export function ImageList({
@@ -51,17 +51,17 @@ export function ImageList({
   onRemove,
   onFilterChange,
 }: {
-  items: ImageItem[]
-  currentIndex: number
-  filter: ListFilter
-  onSelect: (index: number) => void
-  onRemove: (id: string) => void
-  onFilterChange: (filter: ListFilter) => void
+  items: ImageItem[];
+  currentIndex: number;
+  filter: ListFilter;
+  onSelect: (index: number) => void;
+  onRemove: (id: string) => void;
+  onFilterChange: (filter: ListFilter) => void;
 }) {
-  const { t } = useLocale()
+  const { t } = useLocale();
   const visible = items
     .map((item, index) => ({ item, index }))
-    .filter(({ item }) => matchesFilter(item, filter))
+    .filter(({ item }) => matchesFilter(item, filter));
 
   return (
     <section className="ic-list" aria-labelledby="ic-list-heading">
@@ -91,7 +91,7 @@ export function ImageList({
         {visible.map(({ item, index }) => {
           const size = item.outputBlob
             ? compareSize(item.sourceFile.size, item.outputBlob.size)
-            : null
+            : null;
           return (
             <li key={item.id}>
               <button
@@ -130,7 +130,7 @@ export function ImageList({
                 ×
               </button>
             </li>
-          )
+          );
         })}
       </ul>
 
@@ -138,5 +138,5 @@ export function ImageList({
         <p className="ic-hint">{t.imageCompressor.emptyFilter}</p>
       )}
     </section>
-  )
+  );
 }

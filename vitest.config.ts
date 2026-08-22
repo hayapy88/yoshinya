@@ -1,5 +1,5 @@
-import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vitest/config'
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vitest/config';
 
 // Vitest deliberately does not load vite.config.ts: the React Router and
 // Cloudflare plugins are meant for the app build and break under the test runner.
@@ -14,4 +14,4 @@ export default defineConfig({
     // Globals let Testing Library register its automatic DOM cleanup.
     globals: true,
   },
-})
+});
