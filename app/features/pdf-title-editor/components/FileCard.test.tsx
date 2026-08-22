@@ -32,7 +32,10 @@ const item = (over: Partial<PdfItem> = {}): PdfItem => {
   }
 }
 
-function renderCard(value: PdfItem, props: Partial<Parameters<typeof FileCard>[0]> = {}) {
+function renderCard(
+  value: PdfItem,
+  props: Partial<Parameters<typeof FileCard>[0]> = {},
+) {
   render(
     <LocaleContext.Provider value={{ locale: 'en', t: en }}>
       <ul>
@@ -91,9 +94,7 @@ describe('FileCard change markers', () => {
 describe('FileCard create button', () => {
   it('is hidden when this is the only file', () => {
     renderCard(item(), { showCreate: false })
-    expect(
-      screen.queryByRole('button', { name: 'Create this one' }),
-    ).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Create this one' })).toBeNull()
   })
 
   it('is shown when there are several files', () => {
@@ -105,11 +106,17 @@ describe('FileCard create button', () => {
 
   it('is not offered for a file that failed to load', () => {
     renderCard(
-      item({ status: 'error', errorCode: 'corrupted', editedMetadata: undefined }),
+      item({
+        status: 'error',
+        errorCode: 'corrupted',
+        editedMetadata: undefined,
+      }),
     )
     expect(screen.queryByRole('button', { name: 'Create this one' })).toBeNull()
     expect(
-      screen.getByText('This PDF could not be read. The file may be corrupted.'),
+      screen.getByText(
+        'This PDF could not be read. The file may be corrupted.',
+      ),
     ).toBeVisible()
   })
 })

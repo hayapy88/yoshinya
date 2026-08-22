@@ -73,11 +73,7 @@ export type RejectedFile = {
 }
 
 export type ListFilter =
-  | 'all'
-  | 'not-downloaded'
-  | 'customized'
-  | 'downloaded'
-  | 'error'
+  'all' | 'not-downloaded' | 'customized' | 'downloaded' | 'error'
 
 // Only formats the browser is asked to decode. HEIC, SVG, GIF and RAW are out
 // of scope for the MVP.

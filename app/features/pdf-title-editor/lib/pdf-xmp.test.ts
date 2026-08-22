@@ -65,8 +65,9 @@ const metadata = (over: Partial<PdfMetadataForm> = {}): PdfMetadataForm => ({
 
 describe('XMP stays in step with the Info dictionary', () => {
   it('updates the XMP title, not just the Info dictionary one', async () => {
-    const file = await makePdfWithXmp(packet(titleBody('OLD XMP TITLE')), (doc) =>
-      doc.setTitle('OLD INFO TITLE'),
+    const file = await makePdfWithXmp(
+      packet(titleBody('OLD XMP TITLE')),
+      (doc) => doc.setTitle('OLD INFO TITLE'),
     )
     const out = await writePdf(file, metadata({ title: 'NEW TITLE' }))
 
@@ -100,7 +101,9 @@ describe('XMP stays in step with the Info dictionary', () => {
 
   it('keeps XMP properties the tool does not own', async () => {
     const file = await makePdfWithXmp(
-      packet(`   <xmp:CreatorTool>Acme Writer 1.0</xmp:CreatorTool>\n${titleBody('OLD')}`),
+      packet(
+        `   <xmp:CreatorTool>Acme Writer 1.0</xmp:CreatorTool>\n${titleBody('OLD')}`,
+      ),
     )
     const out = await writePdf(file, metadata({ title: 'NEW' }))
     expect(await xmpOf(out)).toContain('Acme Writer 1.0')

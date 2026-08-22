@@ -63,7 +63,12 @@ function ImageRow({
       <span className="is-row-check" aria-hidden="true">
         {isSelected ? '✓' : ''}
       </span>
-      <img className="is-row-thumb" src={image.previewUrl} alt="" loading="lazy" />
+      <img
+        className="is-row-thumb"
+        src={image.previewUrl}
+        alt=""
+        loading="lazy"
+      />
       <span className="is-row-name">{image.name}</span>
     </button>
   )
@@ -188,7 +193,8 @@ export function ReviewView({
       return
     }
     const ids = dragImageIds(draggedId)
-    const folderId = event.over.id === UNSORTED_DROP ? null : String(event.over.id)
+    const folderId =
+      event.over.id === UNSORTED_DROP ? null : String(event.over.id)
     onMove(ids, folderId)
     if (selected.has(draggedId)) {
       setSelected(new Set())

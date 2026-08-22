@@ -47,9 +47,24 @@ export function pageMeta({
     { title },
     { name: 'description', content: description },
     { tagName: 'link', rel: 'canonical', href: canonical },
-    { tagName: 'link', rel: 'alternate', hrefLang: 'ja', href: `${SITE_ORIGIN}/ja${path}` },
-    { tagName: 'link', rel: 'alternate', hrefLang: 'en', href: `${SITE_ORIGIN}/en${path}` },
-    { tagName: 'link', rel: 'alternate', hrefLang: 'x-default', href: `${SITE_ORIGIN}/` },
+    {
+      tagName: 'link',
+      rel: 'alternate',
+      hrefLang: 'ja',
+      href: `${SITE_ORIGIN}/ja${path}`,
+    },
+    {
+      tagName: 'link',
+      rel: 'alternate',
+      hrefLang: 'en',
+      href: `${SITE_ORIGIN}/en${path}`,
+    },
+    {
+      tagName: 'link',
+      rel: 'alternate',
+      hrefLang: 'x-default',
+      href: `${SITE_ORIGIN}/`,
+    },
     { property: 'og:site_name', content: 'YOSHINYA' },
     { property: 'og:type', content: 'website' },
     { property: 'og:title', content: title },
@@ -128,7 +143,9 @@ export function imageSorterJsonLd(locale: Locale): Record<string, unknown> {
 export function pdfTitleEditorJsonLd(locale: Locale): Record<string, unknown> {
   return toolJsonLd(
     locale,
-    locale === 'ja' ? 'よしにゃにPDFタイトル変更' : 'PDF Title Editor by Yoshinya',
+    locale === 'ja'
+      ? 'よしにゃにPDFタイトル変更'
+      : 'PDF Title Editor by Yoshinya',
     '/pdf-title-editor',
   )
 }
@@ -143,7 +160,9 @@ export function imageCompressorJsonLd(locale: Locale): Record<string, unknown> {
   )
 }
 
-export function csvEncodingFixerJsonLd(locale: Locale): Record<string, unknown> {
+export function csvEncodingFixerJsonLd(
+  locale: Locale,
+): Record<string, unknown> {
   return toolJsonLd(
     locale,
     locale === 'ja'

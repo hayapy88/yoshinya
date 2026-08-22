@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import { useLocale } from '~/i18n/locale'
 import { track } from '~/lib/analytics'
 import { ToolIntro } from '~/components/tool/ToolIntro'
@@ -27,7 +34,12 @@ import {
 } from './lib/settings'
 import { probeEncodableFormats } from './lib/support'
 import { outputFileName, resolveDuplicateNames } from './lib/filename'
-import { compareSize, formatBytes, formatPercent, totalComparison } from './lib/format'
+import {
+  compareSize,
+  formatBytes,
+  formatPercent,
+  totalComparison,
+} from './lib/format'
 import { classifyFiles } from './lib/validate'
 import { EncodeQueue, isCancelled } from './lib/queue'
 import { createImageZip, zipFileName } from './lib/zip'
@@ -159,7 +171,10 @@ function ImageCompressorTool() {
   const settings = item ? effectiveSettings(state.common, item) : state.common
 
   const addFiles = (files: File[]) => {
-    const totalBytes = state.items.reduce((sum, i) => sum + i.sourceFile.size, 0)
+    const totalBytes = state.items.reduce(
+      (sum, i) => sum + i.sourceFile.size,
+      0,
+    )
     const { accepted, rejected } = classifyFiles(
       files,
       { count: state.items.length, bytes: totalBytes },
@@ -238,7 +253,9 @@ function ImageCompressorTool() {
       }
       // The output this one replaces, freed after the swap so the previous
       // result can stay on screen right up to the moment it is superseded.
-      const superseded = itemsRef.current.find((i) => i.id === target.id)?.outputUrl
+      const superseded = itemsRef.current.find(
+        (i) => i.id === target.id,
+      )?.outputUrl
       dispatch({
         type: 'encode_succeeded',
         id: target.id,
@@ -270,11 +287,18 @@ function ImageCompressorTool() {
   }, [state.items, item?.id, encodeItem])
 
   const qualityTargets = useMemo(
-    () => bulkTargetIds(state.items, state.currentIndex, state.common, 'quality'),
+    () =>
+      bulkTargetIds(state.items, state.currentIndex, state.common, 'quality'),
     [state.items, state.currentIndex, state.common],
   )
   const allTargets = useMemo(
-    () => bulkTargetIds(state.items, state.currentIndex, state.common, 'all-settings'),
+    () =>
+      bulkTargetIds(
+        state.items,
+        state.currentIndex,
+        state.common,
+        'all-settings',
+      ),
     [state.items, state.currentIndex, state.common],
   )
 
@@ -284,7 +308,11 @@ function ImageCompressorTool() {
       return
     }
     dispatch({ type: 'bulk_apply', kind, targetIds })
-    track('batch_action', { tool: TOOL, action: kind, file_count: targetIds.length })
+    track('batch_action', {
+      tool: TOOL,
+      action: kind,
+      file_count: targetIds.length,
+    })
     setToast({
       message:
         kind === 'quality'
@@ -317,11 +345,18 @@ function ImageCompressorTool() {
 
   const applyToAll = () => {
     const count = state.items.length
-    if (count === 0 || !window.confirm(t.imageCompressor.applyToAllConfirm(count))) {
+    if (
+      count === 0 ||
+      !window.confirm(t.imageCompressor.applyToAllConfirm(count))
+    ) {
       return
     }
     dispatch({ type: 'apply_to_all' })
-    track('batch_action', { tool: TOOL, action: 'apply-to-all', file_count: count })
+    track('batch_action', {
+      tool: TOOL,
+      action: 'apply-to-all',
+      file_count: count,
+    })
     setToast({ message: t.imageCompressor.appliedToAll(count) })
   }
 
@@ -335,7 +370,9 @@ function ImageCompressorTool() {
     track('download_completed', { tool: TOOL, file_count: 1 })
     if (advance) {
       const next = nextUndownloadedIndex(
-        state.items.map((i) => (i.id === item.id ? { ...i, downloaded: true } : i)),
+        state.items.map((i) =>
+          i.id === item.id ? { ...i, downloaded: true } : i,
+        ),
         state.currentIndex,
       )
       if (next >= 0) {
@@ -356,7 +393,10 @@ function ImageCompressorTool() {
         ready.map((i) =>
           outputFileName(
             i.sourceFile.name,
-            resolveFormat(effectiveSettings(state.common, i).outputFormat, i.sourceType),
+            resolveFormat(
+              effectiveSettings(state.common, i).outputFormat,
+              i.sourceType,
+            ),
           ),
         ),
       )
@@ -384,7 +424,10 @@ function ImageCompressorTool() {
   }
 
   const removeAll = () => {
-    if (state.items.length > 0 && !window.confirm(t.imageCompressor.removeAllConfirm)) {
+    if (
+      state.items.length > 0 &&
+      !window.confirm(t.imageCompressor.removeAllConfirm)
+    ) {
       return
     }
     for (const i of state.items) {
@@ -402,7 +445,9 @@ function ImageCompressorTool() {
   const finished = allDownloaded(state)
   const isLast = item
     ? nextUndownloadedIndex(
-        state.items.map((i) => (i.id === item.id ? { ...i, downloaded: true } : i)),
+        state.items.map((i) =>
+          i.id === item.id ? { ...i, downloaded: true } : i,
+        ),
         state.currentIndex,
       ) < 0
     : false
@@ -442,7 +487,9 @@ function ImageCompressorTool() {
       hasOverride={hasOverride(item)}
       bulkQualityCount={qualityTargets.length}
       bulkAllCount={allTargets.length}
-      adjustedCount={state.items.filter((i) => i.settingsOverride !== null).length}
+      adjustedCount={
+        state.items.filter((i) => i.settingsOverride !== null).length
+      }
       totalCount={state.items.length}
       encodableFormats={encodableFormats}
       // Locked only when no setting could help. When the error names a way out
@@ -489,8 +536,7 @@ function ImageCompressorTool() {
               {totals.before > 0 && (
                 <>
                   {' · '}
-                  {formatBytes(totals.before)} → {formatBytes(totals.after)}
-                  {' '}
+                  {formatBytes(totals.before)} → {formatBytes(totals.after)}{' '}
                   <span className={totals.grew ? 'ic-grew' : 'ic-saved'}>
                     ({totals.grew ? '+' : '−'}
                     {formatPercent(totals.percent)})
@@ -501,7 +547,11 @@ function ImageCompressorTool() {
             </p>
             <div className="ic-topbar-actions">
               <Dropzone onFiles={addFiles} compact />
-              <button type="button" className="ic-linkbtn ic-remove" onClick={removeAll}>
+              <button
+                type="button"
+                className="ic-linkbtn ic-remove"
+                onClick={removeAll}
+              >
                 {t.imageCompressor.removeAll}
               </button>
             </div>
@@ -518,7 +568,9 @@ function ImageCompressorTool() {
                     <button
                       type="button"
                       className="ic-linkbtn"
-                      onClick={() => dispatch({ type: 'dismiss_rejected', id: file.id })}
+                      onClick={() =>
+                        dispatch({ type: 'dismiss_rejected', id: file.id })
+                      }
                     >
                       {t.imageCompressor.dismiss}
                     </button>
@@ -535,7 +587,9 @@ function ImageCompressorTool() {
               filter={state.filter}
               onSelect={(index) => dispatch({ type: 'select_index', index })}
               onRemove={(id) => dispatch({ type: 'remove_item', id })}
-              onFilterChange={(filter) => dispatch({ type: 'set_filter', filter })}
+              onFilterChange={(filter) =>
+                dispatch({ type: 'set_filter', filter })
+              }
             />
 
             <div className="ic-main">
@@ -543,7 +597,11 @@ function ImageCompressorTool() {
                 <>
                   {item.processingState === 'error' ? (
                     <p className="ic-error" role="alert">
-                      {t.imageCompressor.errors[item.errorCode ?? 'encode_failed']}
+                      {
+                        t.imageCompressor.errors[
+                          item.errorCode ?? 'encode_failed'
+                        ]
+                      }
                     </p>
                   ) : (
                     // The wrapper is what goes full screen, so the comparison
@@ -588,12 +646,15 @@ function ImageCompressorTool() {
                         // Enough to keep working without leaving: judge the
                         // result, adjust the quality, save, move on.
                         <div className="ic-fs-bar">
-                          <span className="ic-fs-name">{item.sourceFile.name}</span>
+                          <span className="ic-fs-name">
+                            {item.sourceFile.name}
+                          </span>
                           {size && (
-                            <span className={size.grew ? 'ic-grew' : 'ic-saved'}>
+                            <span
+                              className={size.grew ? 'ic-grew' : 'ic-saved'}
+                            >
                               {formatBytes(item.sourceFile.size)} →{' '}
-                              {formatBytes(size.after)} (
-                              {size.grew ? '+' : '−'}
+                              {formatBytes(size.after)} ({size.grew ? '+' : '−'}
                               {formatPercent(size.percent)})
                             </span>
                           )}
@@ -601,7 +662,8 @@ function ImageCompressorTool() {
                             type="button"
                             className="ic-btn ic-btn-primary ic-btn-small"
                             disabled={
-                              !item.outputBlob || item.processingState !== 'ready'
+                              !item.outputBlob ||
+                              item.processingState !== 'ready'
                             }
                             onClick={() => downloadCurrent(true)}
                           >
@@ -615,13 +677,21 @@ function ImageCompressorTool() {
                   )}
 
                   <div className="ic-sizes">
-                    <span>{t.imageCompressor.beforeSize(formatBytes(item.sourceFile.size))}</span>
+                    <span>
+                      {t.imageCompressor.beforeSize(
+                        formatBytes(item.sourceFile.size),
+                      )}
+                    </span>
                     {size && (
                       <>
-                        <span>{t.imageCompressor.afterSize(formatBytes(size.after))}</span>
+                        <span>
+                          {t.imageCompressor.afterSize(formatBytes(size.after))}
+                        </span>
                         <span className={size.grew ? 'ic-grew' : 'ic-saved'}>
                           {size.grew
-                            ? t.imageCompressor.grewBy(formatPercent(size.percent))
+                            ? t.imageCompressor.grewBy(
+                                formatPercent(size.percent),
+                              )
                             : t.imageCompressor.savedBy(
                                 formatBytes(size.savedBytes),
                                 formatPercent(size.percent),
@@ -630,13 +700,17 @@ function ImageCompressorTool() {
                       </>
                     )}
                   </div>
-                  {size?.grew && <p className="ic-warn">{t.imageCompressor.grewNote}</p>}
+                  {size?.grew && (
+                    <p className="ic-warn">{t.imageCompressor.grewNote}</p>
+                  )}
 
                   <div className="ic-actions">
                     <button
                       type="button"
                       className="ic-btn ic-btn-primary"
-                      disabled={!item.outputBlob || item.processingState !== 'ready'}
+                      disabled={
+                        !item.outputBlob || item.processingState !== 'ready'
+                      }
                       onClick={() => downloadCurrent(true)}
                     >
                       {isLast
@@ -646,7 +720,9 @@ function ImageCompressorTool() {
                     <button
                       type="button"
                       className="ic-btn ic-btn-secondary"
-                      disabled={!item.outputBlob || item.processingState !== 'ready'}
+                      disabled={
+                        !item.outputBlob || item.processingState !== 'ready'
+                      }
                       onClick={() => downloadCurrent(false)}
                     >
                       {t.imageCompressor.download}
@@ -654,16 +730,24 @@ function ImageCompressorTool() {
                     <button
                       type="button"
                       className="ic-btn ic-btn-secondary"
-                      disabled={state.isZipping || downloadableItems(state).length === 0}
+                      disabled={
+                        state.isZipping || downloadableItems(state).length === 0
+                      }
                       onClick={() => void downloadZip()}
                     >
                       {state.isZipping
-                        ? t.imageCompressor.zipping(Math.round(zipProgress ?? 0))
+                        ? t.imageCompressor.zipping(
+                            Math.round(zipProgress ?? 0),
+                          )
                         : t.imageCompressor.downloadZip}
                     </button>
                   </div>
 
-                  {finished && <p className="ic-done">{t.imageCompressor.finished(state.items.length)}</p>}
+                  {finished && (
+                    <p className="ic-done">
+                      {t.imageCompressor.finished(state.items.length)}
+                    </p>
+                  )}
                 </>
               )}
             </div>

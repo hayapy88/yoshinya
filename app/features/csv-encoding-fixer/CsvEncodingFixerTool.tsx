@@ -18,7 +18,9 @@ function save(bytes: Uint8Array, name: string) {
   // text/csv rather than the original type: some systems export CSV as
   // application/octet-stream, which makes browsers treat the download as an
   // unknown binary.
-  const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'text/csv' }))
+  const url = URL.createObjectURL(
+    new Blob([bytes as BlobPart], { type: 'text/csv' }),
+  )
   const anchor = document.createElement('a')
   anchor.href = url
   anchor.download = name
@@ -220,7 +222,9 @@ function CsvEncodingFixerTool() {
                   <p className="cef-verdict">{verdict}</p>
 
                   {diagnosis.damaged && (
-                    <p className="cef-warn">{t.csvEncodingFixer.damagedWarning}</p>
+                    <p className="cef-warn">
+                      {t.csvEncodingFixer.damagedWarning}
+                    </p>
                   )}
 
                   {/* Said even though the fix itself succeeded. Handing back a

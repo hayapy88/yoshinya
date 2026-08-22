@@ -74,8 +74,14 @@ export async function readPdf(file: File): Promise<PdfReadResult> {
     return {
       pageCount: doc.getPageCount(),
       metadata: {
-        title: fallback(normalizeTextField(doc.getTitle() ?? ''), fromXmp?.title),
-        author: fallback(normalizeTextField(doc.getAuthor() ?? ''), fromXmp?.author),
+        title: fallback(
+          normalizeTextField(doc.getTitle() ?? ''),
+          fromXmp?.title,
+        ),
+        author: fallback(
+          normalizeTextField(doc.getAuthor() ?? ''),
+          fromXmp?.author,
+        ),
         subject: fallback(
           normalizeTextField(doc.getSubject() ?? ''),
           fromXmp?.subject,
@@ -172,7 +178,9 @@ export async function writePdf(
     return new Blob([output as BlobPart], { type: 'application/pdf' })
   } catch (error) {
     const mapped = toPdfToolError(error)
-    throw mapped.code === 'corrupted' ? new PdfToolError('write_failed') : mapped
+    throw mapped.code === 'corrupted'
+      ? new PdfToolError('write_failed')
+      : mapped
   }
 }
 

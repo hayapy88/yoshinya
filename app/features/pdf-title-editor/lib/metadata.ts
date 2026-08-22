@@ -35,7 +35,10 @@ export function emptyMetadata(): PdfMetadataForm {
   return { title: '', author: '', subject: '', keywords: [] }
 }
 
-export function metadataEquals(a: PdfMetadataForm, b: PdfMetadataForm): boolean {
+export function metadataEquals(
+  a: PdfMetadataForm,
+  b: PdfMetadataForm,
+): boolean {
   return (
     a.title === b.title &&
     a.author === b.author &&

@@ -30,7 +30,8 @@ export const en = {
       'Every tool runs right in your browser. Files are processed on your device and never sent to an external server.',
   },
   fileRenamerPage: {
-    metaTitle: 'Bulk Rename Files - File Renamer by Yoshinya | Free, No Sign-up',
+    metaTitle:
+      'Bulk Rename Files - File Renamer by Yoshinya | Free, No Sign-up',
     metaDescription:
       'Batch-rename files entirely in your browser: reorder them, build a naming rule with prefix, date, and index tokens, then download as a zip. Your files never leave your browser.',
     heading: 'File Renamer by Yoshinya',
@@ -49,8 +50,7 @@ export const en = {
     toolName: 'Image Sorter by Yoshinya',
     toolDescription:
       'View each image and sort it into a folder by number, then download folders as a zip.',
-    lead:
-      'View your photos and sort them by number. Create your own folders and save them all as one zip.',
+    lead: 'View your photos and sort them by number. Create your own folders and save them all as one zip.',
     privacyNote:
       'Your images are not sent to a server. All processing happens in your browser.',
     steps: {
@@ -83,7 +83,8 @@ export const en = {
     rejectedHeading: 'These files were not added',
     dismiss: 'Dismiss',
     // File cards
-    filesHeading: (n: number) => (n === 1 ? '② Edit 1 PDF' : `② Edit ${n} PDFs`),
+    filesHeading: (n: number) =>
+      n === 1 ? '② Edit 1 PDF' : `② Edit ${n} PDFs`,
     pages: (n: number) => (n === 1 ? '1 page' : `${n} pages`),
     currentTitle: 'Current title:',
     noTitle: 'No title set',
@@ -278,8 +279,7 @@ export const en = {
       },
       {
         heading: 'Privacy and security',
-        body:
-          'Your files are read and renamed entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential material in workplaces where uploading to an online service is not allowed.',
+        body: 'Your files are read and renamed entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential material in workplaces where uploading to an online service is not allowed.',
       },
     ],
     faqHeading: 'Frequently asked questions',
@@ -342,8 +342,7 @@ export const en = {
       },
       {
         heading: 'Privacy and security',
-        body:
-          'Your images are read, grouped, and packed into a zip entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the images never leave your device, the tool can be used with confidential or personal photos.',
+        body: 'Your images are read, grouped, and packed into a zip entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the images never leave your device, the tool can be used with confidential or personal photos.',
       },
     ],
     faqHeading: 'Frequently asked questions',
@@ -386,13 +385,11 @@ export const en = {
     sections: [
       {
         heading: 'What is a PDF title?',
-        body:
-          'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
+        body: 'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
       },
       {
         heading: 'Filename vs PDF title',
-        body:
-          'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
+        body: 'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
         terms: [
           {
             term: 'Filename',
@@ -428,8 +425,7 @@ export const en = {
       },
       {
         heading: 'Privacy and security',
-        body:
-          'Your PDFs are opened, edited, and rebuilt entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential documents in workplaces where uploading to an online service is not allowed.',
+        body: 'Your PDFs are opened, edited, and rebuilt entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the files never leave your device, the tool can be used with confidential documents in workplaces where uploading to an online service is not allowed.',
       },
     ],
     faqHeading: 'Frequently asked questions',
@@ -440,7 +436,8 @@ export const en = {
           'The filename is what your operating system shows in a folder. The title is stored inside the PDF and is what a browser tab displays. Renaming the file does not touch the title.',
       },
       {
-        question: 'Why does a renamed PDF show a different name in the browser tab?',
+        question:
+          'Why does a renamed PDF show a different name in the browser tab?',
         answer:
           'Because the browser prefers the title stored inside the document over the filename. If that title was set when the PDF was created, it survives every rename until you edit the metadata itself.',
       },
@@ -500,7 +497,8 @@ export const en = {
     rejectedHeading: 'Files that could not be added',
     dismiss: 'Dismiss',
     // Results
-    filesHeading: (n: number) => `\u2461 ${n} file${n === 1 ? '' : 's'} checked`,
+    filesHeading: (n: number) =>
+      `\u2461 ${n} file${n === 1 ? '' : 's'} checked`,
     detectedLabel: 'What this file really is',
     encodings: {
       'utf-8': 'UTF-8',
@@ -583,7 +581,8 @@ export const en = {
     dividerLabel: 'Comparison position',
     dividerValue: (percent: number) =>
       `${percent}% — left of the line is the original, right is the compressed result`,
-    compareHint: 'Drag to compare · drag the image to pan · hold Space to see the original',
+    compareHint:
+      'Drag to compare · drag the image to pan · hold Space to see the original',
     processing: 'Compressing…',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
@@ -594,7 +593,8 @@ export const en = {
     // Sizes
     beforeSize: (size: string) => `Before: ${size}`,
     afterSize: (size: string) => `After: ${size}`,
-    savedBy: (bytes: string, percent: string) => `${bytes} smaller (${percent})`,
+    savedBy: (bytes: string, percent: string) =>
+      `${bytes} smaller (${percent})`,
     grewBy: (percent: string) => `${percent} larger`,
     grewNote:
       'This setting produces a bigger file than the original. Lower the quality, or keep the original file.',
@@ -620,11 +620,13 @@ export const en = {
     // settings arrive on request rather than taking a third of it up front.
     showSettings: 'Settings',
     hideSettings: 'Close the settings',
-    formatUnavailable: (name: string) => `${name} (not supported by this browser)`,
+    formatUnavailable: (name: string) =>
+      `${name} (not supported by this browser)`,
     formatUnavailableHint:
       'Greyed-out formats cannot be written by this browser. Another browser, or a newer version of this one, will offer them.',
     backgroundLabel: 'Background behind transparency',
-    backgroundHint: 'JPEG has no transparency, so clear areas are filled with this colour.',
+    backgroundHint:
+      'JPEG has no transparency, so clear areas are filled with this colour.',
     qualityLabel: 'Quality',
     losslessAt100:
       'Quality 100 encodes WebP losslessly — pixel-identical to the original, and often smaller than quality 99. Use it when nothing may be lost.',
@@ -649,7 +651,8 @@ export const en = {
     applyRestNone: 'No later images are waiting to be saved.',
     appliedQuality: (quality: number, count: number) =>
       `Applied quality ${quality} to ${count} image${count === 1 ? '' : 's'}.`,
-    applyAllToRest: (count: number) => `Apply all settings to the remaining ${count}`,
+    applyAllToRest: (count: number) =>
+      `Apply all settings to the remaining ${count}`,
     applyAllHint:
       'Copies the format, quality and size of this image onto the later images that are still unsaved, replacing any adjustments they had.',
     appliedAll: (count: number) =>
@@ -658,10 +661,12 @@ export const en = {
       `${n} adjusted image${n === 1 ? '' : 's'} did not follow this change.`,
     includeThem: 'Change those too',
     moreActions: 'More',
-    applyToAll: (n: number) => `Apply these settings to all ${n} images (overwrites adjustments)`,
+    applyToAll: (n: number) =>
+      `Apply these settings to all ${n} images (overwrites adjustments)`,
     applyToAllConfirm: (n: number) =>
       `Apply the current settings to all ${n} images? Images you adjusted individually and images you already saved will be overwritten.`,
-    appliedToAll: (n: number) => `Applied the current settings to all ${n} images.`,
+    appliedToAll: (n: number) =>
+      `Applied the current settings to all ${n} images.`,
     undo: 'Undo',
     resizeHeading: 'Resize',
     resizeEnable: 'Change the pixel size',
@@ -670,8 +675,12 @@ export const en = {
     keepRatio: 'Keep the aspect ratio',
     preventUpscale: 'Never enlarge beyond the original',
     distortWarning: 'These dimensions will stretch the image out of shape.',
-    dimensionsPreview: (fromW: number, fromH: number, toW: number, toH: number) =>
-      `${fromW}×${fromH} → ${toW}×${toH}`,
+    dimensionsPreview: (
+      fromW: number,
+      fromH: number,
+      toW: number,
+      toH: number,
+    ) => `${fromW}×${fromH} → ${toW}×${toH}`,
     metadataNote:
       'Re-encoding drops metadata such as the capture location. Rotation is preserved.',
     // Download
@@ -727,13 +736,11 @@ export const en = {
       },
       {
         heading: 'Choosing a quality',
-        body:
-          'Quality 80 is a good starting point for photographs — most of the file disappears while the difference stays hard to see. Detailed textures, text inside an image, and flat illustrations show artefacts sooner, so compare those at 100% zoom before deciding. Below about 60 the damage is usually visible. Above about 90 the opposite happens — the picture stops improving while the file keeps growing — except at exactly 100, where WebP switches to lossless and comes out pixel-identical, often smaller than 99. PNG has no quality setting at all because it is lossless; to shrink a PNG, resize it or convert it to WebP.',
+        body: 'Quality 80 is a good starting point for photographs — most of the file disappears while the difference stays hard to see. Detailed textures, text inside an image, and flat illustrations show artefacts sooner, so compare those at 100% zoom before deciding. Below about 60 the damage is usually visible. Above about 90 the opposite happens — the picture stops improving while the file keeps growing — except at exactly 100, where WebP switches to lossless and comes out pixel-identical, often smaller than 99. PNG has no quality setting at all because it is lossless; to shrink a PNG, resize it or convert it to WebP.',
       },
       {
         heading: 'Privacy and security',
-        body:
-          'Your images are decoded, compressed, and packed into a ZIP entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the images never leave your device, the tool can be used with confidential or personal photos.',
+        body: 'Your images are decoded, compressed, and packed into a ZIP entirely inside your browser. Nothing is uploaded to a server, no account is required, and closing or reloading the page discards everything. Because the images never leave your device, the tool can be used with confidential or personal photos.',
       },
     ],
     faqHeading: 'Frequently asked questions',
@@ -946,8 +953,7 @@ export const en = {
     needFiles: 'Add files to enable the download',
     needRule: 'Build a rename rule to enable the download',
     fixTextErrors: 'Fix the errors in the text fields',
-    duplicatesBlock:
-      'Duplicate file names must be resolved before downloading',
+    duplicatesBlock: 'Duplicate file names must be resolved before downloading',
     zipFailed: (message: string) => `Failed to generate the zip: ${message}`,
   },
 }

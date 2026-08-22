@@ -81,7 +81,10 @@ function FileRenamerTool() {
   useEffect(() => {
     if (results && !hadPreview.current) {
       hadPreview.current = true
-      track('rename_preview_generated', { tool: TOOL, file_count: results.length })
+      track('rename_preview_generated', {
+        tool: TOOL,
+        file_count: results.length,
+      })
     }
     if (!results) {
       hadPreview.current = false

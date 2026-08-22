@@ -60,7 +60,12 @@ export type EditorAction =
   | { type: 'batch_filename_from_title' }
   | { type: 'dismiss_rejected'; id: string }
   | { type: 'process_start'; total: number }
-  | { type: 'process_succeeded'; id: string; blob: Blob; outputFileName: string }
+  | {
+      type: 'process_succeeded'
+      id: string
+      blob: Blob
+      outputFileName: string
+    }
   | { type: 'process_failed'; id: string; code: PdfErrorCode }
   | { type: 'process_end'; success: number; failed: number }
 

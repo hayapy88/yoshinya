@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { compareSize, formatBytes, formatPercent, totalComparison } from './format'
+import {
+  compareSize,
+  formatBytes,
+  formatPercent,
+  totalComparison,
+} from './format'
 
 describe('formatBytes', () => {
   it('scales through the units', () => {
@@ -47,13 +52,20 @@ describe('totalComparison', () => {
   it('adds up only the images that produced an output', () => {
     // A queued or failed image has no result yet, and counting its source
     // would understate the saving.
-    const result = totalComparison([item(1000, 400), item(2000, 600), item(5000, null)])
+    const result = totalComparison([
+      item(1000, 400),
+      item(2000, 600),
+      item(5000, null),
+    ])
     expect(result.before).toBe(3000)
     expect(result.after).toBe(1000)
     expect(result.percent).toBeCloseTo(66.7, 1)
   })
 
   it('is empty before anything has been processed', () => {
-    expect(totalComparison([item(1000, null)])).toMatchObject({ before: 0, after: 0 })
+    expect(totalComparison([item(1000, null)])).toMatchObject({
+      before: 0,
+      after: 0,
+    })
   })
 })

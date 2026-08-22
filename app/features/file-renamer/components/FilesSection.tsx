@@ -204,7 +204,13 @@ export function FileThumb({ file }: { file: LoadedFile }) {
   )
 }
 
-function Lightbox({ file, onClose }: { file: LoadedFile; onClose: () => void }) {
+function Lightbox({
+  file,
+  onClose,
+}: {
+  file: LoadedFile
+  onClose: () => void
+}) {
   const { t } = useLocale()
 
   useEffect(() => {
@@ -253,8 +259,14 @@ function SortableFileItem({
   onRemove: (id: string) => void
 }) {
   const { t } = useLocale()
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: item.id })
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id })
 
   return (
     <li

@@ -29,7 +29,10 @@ describe('parseKeywords', () => {
   })
 
   it('caps the number of keywords', () => {
-    const many = Array.from({ length: LIMITS.maxKeywords + 20 }, (_, i) => `k${i}`)
+    const many = Array.from(
+      { length: LIMITS.maxKeywords + 20 },
+      (_, i) => `k${i}`,
+    )
     expect(parseKeywords(many.join(',')).length).toBe(LIMITS.maxKeywords)
   })
 
@@ -51,9 +54,9 @@ describe('normalizeTextField', () => {
   })
 
   it('caps the length', () => {
-    expect(normalizeTextField('x'.repeat(LIMITS.maxTextLength + 50)).length).toBe(
-      LIMITS.maxTextLength,
-    )
+    expect(
+      normalizeTextField('x'.repeat(LIMITS.maxTextLength + 50)).length,
+    ).toBe(LIMITS.maxTextLength)
   })
 
   it('keeps emoji and Japanese intact', () => {

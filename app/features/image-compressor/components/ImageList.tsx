@@ -15,16 +15,30 @@ function StateBadge({ item }: { item: ImageItem }) {
   const { t } = useLocale()
   // Symbol plus word: never colour alone.
   if (item.processingState === 'error') {
-    return <span className="ic-badge ic-badge-error">× {t.imageCompressor.stateError}</span>
+    return (
+      <span className="ic-badge ic-badge-error">
+        × {t.imageCompressor.stateError}
+      </span>
+    )
   }
   if (item.downloaded) {
-    return <span className="ic-badge ic-badge-done">✓ {t.imageCompressor.stateDownloaded}</span>
+    return (
+      <span className="ic-badge ic-badge-done">
+        ✓ {t.imageCompressor.stateDownloaded}
+      </span>
+    )
   }
   if (item.processingState !== 'ready') {
-    return <span className="ic-badge">… {t.imageCompressor.stateProcessing}</span>
+    return (
+      <span className="ic-badge">… {t.imageCompressor.stateProcessing}</span>
+    )
   }
   if (item.settingsOverride !== null) {
-    return <span className="ic-badge ic-badge-custom">● {t.imageCompressor.stateCustomized}</span>
+    return (
+      <span className="ic-badge ic-badge-custom">
+        ● {t.imageCompressor.stateCustomized}
+      </span>
+    )
   }
   return null
 }
@@ -51,9 +65,15 @@ export function ImageList({
 
   return (
     <section className="ic-list" aria-labelledby="ic-list-heading">
-      <h2 id="ic-list-heading">{t.imageCompressor.listHeading(items.length)}</h2>
+      <h2 id="ic-list-heading">
+        {t.imageCompressor.listHeading(items.length)}
+      </h2>
 
-      <div className="ic-filters" role="group" aria-label={t.imageCompressor.filterLabel}>
+      <div
+        className="ic-filters"
+        role="group"
+        aria-label={t.imageCompressor.filterLabel}
+      >
         {FILTERS.map((name) => (
           <button
             key={name}
@@ -114,7 +134,9 @@ export function ImageList({
         })}
       </ul>
 
-      {visible.length === 0 && <p className="ic-hint">{t.imageCompressor.emptyFilter}</p>}
+      {visible.length === 0 && (
+        <p className="ic-hint">{t.imageCompressor.emptyFilter}</p>
+      )}
     </section>
   )
 }

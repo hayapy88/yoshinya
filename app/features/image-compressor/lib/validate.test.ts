@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { classifyFiles, isSupportedImage } from './validate'
 import { LIMITS } from './types'
 
-const file = (name: string, type = 'image/jpeg', size = 1024) => ({ name, type, size })
+const file = (name: string, type = 'image/jpeg', size = 1024) => ({
+  name,
+  type,
+  size,
+})
 
 let counter = 0
 const makeId = () => `id-${(counter += 1)}`
@@ -46,7 +50,11 @@ describe('classifyFiles', () => {
   })
 
   it('refuses an empty file', () => {
-    const result = classifyFiles([file('a.jpg', 'image/jpeg', 0)], empty, makeId)
+    const result = classifyFiles(
+      [file('a.jpg', 'image/jpeg', 0)],
+      empty,
+      makeId,
+    )
     expect(result.rejected[0]?.errorCode).toBe('empty_file')
   })
 
@@ -60,13 +68,20 @@ describe('classifyFiles', () => {
   })
 
   it('counts images already loaded toward the file-count limit', () => {
-    const result = classifyFiles([file('a.jpg')], { count: LIMITS.maxFiles, bytes: 0 }, makeId)
+    const result = classifyFiles(
+      [file('a.jpg')],
+      { count: LIMITS.maxFiles, bytes: 0 },
+      makeId,
+    )
     expect(result.rejected[0]?.errorCode).toBe('too_many_files')
   })
 
   it('accumulates sizes so a batch cannot pass in aggregate', () => {
     const result = classifyFiles(
-      [file('a.jpg', 'image/jpeg', LIMITS.maxFileBytes), file('b.jpg', 'image/jpeg', 1)],
+      [
+        file('a.jpg', 'image/jpeg', LIMITS.maxFileBytes),
+        file('b.jpg', 'image/jpeg', 1),
+      ],
       { count: 0, bytes: LIMITS.maxTotalBytes - LIMITS.maxFileBytes },
       makeId,
     )

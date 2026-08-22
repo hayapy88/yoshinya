@@ -55,10 +55,18 @@ export type CompressorAction =
   | { type: 'set_common'; patch: Partial<CompressionSettings> }
   | { type: 'set_current_override'; patch: Partial<CompressionSettings> }
   | { type: 'reset_current_to_common' }
-  | { type: 'bulk_apply'; kind: 'quality' | 'all-settings'; targetIds: string[] }
+  | {
+      type: 'bulk_apply'
+      kind: 'quality' | 'all-settings'
+      targetIds: string[]
+    }
   | { type: 'undo_bulk' }
   | { type: 'apply_to_all' }
-  | { type: 'release_overrides'; ids: string[]; keys: (keyof CompressionSettings)[] }
+  | {
+      type: 'release_overrides'
+      ids: string[]
+      keys: (keyof CompressionSettings)[]
+    }
   | { type: 'mark_downloaded'; ids: string[] }
   | { type: 'remove_item'; id: string }
   | { type: 'remove_all' }
@@ -190,7 +198,9 @@ export function compressorReducer(
       const affected = new Set(
         state.items
           .filter((item) =>
-            changed.some((key) => (item.settingsOverride ?? {})[key] === undefined),
+            changed.some(
+              (key) => (item.settingsOverride ?? {})[key] === undefined,
+            ),
           )
           .map((item) => item.id),
       )
@@ -203,7 +213,10 @@ export function compressorReducer(
       const pruned = state.items.map((item) =>
         item.settingsOverride === null
           ? item
-          : { ...item, settingsOverride: withOverride(common, item.settingsOverride, {}) },
+          : {
+              ...item,
+              settingsOverride: withOverride(common, item.settingsOverride, {}),
+            },
       )
       return {
         ...state,
@@ -257,7 +270,10 @@ export function compressorReducer(
 
       // Captured before the change so undo restores exactly what each image had,
       // including whether it had any override at all.
-      const previousOverrides: Record<string, Partial<CompressionSettings> | null> = {}
+      const previousOverrides: Record<
+        string,
+        Partial<CompressionSettings> | null
+      > = {}
       for (const item of state.items) {
         if (targets.has(item.id)) {
           previousOverrides[item.id] = item.settingsOverride
@@ -265,9 +281,7 @@ export function compressorReducer(
       }
 
       const patch: Partial<CompressionSettings> =
-        action.kind === 'quality'
-          ? { quality: source.quality }
-          : { ...source }
+        action.kind === 'quality' ? { quality: source.quality } : { ...source }
 
       return {
         ...state,
@@ -368,7 +382,9 @@ export function compressorReducer(
         ...state,
         items,
         currentIndex: Math.min(
-          state.currentIndex > index ? state.currentIndex - 1 : state.currentIndex,
+          state.currentIndex > index
+            ? state.currentIndex - 1
+            : state.currentIndex,
           Math.max(0, items.length - 1),
         ),
         undo: null,
@@ -401,7 +417,9 @@ export function downloadableItems(state: CompressorState): ImageItem[] {
 
 export function pendingCount(state: CompressorState): number {
   return state.items.filter(
-    (item) => item.processingState === 'queued' || item.processingState === 'processing',
+    (item) =>
+      item.processingState === 'queued' ||
+      item.processingState === 'processing',
   ).length
 }
 

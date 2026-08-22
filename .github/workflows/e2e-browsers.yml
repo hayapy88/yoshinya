@@ -34,6 +34,11 @@ jobs:
       # it WebKit installs but will not launch.
       - run: npx playwright install --with-deps chromium firefox webkit
 
+      # Without this the repo drifts back: an editor that sees .prettierrc
+      # formats whatever file someone opens, and the diff lands in an unrelated
+      # commit. That is what happened before the formatting was applied.
+      - run: npm run format:check
+
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test

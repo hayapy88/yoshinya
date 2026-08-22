@@ -45,8 +45,7 @@ export function targetDimensions(
     }
   } else {
     target = { width, height }
-    isDistorted =
-      Math.abs(width / height - source.width / source.height) > 0.01
+    isDistorted = Math.abs(width / height - source.width / source.height) > 0.01
   }
 
   if (preventUpscale) {

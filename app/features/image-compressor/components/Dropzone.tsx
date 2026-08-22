@@ -45,7 +45,9 @@ export function Dropzone({
         {compact ? t.imageCompressor.addMore : t.imageCompressor.dropzone}
       </span>
       {!compact && (
-        <span className="ic-dropzone-hint">{t.imageCompressor.supportedFormats}</span>
+        <span className="ic-dropzone-hint">
+          {t.imageCompressor.supportedFormats}
+        </span>
       )}
       <input
         ref={inputRef}

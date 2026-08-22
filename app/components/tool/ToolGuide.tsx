@@ -1,6 +1,11 @@
 import { Link } from 'react-router'
 import { useLocale, type Dictionary } from '~/i18n/locale'
-import { TOOL_SLUGS, type GuideSection, type ToolGuideContent, type ToolSlug } from './types'
+import {
+  TOOL_SLUGS,
+  type GuideSection,
+  type ToolGuideContent,
+  type ToolSlug,
+} from './types'
 import './tool-shared.css'
 
 // Maps a slug to the dictionary entry that names and describes it, so the

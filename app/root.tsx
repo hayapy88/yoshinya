@@ -23,7 +23,8 @@ import './app.css'
 // versioned, and visible to whoever reads this file — and it is one script
 // lighter, since a Tag Manager container loads this same library on top of
 // itself. See docs/analytics.md.
-const GA4_ID = (import.meta.env.VITE_GA4_ID as string | undefined) ?? 'G-5M9ZWGZJ0J'
+const GA4_ID =
+  (import.meta.env.VITE_GA4_ID as string | undefined) ?? 'G-5M9ZWGZJ0J'
 
 function analyticsEnabled(host: string | undefined): boolean {
   return GA4_ID.length > 0 && isProductionHost(host)

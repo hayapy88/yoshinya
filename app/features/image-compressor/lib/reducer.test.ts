@@ -29,7 +29,10 @@ const item = (id: string, over: Partial<ImageItem> = {}): ImageItem => ({
   ...over,
 })
 
-const stateWith = (items: ImageItem[], over: Partial<CompressorState> = {}): CompressorState => ({
+const stateWith = (
+  items: ImageItem[],
+  over: Partial<CompressorState> = {},
+): CompressorState => ({
   ...initialState,
   items,
   ...over,
@@ -45,7 +48,12 @@ const applyBulk = (state: CompressorState, kind: 'quality' | 'all-settings') =>
   compressorReducer(state, {
     type: 'bulk_apply',
     kind,
-    targetIds: bulkTargetIds(state.items, state.currentIndex, state.common, kind),
+    targetIds: bulkTargetIds(
+      state.items,
+      state.currentIndex,
+      state.common,
+      kind,
+    ),
   })
 
 describe('editing one image', () => {
@@ -94,8 +102,14 @@ describe('editing one image', () => {
 
 describe('changing the common settings', () => {
   it('moves the images that never overrode that field', () => {
-    const before = stateWith([item('a'), item('b', { settingsOverride: { quality: 30 } })])
-    const after = compressorReducer(before, { type: 'set_common', patch: { quality: 60 } })
+    const before = stateWith([
+      item('a'),
+      item('b', { settingsOverride: { quality: 30 } }),
+    ])
+    const after = compressorReducer(before, {
+      type: 'set_common',
+      patch: { quality: 60 },
+    })
     expect(settingsOf(after, 'a').quality).toBe(60)
     // b pinned its own quality, so the shared change must not reach it.
     expect(settingsOf(after, 'b').quality).toBe(30)
@@ -107,7 +121,10 @@ describe('changing the common settings', () => {
     // badged as adjusted while identical to the common settings.
     let s = stateWith([item('a'), item('b')], { currentIndex: 0 })
     s = compressorReducer(s, { type: 'set_common', patch: { quality: 70 } })
-    s = compressorReducer(s, { type: 'set_current_override', patch: { quality: 50 } })
+    s = compressorReducer(s, {
+      type: 'set_current_override',
+      patch: { quality: 50 },
+    })
     expect(s.items[0]!.settingsOverride).not.toBeNull()
 
     s = compressorReducer(s, { type: 'set_common', patch: { quality: 50 } })
@@ -117,25 +134,31 @@ describe('changing the common settings', () => {
 
   it('keeps an override when the common change was to a different field', () => {
     let s = stateWith([item('a')], { currentIndex: 0 })
-    s = compressorReducer(s, { type: 'set_current_override', patch: { quality: 50 } })
-    s = compressorReducer(s, { type: 'set_common', patch: { outputFormat: 'webp' } })
+    s = compressorReducer(s, {
+      type: 'set_current_override',
+      patch: { quality: 50 },
+    })
+    s = compressorReducer(s, {
+      type: 'set_common',
+      patch: { outputFormat: 'webp' },
+    })
     // The quality genuinely still differs, so the image is still adjusted.
     expect(s.items[0]!.settingsOverride).toEqual({ quality: 50 })
   })
 
   it('leaves an image alone that pinned exactly the changed field', () => {
     const before = stateWith([item('b', { settingsOverride: { quality: 30 } })])
-    const after = compressorReducer(before, { type: 'set_common', patch: { quality: 60 } })
+    const after = compressorReducer(before, {
+      type: 'set_common',
+      patch: { quality: 60 },
+    })
     expect(after.items[0]!.outputBlob).not.toBeNull()
   })
 })
 
 describe('applying a quality to the rest', () => {
   const base = () =>
-    stateWith(
-      [item('a'), item('b'), item('c'), item('d')],
-      { currentIndex: 0 },
-    )
+    stateWith([item('a'), item('b'), item('c'), item('d')], { currentIndex: 0 })
 
   it('applies the current image quality to the later images', () => {
     const edited = compressorReducer(base(), {
@@ -152,7 +175,13 @@ describe('applying a quality to the rest', () => {
     const start = stateWith(
       [
         item('a'),
-        item('b', { settingsOverride: { outputFormat: 'webp', resizeEnabled: true, width: 800 } }),
+        item('b', {
+          settingsOverride: {
+            outputFormat: 'webp',
+            resizeEnabled: true,
+            width: 800,
+          },
+        }),
       ],
       { currentIndex: 0 },
     )
@@ -208,14 +237,19 @@ describe('applying a quality to the rest', () => {
       patch: { quality: 85 },
     })
     const after = applyBulk(edited, 'quality')
-    expect(after.items.find((i) => i.id === 'b')?.processingState).toBe('queued')
+    expect(after.items.find((i) => i.id === 'b')?.processingState).toBe(
+      'queued',
+    )
   })
 })
 
 describe('applying every setting to the rest', () => {
   it('replaces the whole effective settings of the targets', () => {
     const start = stateWith(
-      [item('a'), item('b', { settingsOverride: { quality: 20, outputFormat: 'png' } })],
+      [
+        item('a'),
+        item('b', { settingsOverride: { quality: 20, outputFormat: 'png' } }),
+      ],
       { currentIndex: 0 },
     )
     const edited = compressorReducer(start, {
@@ -236,7 +270,10 @@ describe('releasing a pin so an image follows the shared settings again', () => 
       type: 'set_current_override',
       patch: { outputFormat: 'png', quality: 40 },
     })
-    s = compressorReducer(s, { type: 'set_common', patch: { outputFormat: 'webp' } })
+    s = compressorReducer(s, {
+      type: 'set_common',
+      patch: { outputFormat: 'webp' },
+    })
     // Still pinned to png, which is what the user is being offered a way out of.
     expect(settingsOf(s, 'a').outputFormat).toBe('png')
 
@@ -253,7 +290,10 @@ describe('releasing a pin so an image follows the shared settings again', () => 
 
   it('clears the override entirely when nothing is left pinned', () => {
     let s = stateWith([item('a')], { currentIndex: 0 })
-    s = compressorReducer(s, { type: 'set_current_override', patch: { outputFormat: 'png' } })
+    s = compressorReducer(s, {
+      type: 'set_current_override',
+      patch: { outputFormat: 'png' },
+    })
     s = compressorReducer(s, {
       type: 'release_overrides',
       ids: ['a'],
@@ -300,11 +340,7 @@ describe('applying to every image', () => {
 describe('undoing a bulk apply', () => {
   it('restores each image to the quality it had', () => {
     const start = stateWith(
-      [
-        item('a'),
-        item('b', { settingsOverride: { quality: 20 } }),
-        item('c'),
-      ],
+      [item('a'), item('b', { settingsOverride: { quality: 20 } }), item('c')],
       { currentIndex: 0 },
     )
     const edited = compressorReducer(start, {
@@ -326,7 +362,9 @@ describe('undoing a bulk apply', () => {
       type: 'set_current_override',
       patch: { quality: 85 },
     })
-    const undone = compressorReducer(applyBulk(edited, 'quality'), { type: 'undo_bulk' })
+    const undone = compressorReducer(applyBulk(edited, 'quality'), {
+      type: 'undo_bulk',
+    })
     expect(undone.items.find((i) => i.id === 'c')?.settingsOverride).toBeNull()
   })
 
@@ -336,7 +374,9 @@ describe('undoing a bulk apply', () => {
       type: 'set_current_override',
       patch: { quality: 85 },
     })
-    const undone = compressorReducer(applyBulk(edited, 'quality'), { type: 'undo_bulk' })
+    const undone = compressorReducer(applyBulk(edited, 'quality'), {
+      type: 'undo_bulk',
+    })
     expect(settingsOf(undone, 'a').quality).toBe(85)
   })
 
@@ -346,7 +386,9 @@ describe('undoing a bulk apply', () => {
       type: 'set_current_override',
       patch: { quality: 85 },
     })
-    const undone = compressorReducer(applyBulk(edited, 'quality'), { type: 'undo_bulk' })
+    const undone = compressorReducer(applyBulk(edited, 'quality'), {
+      type: 'undo_bulk',
+    })
     expect(undone.undo).toBeNull()
     expect(compressorReducer(undone, { type: 'undo_bulk' })).toBe(undone)
   })
@@ -355,7 +397,10 @@ describe('undoing a bulk apply', () => {
     // The captured target ids no longer describe what the user is looking at.
     const start = stateWith([item('a'), item('b')], { currentIndex: 0 })
     const applied = applyBulk(
-      compressorReducer(start, { type: 'set_current_override', patch: { quality: 85 } }),
+      compressorReducer(start, {
+        type: 'set_current_override',
+        patch: { quality: 85 },
+      }),
       'quality',
     )
     expect(applied.undo).not.toBeNull()
@@ -370,7 +415,9 @@ describe('undoing a bulk apply', () => {
 
 describe('removing images', () => {
   it('keeps the selection on the same image when an earlier one goes', () => {
-    const state = stateWith([item('a'), item('b'), item('c')], { currentIndex: 2 })
+    const state = stateWith([item('a'), item('b'), item('c')], {
+      currentIndex: 2,
+    })
     const after = compressorReducer(state, { type: 'remove_item', id: 'a' })
     expect(currentItem(after)?.id).toBe('c')
   })
@@ -382,7 +429,9 @@ describe('removing images', () => {
   })
 
   it('clears everything but keeps the settings the user dialled in', () => {
-    const state = stateWith([item('a')], { common: { ...DEFAULT_SETTINGS, quality: 42 } })
+    const state = stateWith([item('a')], {
+      common: { ...DEFAULT_SETTINGS, quality: 42 },
+    })
     const after = compressorReducer(state, { type: 'remove_all' })
     expect(after.items).toEqual([])
     expect(after.common.quality).toBe(42)

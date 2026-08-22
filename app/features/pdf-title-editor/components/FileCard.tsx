@@ -53,7 +53,11 @@ export function FileCard({
   // meaning, not its colour, and it is labelled for screen readers.
   const marker = (field: ChangeMarker) =>
     changed.has(field) ? (
-      <span className="pte-changed" role="img" aria-label={t.pdfTitleEditor.changedMarker}>
+      <span
+        className="pte-changed"
+        role="img"
+        aria-label={t.pdfTitleEditor.changedMarker}
+      >
         ●
       </span>
     ) : null

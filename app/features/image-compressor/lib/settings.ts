@@ -31,7 +31,9 @@ export function effectiveSettings(
   return { ...common, ...(item.settingsOverride ?? {}) }
 }
 
-export function hasOverride(item: Pick<ImageItem, 'settingsOverride'>): boolean {
+export function hasOverride(
+  item: Pick<ImageItem, 'settingsOverride'>,
+): boolean {
   const override = item.settingsOverride
   return override !== null && Object.keys(override).length > 0
 }

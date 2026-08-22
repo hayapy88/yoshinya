@@ -11,13 +11,12 @@ import {
 
 describe('sanitizeFileName', () => {
   it('replaces characters that are illegal on Windows', () => {
-    expect(sanitizeFileName('a/b\\c:d*e?f"g<h>i|j')).toBe(
-      'a-b-c-d-e-f-g-h-i-j',
-    )
+    expect(sanitizeFileName('a/b\\c:d*e?f"g<h>i|j')).toBe('a-b-c-d-e-f-g-h-i-j')
   })
 
   it('strips control characters instead of turning them into dashes', () => {
-    const withControlChars = "re" + String.fromCharCode(0) + "po" + String.fromCharCode(31) + "rt"
+    const withControlChars =
+      're' + String.fromCharCode(0) + 'po' + String.fromCharCode(31) + 'rt'
     expect(sanitizeFileName(withControlChars)).toBe('report')
   })
 
@@ -88,9 +87,11 @@ describe('resolveDuplicateNames', () => {
   })
 
   it('numbers duplicates from 2 in input order', () => {
-    expect(
-      resolveDuplicateNames(['a.pdf', 'a.pdf', 'a.pdf']),
-    ).toEqual(['a.pdf', 'a (2).pdf', 'a (3).pdf'])
+    expect(resolveDuplicateNames(['a.pdf', 'a.pdf', 'a.pdf'])).toEqual([
+      'a.pdf',
+      'a (2).pdf',
+      'a (3).pdf',
+    ])
   })
 
   it('treats names that differ only by case as duplicates', () => {
@@ -101,8 +102,10 @@ describe('resolveDuplicateNames', () => {
   })
 
   it('does not collide with a name that already looks numbered', () => {
-    expect(
-      resolveDuplicateNames(['a.pdf', 'a (2).pdf', 'a.pdf']),
-    ).toEqual(['a.pdf', 'a (2).pdf', 'a (3).pdf'])
+    expect(resolveDuplicateNames(['a.pdf', 'a (2).pdf', 'a.pdf'])).toEqual([
+      'a.pdf',
+      'a (2).pdf',
+      'a (3).pdf',
+    ])
   })
 })

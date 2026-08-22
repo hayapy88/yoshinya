@@ -36,7 +36,10 @@ describe('FileRenamerTool (regression)', () => {
   it('renders the empty state with a disabled download button', () => {
     renderTool()
     expect(
-      screen.getByRole('heading', { level: 1, name: 'File Renamer by Yoshinya' }),
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'File Renamer by Yoshinya',
+      }),
     ).toBeInTheDocument()
     const download = screen.getByRole('button', {
       name: 'Confirm and download',
@@ -51,7 +54,10 @@ describe('FileRenamerTool (regression)', () => {
   it('renders localized Japanese labels', () => {
     renderTool('ja')
     expect(
-      screen.getByRole('heading', { level: 1, name: 'よしにゃにファイルリネーム' }),
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'よしにゃにファイルリネーム',
+      }),
     ).toBeInTheDocument()
     expect(screen.getByText('① ファイルのアップロード')).toBeInTheDocument()
     expect(

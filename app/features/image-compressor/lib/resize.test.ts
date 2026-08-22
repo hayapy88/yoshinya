@@ -7,7 +7,9 @@ const base = { ...DEFAULT_SETTINGS, resizeEnabled: true }
 
 describe('targetDimensions', () => {
   it('keeps the original size when resizing is off', () => {
-    expect(targetDimensions(source, { ...base, resizeEnabled: false, width: 100 })).toEqual({
+    expect(
+      targetDimensions(source, { ...base, resizeEnabled: false, width: 100 }),
+    ).toEqual({
       ...source,
       isDistorted: false,
     })
@@ -31,7 +33,9 @@ describe('targetDimensions', () => {
 
   it('fits inside the box when both are given and the ratio is locked', () => {
     // 1000x1000 on a 4:3 image means "fit within", not "stretch to".
-    expect(targetDimensions(source, { ...base, width: 1000, height: 1000 })).toEqual({
+    expect(
+      targetDimensions(source, { ...base, width: 1000, height: 1000 }),
+    ).toEqual({
       width: 1000,
       height: 750,
       isDistorted: false,
@@ -75,13 +79,18 @@ describe('targetDimensions', () => {
   })
 
   it('never returns a zero dimension, which would throw on a canvas', () => {
-    const result = targetDimensions({ width: 1000, height: 10 }, { ...base, width: 5 })
+    const result = targetDimensions(
+      { width: 1000, height: 10 },
+      { ...base, width: 5 },
+    )
     expect(result.width).toBeGreaterThanOrEqual(1)
     expect(result.height).toBeGreaterThanOrEqual(1)
   })
 
   it('keeps the original size when neither dimension is filled in', () => {
-    expect(targetDimensions(source, { ...base, width: null, height: null })).toEqual({
+    expect(
+      targetDimensions(source, { ...base, width: null, height: null }),
+    ).toEqual({
       ...source,
       isDistorted: false,
     })
