@@ -132,12 +132,16 @@ function toolName(slug) {
 }
 
 function buildMessage({ kind, slug, name, title, bullets }) {
+  // The tool name is bracketed. A post opens with a long Japanese sentence in
+  // which the product name is itself Japanese, and without the brackets the
+  // reader has to work out where the name ends before anything else parses.
+  const bracketed = `【${name}】`;
   const opening =
     kind === 'release'
-      ? `${name}をリリースしたにゃ😺`
+      ? `${bracketed}をリリースしたにゃ😺`
       : kind === 'feature'
-        ? `${name}に新機能「${title}」を追加したにゃ😺`
-        : `${name}を改善したにゃ😺`;
+        ? `${bracketed}に新機能「${title}」を追加したにゃ😺`
+        : `${bracketed}を改善したにゃ😺`;
 
   const listed = bullets.map((line) => `✅ ${line}`).join('\n');
 
