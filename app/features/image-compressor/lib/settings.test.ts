@@ -15,11 +15,15 @@ const common: CompressionSettings = { ...DEFAULT_SETTINGS }
 
 describe('effectiveSettings', () => {
   it('returns the common settings when nothing is overridden', () => {
-    expect(effectiveSettings(common, { settingsOverride: null })).toEqual(common)
+    expect(effectiveSettings(common, { settingsOverride: null })).toEqual(
+      common,
+    )
   })
 
   it('lets an override win for the fields it names', () => {
-    const result = effectiveSettings(common, { settingsOverride: { quality: 60 } })
+    const result = effectiveSettings(common, {
+      settingsOverride: { quality: 60 },
+    })
     expect(result.quality).toBe(60)
     expect(result.outputFormat).toBe(common.outputFormat)
   })
@@ -42,7 +46,9 @@ describe('withOverride', () => {
   it('drops a value that matches the common setting again', () => {
     // Otherwise an image would stay flagged as customised while identical to
     // the common settings.
-    expect(withOverride(common, { quality: 50 }, { quality: common.quality })).toBeNull()
+    expect(
+      withOverride(common, { quality: 50 }, { quality: common.quality }),
+    ).toBeNull()
   })
 
   it('keeps other overrides when one is cleared', () => {
@@ -55,7 +61,9 @@ describe('withOverride', () => {
   })
 
   it('merges rather than replaces', () => {
-    expect(withOverride(common, { quality: 50 }, { outputFormat: 'webp' })).toEqual({
+    expect(
+      withOverride(common, { quality: 50 }, { outputFormat: 'webp' }),
+    ).toEqual({
       quality: 50,
       outputFormat: 'webp',
     })

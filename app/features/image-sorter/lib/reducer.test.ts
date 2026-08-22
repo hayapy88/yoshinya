@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  folderNumber,
-  counts,
-  initialState,
-  sortingReducer,
-} from './reducer'
+import { folderNumber, counts, initialState, sortingReducer } from './reducer'
 import type { ImageItem, SortingState } from './types'
 
 function img(id: string, folderId: string | null = null): ImageItem {

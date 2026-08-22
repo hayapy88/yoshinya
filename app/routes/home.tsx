@@ -41,10 +41,7 @@ export default function Home() {
           </p>
         </div>
         <picture className="flex w-full justify-center sm:w-auto">
-          <source
-            type="image/webp"
-            srcSet="/brand/yoshinyan-eyes-open.webp"
-          />
+          <source type="image/webp" srcSet="/brand/yoshinyan-eyes-open.webp" />
           <img
             src="/brand/yoshinyan-eyes-open.png"
             alt={t.site.mascotAlt}

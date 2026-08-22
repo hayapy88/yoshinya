@@ -53,7 +53,9 @@ export function bulkTargetIds(
         return true
       }
       const settings = effectiveSettings(common, item)
-      return supportsQuality(resolveFormat(settings.outputFormat, item.sourceType))
+      return supportsQuality(
+        resolveFormat(settings.outputFormat, item.sourceType),
+      )
     })
     .map((item) => item.id)
 }

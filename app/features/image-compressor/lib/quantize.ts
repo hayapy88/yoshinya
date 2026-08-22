@@ -35,7 +35,10 @@ function collectColors(pixels: Uint8ClampedArray): {
     const key =
       a === 0
         ? 0
-        : ((a << 24) | (pixels[i] << 16) | (pixels[i + 1] << 8) | pixels[i + 2]) >>>
+        : ((a << 24) |
+            (pixels[i] << 16) |
+            (pixels[i + 1] << 8) |
+            pixels[i + 2]) >>>
           0
     seen.set(key, (seen.get(key) ?? 0) + 1)
   }
@@ -126,12 +129,15 @@ export function buildPalette(
     const rSpread = box.rMax - box.rMin
     const gSpread = box.gMax - box.gMin
     const bSpread = box.bMax - box.bMin
-    const shift = rSpread >= gSpread && rSpread >= bSpread ? 16 : gSpread >= bSpread ? 8 : 0
+    const shift =
+      rSpread >= gSpread && rSpread >= bSpread ? 16 : gSpread >= bSpread ? 8 : 0
 
-    const slice = Array.from(
-      sortedValues.subarray(box.from, box.to + 1),
-    ).map((value, i) => ({ value, count: sortedCounts[box.from + i] }))
-    slice.sort((a, b) => ((a.value >>> shift) & 0xff) - ((b.value >>> shift) & 0xff))
+    const slice = Array.from(sortedValues.subarray(box.from, box.to + 1)).map(
+      (value, i) => ({ value, count: sortedCounts[box.from + i] }),
+    )
+    slice.sort(
+      (a, b) => ((a.value >>> shift) & 0xff) - ((b.value >>> shift) & 0xff),
+    )
     for (let i = 0; i < slice.length; i += 1) {
       sortedValues[box.from + i] = slice[i].value
       sortedCounts[box.from + i] = slice[i].count
@@ -225,7 +231,12 @@ export function quantize(
 
   if (!dither) {
     for (let i = 0, p = 0; i < indices.length; i += 1, p += 4) {
-      indices[i] = nearest(pixels[p], pixels[p + 1], pixels[p + 2], pixels[p + 3])
+      indices[i] = nearest(
+        pixels[p],
+        pixels[p + 1],
+        pixels[p + 2],
+        pixels[p + 3],
+      )
     }
     return { indices, palette }
   }
@@ -234,7 +245,13 @@ export function quantize(
   // across the image rather than being clamped at every step.
   const work = Float32Array.from(pixels)
   const clamp = (v: number) => (v < 0 ? 0 : v > 255 ? 255 : v)
-  const spread = (p: number, er: number, eg: number, eb: number, factor: number) => {
+  const spread = (
+    p: number,
+    er: number,
+    eg: number,
+    eb: number,
+    factor: number,
+  ) => {
     work[p] += er * factor
     work[p + 1] += eg * factor
     work[p + 2] += eb * factor
@@ -247,7 +264,12 @@ export function quantize(
       const g = clamp(work[p + 1])
       const b = clamp(work[p + 2])
       const a = clamp(work[p + 3])
-      const index = nearest(Math.round(r), Math.round(g), Math.round(b), Math.round(a))
+      const index = nearest(
+        Math.round(r),
+        Math.round(g),
+        Math.round(b),
+        Math.round(a),
+      )
       indices[y * width + x] = index
       const er = r - palette.colors[index * 4]
       const eg = g - palette.colors[index * 4 + 1]

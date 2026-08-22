@@ -54,7 +54,9 @@ export function changedFields(item: PdfItem): Set<ChangeMarker> {
   }
   const current = currentMetadata(item)
   for (const field of ['title', 'author', 'subject'] as const) {
-    if (normalizeTextField(current[field]) !== normalizeTextField(original[field])) {
+    if (
+      normalizeTextField(current[field]) !== normalizeTextField(original[field])
+    ) {
       changed.add(field)
     }
   }

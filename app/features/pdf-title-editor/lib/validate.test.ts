@@ -48,7 +48,11 @@ describe('classifyFiles', () => {
   })
 
   it('rejects a zero-byte file', () => {
-    const result = classifyFiles([file('a.pdf', 'application/pdf', 0)], empty, makeId)
+    const result = classifyFiles(
+      [file('a.pdf', 'application/pdf', 0)],
+      empty,
+      makeId,
+    )
     expect(result.rejected[0]?.errorCode).toBe('empty_file')
   })
 
@@ -62,7 +66,11 @@ describe('classifyFiles', () => {
   })
 
   it('counts already-loaded files toward the file-count limit', () => {
-    const result = classifyFiles([file('a.pdf')], { count: LIMITS.maxFiles, bytes: 0 }, makeId)
+    const result = classifyFiles(
+      [file('a.pdf')],
+      { count: LIMITS.maxFiles, bytes: 0 },
+      makeId,
+    )
     expect(result.rejected[0]?.errorCode).toBe('too_many_files')
   })
 

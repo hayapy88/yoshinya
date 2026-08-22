@@ -13,7 +13,11 @@ import {
   processableItems,
   totalBytes,
 } from './lib/reducer'
-import { currentMetadata, type ApplyMode, type EditableField } from './lib/edits'
+import {
+  currentMetadata,
+  type ApplyMode,
+  type EditableField,
+} from './lib/edits'
 import { normalizeTextField } from './lib/metadata'
 import { PdfToolError, readPdf, writePdf } from './lib/pdf'
 import { resolveDuplicateNames } from './lib/filename'
@@ -113,7 +117,11 @@ function PdfTitleEditorTool() {
       dispatch({ type: 'process_end', success: 1, failed: 0 })
       track('download_completed', { tool: TOOL, file_count: 1 })
     } catch (error) {
-      dispatch({ type: 'process_failed', id: item.id, code: toErrorCode(error) })
+      dispatch({
+        type: 'process_failed',
+        id: item.id,
+        code: toErrorCode(error),
+      })
       dispatch({ type: 'process_end', success: 0, failed: 1 })
     }
   }
@@ -181,7 +189,10 @@ function PdfTitleEditorTool() {
   }
 
   const removeAll = () => {
-    if (state.items.length > 0 && !window.confirm(t.pdfTitleEditor.removeAllConfirm)) {
+    if (
+      state.items.length > 0 &&
+      !window.confirm(t.pdfTitleEditor.removeAllConfirm)
+    ) {
       return
     }
     dispatch({ type: 'remove_all' })

@@ -33,7 +33,9 @@ function parseArgs(argv) {
 }
 
 function dataUri(file) {
-  const base64 = fs.readFileSync(path.join(templateDir, file)).toString('base64')
+  const base64 = fs
+    .readFileSync(path.join(templateDir, file))
+    .toString('base64')
   return `data:image/png;base64,${base64}`
 }
 
@@ -48,7 +50,11 @@ function escapeXml(s) {
 // Builds the <text> element for the tool name (1 or 2 lines), matching the
 // template's position, weight, and colour.
 function toolNameSvg(name, size) {
-  const lines = name.split('|').map((l) => l.trim()).filter(Boolean).slice(0, 2)
+  const lines = name
+    .split('|')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .slice(0, 2)
   const lineHeight = Math.round(size * 1.37)
   const y = lines.length === 2 ? 320 : 372
   const tspans = lines
@@ -85,10 +91,18 @@ async function main() {
 
   const jobs = []
   if (args.ja) {
-    jobs.push({ locale: 'ja', name: args.ja, size: Number(args['ja-size']) || 60 })
+    jobs.push({
+      locale: 'ja',
+      name: args.ja,
+      size: Number(args['ja-size']) || 60,
+    })
   }
   if (args.en) {
-    jobs.push({ locale: 'en', name: args.en, size: Number(args['en-size']) || 60 })
+    jobs.push({
+      locale: 'en',
+      name: args.en,
+      size: Number(args['en-size']) || 60,
+    })
   }
 
   fs.mkdirSync(outDir, { recursive: true })

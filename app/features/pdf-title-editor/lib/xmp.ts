@@ -45,15 +45,19 @@ const PROPERTIES: PropertySpec[] = [
     kind: 'langAlt',
     value: (m) => (m.subject === '' ? [] : [m.subject]),
   },
-  { ns: NS.dc, qualifiedName: 'dc:subject', kind: 'bag', value: (m) => m.keywords },
+  {
+    ns: NS.dc,
+    qualifiedName: 'dc:subject',
+    kind: 'bag',
+    value: (m) => m.keywords,
+  },
   {
     // Adobe's own mirror of Info /Keywords. Kept in step so the two cannot
     // contradict each other either.
     ns: NS.pdf,
     qualifiedName: 'pdf:Keywords',
     kind: 'text',
-    value: (m) =>
-      m.keywords.length === 0 ? [] : [formatKeywords(m.keywords)],
+    value: (m) => (m.keywords.length === 0 ? [] : [formatKeywords(m.keywords)]),
   },
 ]
 
@@ -64,10 +68,7 @@ function localName(qualifiedName: string): string {
 // XMP allows the same property to appear in any rdf:Description, and simple
 // properties may be attributes rather than elements. Clear every form before
 // writing the new one, or a leftover copy could win.
-function removeEverywhere(
-  descriptions: Element[],
-  spec: PropertySpec,
-): void {
+function removeEverywhere(descriptions: Element[], spec: PropertySpec): void {
   const local = localName(spec.qualifiedName)
   for (const description of descriptions) {
     const existing = Array.from(
@@ -93,7 +94,11 @@ function buildProperty(
     return property
   }
   const containerName =
-    spec.kind === 'langAlt' ? 'rdf:Alt' : spec.kind === 'seq' ? 'rdf:Seq' : 'rdf:Bag'
+    spec.kind === 'langAlt'
+      ? 'rdf:Alt'
+      : spec.kind === 'seq'
+        ? 'rdf:Seq'
+        : 'rdf:Bag'
   const container = doc.createElementNS(NS.rdf, containerName)
   for (const value of values) {
     const item = doc.createElementNS(NS.rdf, 'rdf:li')
@@ -117,7 +122,10 @@ function buildProperty(
  * stream untouched: a half-rewritten packet is worse than a stale one.
  */
 export function syncXmp(xml: string, metadata: PdfMetadataForm): string | null {
-  if (typeof DOMParser === 'undefined' || typeof XMLSerializer === 'undefined') {
+  if (
+    typeof DOMParser === 'undefined' ||
+    typeof XMLSerializer === 'undefined'
+  ) {
     return null
   }
   let doc: XMLDocument

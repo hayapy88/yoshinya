@@ -60,7 +60,11 @@ function pngFile(name: string, width: number, height: number) {
 
 // Drags an element onto a target slowly enough to satisfy dnd-kit's
 // 8px pointer activation constraint.
-async function dragTo(page: Page, sourceSelector: string, targetSelector: string) {
+async function dragTo(
+  page: Page,
+  sourceSelector: string,
+  targetSelector: string,
+) {
   const source = page.locator(sourceSelector)
   const target = page.locator(targetSelector)
   // Both elements must be inside the viewport for mouse coordinates to hit.
@@ -313,9 +317,7 @@ test.describe('SEO and infrastructure', () => {
     for (const path of ['/file-renamer', '/privacy', '/terms']) {
       const res = await request.get(path, { maxRedirects: 0 })
       expect(res.status()).toBe(302)
-      expect(res.headers()['location']).toMatch(
-        new RegExp(`^/(ja|en)${path}$`),
-      )
+      expect(res.headers()['location']).toMatch(new RegExp(`^/(ja|en)${path}$`))
     }
   })
 
@@ -397,7 +399,10 @@ test.describe('pdf title editor workflow', () => {
   test('changes a title and downloads a single PDF', async ({ page }) => {
     await page.goto('/en/pdf-title-editor')
     await expect(
-      page.getByRole('heading', { name: 'PDF Title Editor by Yoshinya', level: 1 }),
+      page.getByRole('heading', {
+        name: 'PDF Title Editor by Yoshinya',
+        level: 1,
+      }),
     ).toBeVisible()
 
     await page
@@ -502,7 +507,10 @@ test.describe('pdf title editor workflow', () => {
     await page.goto('/ja/pdf-title-editor')
     await expect(page.locator('html')).toHaveAttribute('lang', 'ja')
     await expect(
-      page.getByRole('heading', { name: 'よしにゃにPDFタイトル変更', level: 1 }),
+      page.getByRole('heading', {
+        name: 'よしにゃにPDFタイトル変更',
+        level: 1,
+      }),
     ).toBeVisible()
     await expect(page.getByText('登録不要')).toBeVisible()
     await expect(
@@ -545,7 +553,9 @@ test.describe('shared tool page structure', () => {
 
       // The three promises, identically worded on every tool.
       for (const badge of ['無料', '登録不要', 'ブラウザ内で処理']) {
-        await expect(page.locator('.tool-badges li', { hasText: badge })).toBeVisible()
+        await expect(
+          page.locator('.tool-badges li', { hasText: badge }),
+        ).toBeVisible()
       }
       await expect(page.locator('.tool-privacy')).toContainText(
         'すべての処理はブラウザ内で完結します',
@@ -554,7 +564,13 @@ test.describe('shared tool page structure', () => {
       await expect(
         page.getByRole('heading', { name: '使い方ガイド', level: 2 }),
       ).toBeVisible()
-      for (const section of ['使い方', 'こんなときに便利', 'プライバシーと安全性', 'よくある質問', '関連ツール']) {
+      for (const section of [
+        '使い方',
+        'こんなときに便利',
+        'プライバシーと安全性',
+        'よくある質問',
+        '関連ツール',
+      ]) {
         await expect(
           page.getByRole('heading', { name: section, level: 3 }),
         ).toBeVisible()
@@ -605,7 +621,10 @@ test.describe('image compressor workflow', () => {
   }) => {
     await page.goto('/ja/image-compressor')
     await expect(
-      page.getByRole('heading', { name: 'よしにゃにまとめて画像圧縮', level: 1 }),
+      page.getByRole('heading', {
+        name: 'よしにゃにまとめて画像圧縮',
+        level: 1,
+      }),
     ).toBeVisible()
 
     await addImages(page, ['a.png'])
@@ -653,7 +672,10 @@ test.describe('image compressor workflow', () => {
 
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('button', { name: /ダウンロード/ }).first().click(),
+      page
+        .getByRole('button', { name: /ダウンロード/ })
+        .first()
+        .click(),
     ])
     const stream = await download.createReadStream()
     const chunks: Buffer[] = []
@@ -664,10 +686,14 @@ test.describe('image compressor workflow', () => {
 
     // A real PNG the browser will accept, and smaller than what went in.
     expect([...saved.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10])
-    expect(saved.length).toBeLessThan(readFileSync('public/brand/logo-yoshinya.png').length)
+    expect(saved.length).toBeLessThan(
+      readFileSync('public/brand/logo-yoshinya.png').length,
+    )
   })
 
-  test('turning colour reduction off says what that means', async ({ page }) => {
+  test('turning colour reduction off says what that means', async ({
+    page,
+  }) => {
     await page.goto('/ja/image-compressor')
     await addImages(page, ['a.png'])
     await waitForCompare(page)
@@ -700,7 +726,9 @@ test.describe('image compressor workflow', () => {
     const apply = page.getByRole('button', { name: /品質40を残り2枚に適用/ })
     await expect(apply).toBeVisible()
     await apply.click()
-    await expect(page.locator('.ic-toast')).toContainText('残り2枚に適用しました')
+    await expect(page.locator('.ic-toast')).toContainText(
+      '残り2枚に適用しました',
+    )
 
     await page.locator('.ic-thumb').nth(1).click()
     await expect(page.locator('#ic-quality')).toHaveValue('40')
@@ -722,7 +750,10 @@ test.describe('image compressor workflow', () => {
     await page.getByRole('button', { name: 'ダウンロードして次へ' }).click()
     expect((await download).suggestedFilename()).toBe('a.png')
 
-    await expect(page.locator('.ic-thumb').nth(1)).toHaveAttribute('aria-current', 'true')
+    await expect(page.locator('.ic-thumb').nth(1)).toHaveAttribute(
+      'aria-current',
+      'true',
+    )
     await expect(page.locator('.ic-thumb').nth(0)).toContainText('保存済み')
     // Only one image is left to save, so the button changes wording.
     await expect(
@@ -730,7 +761,9 @@ test.describe('image compressor workflow', () => {
     ).toBeVisible()
   })
 
-  test('changing the format changes the download extension', async ({ page }) => {
+  test('changing the format changes the download extension', async ({
+    page,
+  }) => {
     await page.goto('/ja/image-compressor')
     await addImages(page, ['a.png'])
     await waitForCompare(page)
@@ -738,7 +771,9 @@ test.describe('image compressor workflow', () => {
     await expect(page.locator('#ic-quality')).toBeVisible()
 
     const download = page.waitForEvent('download')
-    await page.getByRole('button', { name: 'ダウンロード', exact: true }).click()
+    await page
+      .getByRole('button', { name: 'ダウンロード', exact: true })
+      .click()
     expect((await download).suggestedFilename()).toBe('a.webp')
   })
 
@@ -749,7 +784,9 @@ test.describe('image compressor workflow', () => {
 
     const download = page.waitForEvent('download')
     await page.getByRole('button', { name: 'すべてZIPでダウンロード' }).click()
-    expect((await download).suggestedFilename()).toBe('yoshinya-compressed-images.zip')
+    expect((await download).suggestedFilename()).toBe(
+      'yoshinya-compressed-images.zip',
+    )
   })
 
   test('the comparison boundary stays under the divider when zoomed', async ({
@@ -768,8 +805,11 @@ test.describe('image compressor workflow', () => {
 
     const geometry = await page.evaluate(() => {
       const q = (sel: string) =>
-        (globalThis as unknown as { document: { querySelector(s: string): unknown } })
-          .document.querySelector(sel) as {
+        (
+          globalThis as unknown as {
+            document: { querySelector(s: string): unknown }
+          }
+        ).document.querySelector(sel) as {
           getBoundingClientRect(): { left: number; width: number }
         } | null
       const win = globalThis as unknown as {
@@ -783,8 +823,14 @@ test.describe('image compressor workflow', () => {
         layerTransform: win.getComputedStyle(layer).transform,
         clipPath: win.getComputedStyle(clip).clipPath,
         sameBox:
-          Math.abs(clip.getBoundingClientRect().left - stage.getBoundingClientRect().left) < 1 &&
-          Math.abs(clip.getBoundingClientRect().width - stage.getBoundingClientRect().width) < 1,
+          Math.abs(
+            clip.getBoundingClientRect().left -
+              stage.getBoundingClientRect().left,
+          ) < 1 &&
+          Math.abs(
+            clip.getBoundingClientRect().width -
+              stage.getBoundingClientRect().width,
+          ) < 1,
       }
     })
 
@@ -795,7 +841,9 @@ test.describe('image compressor workflow', () => {
     expect(geometry.clipPath).toContain('inset')
   })
 
-  test('steers a high webp quality toward the lossless setting', async ({ page }) => {
+  test('steers a high webp quality toward the lossless setting', async ({
+    page,
+  }) => {
     // Chrome's WebP encoder only goes lossless at exactly 100; 99 loses about
     // as much as 80 and produces a much larger file. Someone reaching for 99
     // wants no loss, so the UI has to say where that actually is.
@@ -806,11 +854,15 @@ test.describe('image compressor workflow', () => {
     await page.locator('#ic-quality').fill('99')
     // Scoped to the panel: the same explanation also appears in the guide below.
     const panel = page.locator('.ic-settings')
-    await expect(panel.getByText('画質はほとんど改善せず', { exact: false })).toBeVisible()
+    await expect(
+      panel.getByText('画質はほとんど改善せず', { exact: false }),
+    ).toBeVisible()
 
     await page.getByRole('button', { name: '100（可逆）にする' }).click()
     await expect(page.locator('#ic-quality')).toHaveValue('100')
-    await expect(panel.getByText('可逆で書き出します', { exact: false })).toBeVisible()
+    await expect(
+      panel.getByText('可逆で書き出します', { exact: false }),
+    ).toBeVisible()
   })
 
   test('resize starts from the image size, and the ratio keeps the pair in step', async ({
@@ -849,7 +901,9 @@ test.describe('image compressor workflow', () => {
 
     // The shared settings deliberately skip it, and the panel says so.
     await page.getByLabel('共通設定').check()
-    await expect(page.getByText('個別調整した1枚には反映されません', { exact: false })).toBeVisible()
+    await expect(
+      page.getByText('個別調整した1枚には反映されません', { exact: false }),
+    ).toBeVisible()
     await page.getByLabel('出力形式').selectOption('webp')
     await page.waitForTimeout(600)
     await expect(page.getByLabel('出力形式')).toHaveValue('jpeg')
@@ -859,7 +913,9 @@ test.describe('image compressor workflow', () => {
     await page.getByRole('button', { name: 'これも変更する' }).click()
     await page.waitForTimeout(600)
     await expect(page.getByLabel('出力形式')).toHaveValue('webp')
-    await expect(page.locator('.ic-thumb').first()).not.toContainText('個別調整')
+    await expect(page.locator('.ic-thumb').first()).not.toContainText(
+      '個別調整',
+    )
   })
 
   test('the whole-batch override reaches downloaded and pinned images', async ({
@@ -877,7 +933,9 @@ test.describe('image compressor workflow', () => {
     page.once('dialog', (d) => void d.accept())
     await page.getByText('その他の操作', { exact: true }).click()
     await page.getByRole('button', { name: /現在の設定を全2枚に適用/ }).click()
-    await expect(page.locator('.ic-thumb').first()).not.toContainText('個別調整')
+    await expect(page.locator('.ic-thumb').first()).not.toContainText(
+      '個別調整',
+    )
   })
 
   test('the content lines up with the site frame', async ({ page }) => {
@@ -886,10 +944,17 @@ test.describe('image compressor workflow', () => {
     await page.setViewportSize({ width: 1600, height: 900 })
     await page.goto('/ja/image-compressor')
     const edges = await page.evaluate(() => {
-      const d = (globalThis as unknown as {
-        document: { querySelector(s: string): { getBoundingClientRect(): { left: number } } }
-      }).document
-      const left = (sel: string) => Math.round(d.querySelector(sel).getBoundingClientRect().left)
+      const d = (
+        globalThis as unknown as {
+          document: {
+            querySelector(s: string): {
+              getBoundingClientRect(): { left: number }
+            }
+          }
+        }
+      ).document
+      const left = (sel: string) =>
+        Math.round(d.querySelector(sel).getBoundingClientRect().left)
       return [left('header a picture'), left('.ic-root h1'), left('footer p')]
     })
     expect(new Set(edges).size).toBe(1)
@@ -903,12 +968,18 @@ test.describe('image compressor workflow', () => {
     await addImages(page, ['a.png'])
     await waitForCompare(page)
     const heights = await page.evaluate(() => {
-      const d = (globalThis as unknown as {
-        document: { querySelectorAll(s: string): ArrayLike<{ getBoundingClientRect(): { height: number } }> }
-      }).document
-      return Array.from(d.querySelectorAll('.ic-zoom .ic-zoom-step, .ic-zoom .ic-btn')).map(
-        (e) => Math.round(e.getBoundingClientRect().height),
-      )
+      const d = (
+        globalThis as unknown as {
+          document: {
+            querySelectorAll(
+              s: string,
+            ): ArrayLike<{ getBoundingClientRect(): { height: number } }>
+          }
+        }
+      ).document
+      return Array.from(
+        d.querySelectorAll('.ic-zoom .ic-zoom-step, .ic-zoom .ic-btn'),
+      ).map((e) => Math.round(e.getBoundingClientRect().height))
     })
     expect(heights.length).toBe(4)
     expect(new Set(heights).size).toBe(1)
@@ -941,7 +1012,9 @@ test.describe('image compressor workflow', () => {
     // Still able to judge and save without leaving.
     await expect(page.locator('.ic-fs-bar')).toBeVisible()
     await expect(
-      page.locator('.ic-fs-bar').getByRole('button', { name: /ダウンロードして/ }),
+      page
+        .locator('.ic-fs-bar')
+        .getByRole('button', { name: /ダウンロードして/ }),
     ).toBeVisible()
 
     // Escape gets out, which is the only exit some users will look for.
@@ -958,9 +1031,13 @@ test.describe('image compressor workflow', () => {
     await addImages(page, ['a.png', 'b.png', 'c.png', 'd.png'])
     await waitForCompare(page)
     const overflow = await page.evaluate(() => {
-      const el = (globalThis as unknown as {
-        document: { documentElement: { scrollWidth: number; clientWidth: number } }
-      }).document.documentElement
+      const el = (
+        globalThis as unknown as {
+          document: {
+            documentElement: { scrollWidth: number; clientWidth: number }
+          }
+        }
+      ).document.documentElement
       return { scroll: el.scrollWidth, client: el.clientWidth }
     })
     expect(overflow.scroll).toBeLessThanOrEqual(overflow.client + 1)
@@ -1030,7 +1107,9 @@ test.describe('image compressor workflow', () => {
   // The invariant the mobile layout broke: laying the settings out beneath the
   // picture left a 254px stage on an 839px screen, smaller than the 285px the
   // same picture gets in the page, so full screen made the picture worse.
-  test('full screen gives the picture more room, not less', async ({ page }) => {
+  test('full screen gives the picture more room, not less', async ({
+    page,
+  }) => {
     await page.goto('/ja/image-compressor')
     await addImages(page, ['a.png'])
     await waitForCompare(page)
@@ -1050,7 +1129,9 @@ test.describe('image compressor workflow', () => {
       await page.getByRole('button', { name: '設定', exact: true }).click()
       await expect(panel).toBeVisible()
       // They slide over the image rather than pushing it out of the way.
-      expect(Math.round((await stage.boundingBox())!.height)).toBe(Math.round(full))
+      expect(Math.round((await stage.boundingBox())!.height)).toBe(
+        Math.round(full),
+      )
       // The sheet's own control: the row's reveal button is underneath it.
       await page.locator('.ic-fs-panel-close').click()
       await expect(panel).toBeHidden()
@@ -1060,12 +1141,16 @@ test.describe('image compressor workflow', () => {
     }
   })
 
-  test('offers every format on a browser that can write them', async ({ page }) => {
+  test('offers every format on a browser that can write them', async ({
+    page,
+  }) => {
     await page.goto('/ja/image-compressor')
     await addImages(page, ['a.png'])
     await waitForCompare(page)
     await expect(page.locator('#ic-format option[value="webp"]')).toBeEnabled()
-    await expect(page.locator('#ic-format option[value="webp"]')).toHaveText('WebP')
+    await expect(page.locator('#ic-format option[value="webp"]')).toHaveText(
+      'WebP',
+    )
   })
 })
 
@@ -1083,8 +1168,10 @@ test.describe('csv encoding fixer workflow', () => {
     mimeType: 'text/csv',
     buffer,
   })
-  const add = (page: Page, files: { name: string; mimeType: string; buffer: Buffer }[]) =>
-    page.locator('input[type="file"]').first().setInputFiles(files)
+  const add = (
+    page: Page,
+    files: { name: string; mimeType: string; buffer: Buffer }[],
+  ) => page.locator('input[type="file"]').first().setInputFiles(files)
 
   test('tells a UTF-8 file it needs only the marker', async ({ page }) => {
     await page.goto('/ja/csv-encoding-fixer')
@@ -1117,7 +1204,9 @@ test.describe('csv encoding fixer workflow', () => {
     await add(page, [csv('utf8.csv', UTF8_NO_BOM)])
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('button', { name: '修復したファイルをダウンロード' }).click(),
+      page
+        .getByRole('button', { name: '修復したファイルをダウンロード' })
+        .click(),
     ])
     expect(download.suggestedFilename()).toBe('utf8_utf8.csv')
     const stream = await download.createReadStream()
@@ -1130,12 +1219,16 @@ test.describe('csv encoding fixer workflow', () => {
     expect([...saved.subarray(3)]).toEqual([...UTF8_NO_BOM])
   })
 
-  test('converts a Shift_JIS file to readable UTF-8 on disk', async ({ page }) => {
+  test('converts a Shift_JIS file to readable UTF-8 on disk', async ({
+    page,
+  }) => {
     await page.goto('/ja/csv-encoding-fixer')
     await add(page, [csv('sjis.csv', SJIS)])
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('button', { name: '修復したファイルをダウンロード' }).click(),
+      page
+        .getByRole('button', { name: '修復したファイルをダウンロード' })
+        .click(),
     ])
     const stream = await download.createReadStream()
     const chunks: Buffer[] = []
@@ -1151,7 +1244,11 @@ test.describe('csv encoding fixer workflow', () => {
     await add(page, [csv('a.csv', UTF8_NO_BOM), csv('b.csv', SJIS)])
     await expect(page.locator('.cef-item')).toHaveCount(2)
     await expect(page.locator('.cef-badge')).toHaveText(['UTF-8', 'Shift_JIS'])
-    await page.locator('.cef-item').first().getByRole('button', { name: '削除' }).click()
+    await page
+      .locator('.cef-item')
+      .first()
+      .getByRole('button', { name: '削除' })
+      .click()
     await expect(page.locator('.cef-item')).toHaveCount(1)
   })
 
@@ -1169,7 +1266,9 @@ test.describe('csv encoding fixer workflow', () => {
     ])
     await expect(page.locator('.cef-badge')).toHaveText('UTF-8')
     await expect(
-      page.getByText('Excelはこの種のファイルを開けないことが多く', { exact: false }),
+      page.getByText('Excelはこの種のファイルを開けないことが多く', {
+        exact: false,
+      }),
     ).toBeVisible()
   })
 
@@ -1178,20 +1277,26 @@ test.describe('csv encoding fixer workflow', () => {
     await add(page, [csv('small.csv', UTF8_NO_BOM)])
     await expect(page.locator('.cef-badge')).toHaveText('UTF-8')
     await expect(
-      page.getByText('Excelはこの種のファイルを開けないことが多く', { exact: false }),
+      page.getByText('Excelはこの種のファイルを開けないことが多く', {
+        exact: false,
+      }),
     ).toHaveCount(0)
   })
 
   test('refuses an empty file and says why', async ({ page }) => {
     await page.goto('/ja/csv-encoding-fixer')
     await add(page, [csv('empty.csv', Buffer.alloc(0))])
-    await expect(page.getByText('このファイルは空です', { exact: false })).toBeVisible()
+    await expect(
+      page.getByText('このファイルは空です', { exact: false }),
+    ).toBeVisible()
     await expect(page.locator('.cef-item')).toHaveCount(0)
   })
 
   test('never makes the page wider than the screen', async ({ page }) => {
     await page.goto('/ja/csv-encoding-fixer')
-    await add(page, [csv('とても長い名前のファイル_売上データ_2026年04月分.csv', SJIS)])
+    await add(page, [
+      csv('とても長い名前のファイル_売上データ_2026年04月分.csv', SJIS),
+    ])
     await expect(page.locator('.cef-item')).toHaveCount(1)
     // Reached through globalThis because this body is compiled with the Node
     // lib, which has no document, even though it runs in the page.

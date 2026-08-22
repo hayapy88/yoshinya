@@ -1,7 +1,12 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { useLocale } from '~/i18n/locale'
 import { track } from '~/lib/analytics'
-import { initialState, sortingReducer, counts, foldersAreValid } from './lib/reducer'
+import {
+  initialState,
+  sortingReducer,
+  counts,
+  foldersAreValid,
+} from './lib/reducer'
 import type { ImageItem, SortingFolder } from './lib/types'
 import { buildZipEntries } from './lib/zip-entries'
 import { createZipBlob } from './lib/zip'
@@ -106,7 +111,10 @@ function ImageSorterTool() {
 
   const requestDeleteFolder = (folder: SortingFolder) => {
     const count = state.images.filter((i) => i.folderId === folder.id).length
-    if (count > 0 && !window.confirm(t.imageSorter.deleteFolderConfirm(folder.name, count))) {
+    if (
+      count > 0 &&
+      !window.confirm(t.imageSorter.deleteFolderConfirm(folder.name, count))
+    ) {
       return
     }
     dispatch({ type: 'remove_folder', folderId: folder.id })
@@ -115,7 +123,10 @@ function ImageSorterTool() {
   const startSorting = () => {
     // Begin at the first unsorted image so returning to setup and back resumes.
     const firstUnsorted = state.images.findIndex((i) => i.folderId === null)
-    dispatch({ type: 'set_index', index: firstUnsorted < 0 ? 0 : firstUnsorted })
+    dispatch({
+      type: 'set_index',
+      index: firstUnsorted < 0 ? 0 : firstUnsorted,
+    })
     setPhase('sorting')
   }
 
@@ -244,7 +255,10 @@ function ImageSorterTool() {
       )}
 
       {phase === 'sorting' && (
-        <section className="is-section" aria-label={t.imageSorterPage.steps.sort}>
+        <section
+          className="is-section"
+          aria-label={t.imageSorterPage.steps.sort}
+        >
           <SortingView
             state={state}
             onSort={handleSort}
@@ -255,7 +269,9 @@ function ImageSorterTool() {
             onUndo={handleUndo}
             onReview={() => setPhase('review')}
             onSkipCurrent={removeImage}
-            onImageError={(imageId) => dispatch({ type: 'mark_error', imageId })}
+            onImageError={(imageId) =>
+              dispatch({ type: 'mark_error', imageId })
+            }
           />
           <div className="is-actions">
             <button
@@ -280,7 +296,11 @@ function ImageSorterTool() {
             zipError={zipError}
           />
           {showUnsortedWarning && (
-            <div className="is-warn" role="alertdialog" aria-label={t.imageSorter.unsortedWarningTitle}>
+            <div
+              className="is-warn"
+              role="alertdialog"
+              aria-label={t.imageSorter.unsortedWarningTitle}
+            >
               <h3>{t.imageSorter.unsortedWarningTitle}</h3>
               <p>{t.imageSorter.unsortedWarning(counts(state).unsorted)}</p>
               {/* The two download choices are the actions of this dialog.

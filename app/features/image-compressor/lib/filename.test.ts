@@ -35,7 +35,10 @@ describe('outputFileName', () => {
 
 describe('resolveDuplicateNames', () => {
   it('leaves unique names alone', () => {
-    expect(resolveDuplicateNames(['a.jpg', 'b.jpg'])).toEqual(['a.jpg', 'b.jpg'])
+    expect(resolveDuplicateNames(['a.jpg', 'b.jpg'])).toEqual([
+      'a.jpg',
+      'b.jpg',
+    ])
   })
 
   it('numbers duplicates from 2, keeping the extension', () => {
@@ -48,7 +51,10 @@ describe('resolveDuplicateNames', () => {
 
   it('treats names differing only in case as colliding', () => {
     // They would collide in a ZIP and on most file systems.
-    expect(resolveDuplicateNames(['A.jpg', 'a.jpg'])).toEqual(['A.jpg', 'a-2.jpg'])
+    expect(resolveDuplicateNames(['A.jpg', 'a.jpg'])).toEqual([
+      'A.jpg',
+      'a-2.jpg',
+    ])
   })
 
   it('handles a collision created by converting two formats to one', () => {

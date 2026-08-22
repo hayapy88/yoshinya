@@ -65,7 +65,11 @@ export function FolderManager({
         })}
       </div>
       <div style={{ marginTop: '0.75rem' }}>
-        <button type="button" className="is-btn is-btn-secondary" onClick={onAdd}>
+        <button
+          type="button"
+          className="is-btn is-btn-secondary"
+          onClick={onAdd}
+        >
           ＋ {t.imageSorter.addFolder}
         </button>
       </div>

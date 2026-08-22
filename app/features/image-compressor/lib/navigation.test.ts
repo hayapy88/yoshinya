@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { bulkTargetIds, matchesFilter, nextUndownloadedIndex } from './navigation'
-import { DEFAULT_SETTINGS, type CompressionSettings, type ImageItem } from './types'
+import {
+  bulkTargetIds,
+  matchesFilter,
+  nextUndownloadedIndex,
+} from './navigation'
+import {
+  DEFAULT_SETTINGS,
+  type CompressionSettings,
+  type ImageItem,
+} from './types'
 
 const common: CompressionSettings = { ...DEFAULT_SETTINGS }
 
@@ -42,12 +50,19 @@ describe('nextUndownloadedIndex', () => {
   })
 
   it('wraps to the start so a user who jumped around still finishes', () => {
-    const items = [item('a'), item('b', { downloaded: true }), item('c', { downloaded: true })]
+    const items = [
+      item('a'),
+      item('b', { downloaded: true }),
+      item('c', { downloaded: true }),
+    ]
     expect(nextUndownloadedIndex(items, 1)).toBe(0)
   })
 
   it('returns -1 once everything is done', () => {
-    const items = [item('a', { downloaded: true }), item('b', { downloaded: true })]
+    const items = [
+      item('a', { downloaded: true }),
+      item('b', { downloaded: true }),
+    ]
     expect(nextUndownloadedIndex(items, 0)).toBe(-1)
   })
 
@@ -96,11 +111,7 @@ describe('bulkTargetIds', () => {
   })
 
   it('excludes a png source kept in its original format', () => {
-    const items = [
-      item('a'),
-      item('b', { sourceType: 'image/png' }),
-      item('c'),
-    ]
+    const items = [item('a'), item('b', { sourceType: 'image/png' }), item('c')]
     expect(bulkTargetIds(items, 0, common, 'quality')).toEqual(['c'])
   })
 
@@ -124,7 +135,10 @@ describe('matchesFilter', () => {
     const plain = item('a')
     const done = item('b', { downloaded: true })
     const custom = item('c', { settingsOverride: { quality: 50 } })
-    const failed = item('d', { processingState: 'error', errorCode: 'decode_failed' })
+    const failed = item('d', {
+      processingState: 'error',
+      errorCode: 'decode_failed',
+    })
 
     expect(matchesFilter(plain, 'not-downloaded')).toBe(true)
     expect(matchesFilter(done, 'not-downloaded')).toBe(false)
@@ -139,7 +153,10 @@ describe('matchesFilter', () => {
   })
 
   it('counts a downloaded image that was then customised as both', () => {
-    const both = item('e', { downloaded: true, settingsOverride: { quality: 40 } })
+    const both = item('e', {
+      downloaded: true,
+      settingsOverride: { quality: 40 },
+    })
     expect(matchesFilter(both, 'downloaded')).toBe(true)
     expect(matchesFilter(both, 'customized')).toBe(true)
   })

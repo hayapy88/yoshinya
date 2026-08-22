@@ -128,7 +128,10 @@ export function SortingView({
         onWheel={(e) => {
           e.preventDefault()
           setScale((s) =>
-            Math.min(ZOOM_MAX, Math.max(1, s - Math.sign(e.deltaY) * ZOOM_STEP)),
+            Math.min(
+              ZOOM_MAX,
+              Math.max(1, s - Math.sign(e.deltaY) * ZOOM_STEP),
+            ),
           )
         }}
         onPointerDown={(e) => {

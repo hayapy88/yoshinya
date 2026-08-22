@@ -4,11 +4,7 @@
 // bytes throughout, which is also why a fix cannot corrupt the data.
 
 export type DetectedEncoding =
-  | 'utf-8'
-  | 'utf-16le'
-  | 'utf-16be'
-  | 'shift_jis'
-  | 'euc-jp'
+  'utf-8' | 'utf-16le' | 'utf-16be' | 'shift_jis' | 'euc-jp'
 
 export const UTF8_BOM = [0xef, 0xbb, 0xbf] as const
 
@@ -110,7 +106,10 @@ export function detectEncoding(bytes: Uint8Array): DetectedEncoding {
   return chooseLegacy(bytes)
 }
 
-export function decodeText(bytes: Uint8Array, encoding: DetectedEncoding): string {
+export function decodeText(
+  bytes: Uint8Array,
+  encoding: DetectedEncoding,
+): string {
   // TextDecoder drops a leading BOM itself for both UTF-8 and UTF-16.
   return new TextDecoder(encoding).decode(bytes)
 }
@@ -193,8 +192,7 @@ export function excelRisk(bytes: Uint8Array): ExcelRisk {
     longest = bytes.length - start
   }
   return {
-    heavy:
-      bytes.length > EXCEL_RISK.bytes && longest > EXCEL_RISK.lineBytes,
+    heavy: bytes.length > EXCEL_RISK.bytes && longest > EXCEL_RISK.lineBytes,
     sizeBytes: bytes.length,
     longestLineBytes: longest,
   }

@@ -3,17 +3,17 @@
  * https://developers.cloudflare.com/workers/wrangler/configuration/
  */
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "yoshinya",
-	"compatibility_date": "2026-07-14",
-	"compatibility_flags": ["nodejs_compat"],
-	"main": "./workers/app.ts",
-	"observability": {
-		"enabled": true
-	},
-	"upload_source_maps": true,
-	"routes": [
-		{ "pattern": "yoshinya.com", "custom_domain": true },
-		{ "pattern": "www.yoshinya.com", "custom_domain": true }
-	]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yoshinya",
+  "compatibility_date": "2026-07-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./workers/app.ts",
+  "observability": {
+    "enabled": true,
+  },
+  "upload_source_maps": true,
+  "routes": [
+    { "pattern": "yoshinya.com", "custom_domain": true },
+    { "pattern": "www.yoshinya.com", "custom_domain": true },
+  ],
 }

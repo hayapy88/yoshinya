@@ -31,7 +31,10 @@ const item = (id: string, over: Partial<PdfItem> = {}): PdfItem => {
   }
 }
 
-function renderBatch(items: PdfItem[], props: Partial<Parameters<typeof BatchActions>[0]> = {}) {
+function renderBatch(
+  items: PdfItem[],
+  props: Partial<Parameters<typeof BatchActions>[0]> = {},
+) {
   const onApply = vi.fn()
   render(
     <LocaleContext.Provider value={{ locale: 'en', t: en }}>
@@ -72,7 +75,11 @@ describe('BatchActions', () => {
   it('excludes files that failed to load from the count', () => {
     renderBatch([
       item('a'),
-      item('b', { status: 'error', errorCode: 'corrupted', editedMetadata: undefined }),
+      item('b', {
+        status: 'error',
+        errorCode: 'corrupted',
+        editedMetadata: undefined,
+      }),
     ])
     expect(
       screen.getByRole('button', { name: 'Apply to 1 file' }),
@@ -81,7 +88,11 @@ describe('BatchActions', () => {
 
   it('disables apply when nothing would change', () => {
     renderBatch([
-      item('a', { status: 'error', errorCode: 'corrupted', editedMetadata: undefined }),
+      item('a', {
+        status: 'error',
+        errorCode: 'corrupted',
+        editedMetadata: undefined,
+      }),
     ])
     expect(screen.getByRole('button', { name: /Apply to/ })).toBeDisabled()
   })

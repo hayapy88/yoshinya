@@ -28,7 +28,9 @@ export function buildZipEntries(
     .sort((a, b) => a.order - b.order)
     .map((folder) => ({
       name: folder.name,
-      items: images.filter((image) => image.folderId === folder.id && !image.error),
+      items: images.filter(
+        (image) => image.folderId === folder.id && !image.error,
+      ),
     }))
 
   if (options.includeUnsorted) {

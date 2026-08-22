@@ -1,0 +1,13 @@
+# Generated, not written: reformatting these produces diffs that reappear the
+# next time the generator runs.
+.react-router
+build
+dist
+worker-configuration.d.ts
+playwright-report
+test-results
+package-lock.json
+
+# Prose, not code: where the lines break is the author's decision, and
+# reflowing it produces diffs that say nothing about the writing.
+*.md

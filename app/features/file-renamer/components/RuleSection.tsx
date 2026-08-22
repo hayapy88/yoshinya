@@ -46,11 +46,19 @@ const PALETTE_KINDS: TokenKind[] = [
   'dimensions',
 ]
 
-const DATE_FORMATS: DateFormat[] = ['yyyy-mm-dd', 'yyyymmdd', 'yyyy-mm', 'yyyymm']
+const DATE_FORMATS: DateFormat[] = [
+  'yyyy-mm-dd',
+  'yyyymmdd',
+  'yyyy-mm',
+  'yyyymm',
+]
 const TIME_FORMATS: TimeFormat[] = ['hh-mm-ss', 'hh-mm']
 const DIMENSIONS_FORMATS: DimensionsFormat[] = ['wxh', 'w', 'h']
 
-const SEPARATOR_CHARS: { value: string; labelKey: 'underscore' | 'hyphen' | 'dot' }[] = [
+const SEPARATOR_CHARS: {
+  value: string
+  labelKey: 'underscore' | 'hyphen' | 'dot'
+}[] = [
   { value: '_', labelKey: 'underscore' },
   { value: '-', labelKey: 'hyphen' },
   { value: '.', labelKey: 'dot' },
@@ -89,9 +97,21 @@ function createToken(kind: TokenKind): RenameToken {
     case 'separator':
       return { id, kind, char: '_' }
     case 'date':
-      return { id, kind, format: 'yyyy-mm-dd', source: 'fixed', fixedDate: todayISO() }
+      return {
+        id,
+        kind,
+        format: 'yyyy-mm-dd',
+        source: 'fixed',
+        fixedDate: todayISO(),
+      }
     case 'time':
-      return { id, kind, format: 'hh-mm', source: 'fixed', fixedTime: currentTime() }
+      return {
+        id,
+        kind,
+        format: 'hh-mm',
+        source: 'fixed',
+        fixedTime: currentTime(),
+      }
     case 'index':
       return { id, kind, style: { type: 'numeric', padding: 2 }, start: 1 }
     case 'dimensions':
@@ -99,7 +119,9 @@ function createToken(kind: TokenKind): RenameToken {
   }
 }
 
-function indexStyleValue(style: IndexStyle): keyof Dictionary['rule']['indexStyles'] {
+function indexStyleValue(
+  style: IndexStyle,
+): keyof Dictionary['rule']['indexStyles'] {
   if (style.type === 'numeric') {
     return `num${style.padding}`
   }
@@ -125,7 +147,10 @@ function dimensionsSample(format: DimensionsFormat): string {
 }
 
 // Tokens of a kind are numbered by their order in the rule (Text 1, Text 2, ...).
-function kindNumbers(tokens: RenameToken[], kind: TokenKind): Map<string, number> {
+function kindNumbers(
+  tokens: RenameToken[],
+  kind: TokenKind,
+): Map<string, number> {
   const numbers = new Map<string, number>()
   let n = 0
   for (const token of tokens) {
@@ -414,8 +439,14 @@ function SortableRuleToken({
   onRemove: (id: string) => void
 }) {
   const { t } = useLocale()
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: token.id, data: { from: 'rule' } })
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: token.id, data: { from: 'rule' } })
   const label = tokenChipLabel(token, t, textNumber)
 
   return (
@@ -522,7 +553,9 @@ function TokenSettings({
                   type="radio"
                   name={`date-source-${token.id}`}
                   checked={token.source === 'fileModified'}
-                  onChange={() => onUpdate(token.id, { source: 'fileModified' })}
+                  onChange={() =>
+                    onUpdate(token.id, { source: 'fileModified' })
+                  }
                 />
                 {t.rule.useFileModified}
               </label>
@@ -546,7 +579,9 @@ function TokenSettings({
                 type="date"
                 aria-label={t.rule.chooseDate}
                 value={token.fixedDate ?? ''}
-                onChange={(e) => onUpdate(token.id, { fixedDate: e.target.value })}
+                onChange={(e) =>
+                  onUpdate(token.id, { fixedDate: e.target.value })
+                }
               />
             )}
           </div>
@@ -582,7 +617,9 @@ function TokenSettings({
                   type="radio"
                   name={`time-source-${token.id}`}
                   checked={token.source === 'fileModified'}
-                  onChange={() => onUpdate(token.id, { source: 'fileModified' })}
+                  onChange={() =>
+                    onUpdate(token.id, { source: 'fileModified' })
+                  }
                 />
                 {t.rule.useFileModified}
               </label>
@@ -607,7 +644,9 @@ function TokenSettings({
                 aria-label={t.rule.chooseTime}
                 step={token.format === 'hh-mm-ss' ? 1 : undefined}
                 value={token.fixedTime ?? ''}
-                onChange={(e) => onUpdate(token.id, { fixedTime: e.target.value })}
+                onChange={(e) =>
+                  onUpdate(token.id, { fixedTime: e.target.value })
+                }
               />
             )}
           </div>
@@ -623,7 +662,9 @@ function TokenSettings({
             id={`index-${token.id}`}
             value={indexStyleValue(token.style)}
             onChange={(e) => {
-              const chosen = INDEX_STYLES.find((s) => s.value === e.target.value)
+              const chosen = INDEX_STYLES.find(
+                (s) => s.value === e.target.value,
+              )
               if (chosen) {
                 onUpdate(token.id, { style: chosen.style })
               }

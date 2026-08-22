@@ -15,7 +15,11 @@ export type CsvItem = {
   risk: ExcelRisk
 }
 
-export type RejectedFile = { id: string; name: string; errorCode: FileErrorCode }
+export type RejectedFile = {
+  id: string
+  name: string
+  errorCode: FileErrorCode
+}
 
 /**
  * Splits an incoming batch into what can be checked and what cannot, counting
@@ -32,7 +36,11 @@ export function classify(
 
   for (const file of files) {
     if (count >= LIMITS.maxFiles) {
-      rejected.push({ id: newId(), name: file.name, errorCode: 'too_many_files' })
+      rejected.push({
+        id: newId(),
+        name: file.name,
+        errorCode: 'too_many_files',
+      })
       continue
     }
     if (file.size === 0) {
@@ -40,7 +48,11 @@ export function classify(
       continue
     }
     if (file.size > LIMITS.maxBytes) {
-      rejected.push({ id: newId(), name: file.name, errorCode: 'file_too_large' })
+      rejected.push({
+        id: newId(),
+        name: file.name,
+        errorCode: 'file_too_large',
+      })
       continue
     }
     accepted.push(file)

@@ -44,7 +44,10 @@ async function canEncode(mimeType: string): Promise<boolean> {
 export async function probeEncodableFormats(): Promise<Set<EncodableFormat>> {
   const available = new Set<EncodableFormat>([ALWAYS_AVAILABLE])
   const results = await Promise.all(
-    PROBED.map(async (format) => [format, await canEncode(mimeForFormat(format))] as const),
+    PROBED.map(
+      async (format) =>
+        [format, await canEncode(mimeForFormat(format))] as const,
+    ),
   )
   for (const [format, ok] of results) {
     if (ok) {

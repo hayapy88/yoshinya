@@ -23,7 +23,11 @@ describe('classify', () => {
   })
 
   it('rejects a file over the size limit', () => {
-    const { rejected } = classify([file('a.csv', LIMITS.maxBytes + 1)], 0, newId)
+    const { rejected } = classify(
+      [file('a.csv', LIMITS.maxBytes + 1)],
+      0,
+      newId,
+    )
     expect(rejected[0].errorCode).toBe('file_too_large')
   })
 

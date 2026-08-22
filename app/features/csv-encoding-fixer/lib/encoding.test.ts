@@ -58,8 +58,12 @@ describe('detectEncoding', () => {
   })
 
   it('reads the UTF-16 markers', () => {
-    expect(detectEncoding(Uint8Array.from([0xff, 0xfe, 0x42, 0x00]))).toBe('utf-16le')
-    expect(detectEncoding(Uint8Array.from([0xfe, 0xff, 0x00, 0x42]))).toBe('utf-16be')
+    expect(detectEncoding(Uint8Array.from([0xff, 0xfe, 0x42, 0x00]))).toBe(
+      'utf-16le',
+    )
+    expect(detectEncoding(Uint8Array.from([0xfe, 0xff, 0x00, 0x42]))).toBe(
+      'utf-16be',
+    )
   })
 
   it('treats plain ASCII as UTF-8', () => {

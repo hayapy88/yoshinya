@@ -46,8 +46,10 @@ export class EncodeQueue {
   private ensureWorkers(): void {
     while (this.workers.length < this.size) {
       const worker = this.createWorker()
-      worker.addEventListener('message', (event: MessageEvent<EncodeResponse>) =>
-        this.handleMessage(worker, event.data),
+      worker.addEventListener(
+        'message',
+        (event: MessageEvent<EncodeResponse>) =>
+          this.handleMessage(worker, event.data),
       )
       this.workers.push(worker)
       this.idle.push(worker)

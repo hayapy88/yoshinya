@@ -5,42 +5,42 @@ import type {
   RenameResult,
   RenameToken,
   TimeFormat,
-} from './types';
+} from './types'
 
 function pad2(n: number): string {
-  return String(n).padStart(2, '0');
+  return String(n).padStart(2, '0')
 }
 
 export function formatDate(date: Date, format: DateFormat): string {
-  const yyyy = String(date.getFullYear());
-  const mm = pad2(date.getMonth() + 1);
-  const dd = pad2(date.getDate());
+  const yyyy = String(date.getFullYear())
+  const mm = pad2(date.getMonth() + 1)
+  const dd = pad2(date.getDate())
   switch (format) {
     case 'yyyy-mm-dd':
-      return `${yyyy}-${mm}-${dd}`;
+      return `${yyyy}-${mm}-${dd}`
     case 'yyyymmdd':
-      return `${yyyy}${mm}${dd}`;
+      return `${yyyy}${mm}${dd}`
     case 'yyyy-mm':
-      return `${yyyy}-${mm}`;
+      return `${yyyy}-${mm}`
     case 'yyyymm':
-      return `${yyyy}${mm}`;
+      return `${yyyy}${mm}`
   }
 }
 
 export function formatTime(date: Date, format: TimeFormat): string {
-  const hh = pad2(date.getHours());
-  const mm = pad2(date.getMinutes());
+  const hh = pad2(date.getHours())
+  const mm = pad2(date.getMinutes())
   switch (format) {
     case 'hh-mm-ss':
-      return `${hh}-${mm}-${pad2(date.getSeconds())}`;
+      return `${hh}-${mm}-${pad2(date.getSeconds())}`
     case 'hh-mm':
-      return `${hh}-${mm}`;
+      return `${hh}-${mm}`
   }
 }
 
 export function formatNumericIndex(n: number, padding: 1 | 2 | 3): string {
   // padStart never truncates, so overflow (e.g. padding=2, n=100) stays "100".
-  return String(n).padStart(padding, '0');
+  return String(n).padStart(padding, '0')
 }
 
 export function formatDimensions(
@@ -51,15 +51,15 @@ export function formatDimensions(
   // Non-image files (or images whose size hasn't loaded yet) have no
   // dimensions, so the token contributes nothing to the name.
   if (width === undefined || height === undefined) {
-    return '';
+    return ''
   }
   switch (format) {
     case 'wxh':
-      return `${width}x${height}`;
+      return `${width}x${height}`
     case 'w':
-      return `${width}`;
+      return `${width}`
     case 'h':
-      return `${height}`;
+      return `${height}`
   }
 }
 
@@ -68,49 +68,49 @@ export function formatAlphaIndex(
   letterCase: 'lower' | 'upper',
 ): string {
   // Bijective base-26, same as Excel column names: 1→a, 26→z, 27→aa, ...
-  let result = '';
-  let rest = n;
+  let result = ''
+  let rest = n
   while (rest > 0) {
-    rest -= 1;
-    result = String.fromCharCode(97 + (rest % 26)) + result;
-    rest = Math.floor(rest / 26);
+    rest -= 1
+    result = String.fromCharCode(97 + (rest % 26)) + result
+    rest = Math.floor(rest / 26)
   }
-  return letterCase === 'upper' ? result.toUpperCase() : result;
+  return letterCase === 'upper' ? result.toUpperCase() : result
 }
 
 export function splitExtension(fileName: string): {
-  base: string;
-  ext: string;
+  base: string
+  ext: string
 } {
-  const dot = fileName.lastIndexOf('.');
+  const dot = fileName.lastIndexOf('.')
   // dot === 0 is a dotfile like ".gitignore": the whole name is the base.
   if (dot <= 0) {
-    return { base: fileName, ext: '' };
+    return { base: fileName, ext: '' }
   }
-  return { base: fileName.slice(0, dot), ext: fileName.slice(dot) };
+  return { base: fileName.slice(0, dot), ext: fileName.slice(dot) }
 }
 
 // Parses 'yyyy-mm-dd' as a local date (new Date(string) would parse it as UTC
 // and could shift the day depending on the time zone).
 function parseFixedDate(fixedDate: string): Date {
-  const [y, m, d] = fixedDate.split('-').map(Number);
-  return new Date(y, m - 1, d);
+  const [y, m, d] = fixedDate.split('-').map(Number)
+  return new Date(y, m - 1, d)
 }
 
 // Parses 'hh:mm' or 'hh:mm:ss'; only the time-of-day fields matter.
 function parseFixedTime(fixedTime: string): Date {
-  const [h, m, s] = fixedTime.split(':').map(Number);
-  return new Date(1970, 0, 1, h, m, s ?? 0);
+  const [h, m, s] = fixedTime.split(':').map(Number)
+  return new Date(1970, 0, 1, h, m, s ?? 0)
 }
 
 export function buildFileName(
   tokens: RenameToken[],
   context: {
-    index: number;
-    fileDate: Date;
-    now: Date;
-    width?: number;
-    height?: number;
+    index: number
+    fileDate: Date
+    now: Date
+    width?: number
+    height?: number
   },
 ): string {
   // context.index is the file's 0-based position in the list.
@@ -118,17 +118,17 @@ export function buildFileName(
     .map((token) => {
       switch (token.kind) {
         case 'text':
-          return token.value;
+          return token.value
         case 'separator':
-          return token.char;
+          return token.char
         case 'date': {
           const date =
             token.source === 'fileModified'
               ? context.fileDate
               : token.fixedDate
                 ? parseFixedDate(token.fixedDate)
-                : context.now;
-          return formatDate(date, token.format);
+                : context.now
+          return formatDate(date, token.format)
         }
         case 'time': {
           const time =
@@ -136,20 +136,20 @@ export function buildFileName(
               ? context.fileDate
               : token.fixedTime
                 ? parseFixedTime(token.fixedTime)
-                : context.now;
-          return formatTime(time, token.format);
+                : context.now
+          return formatTime(time, token.format)
         }
         case 'index': {
-          const n = token.start + context.index;
+          const n = token.start + context.index
           return token.style.type === 'numeric'
             ? formatNumericIndex(n, token.style.padding)
-            : formatAlphaIndex(n, token.style.letterCase);
+            : formatAlphaIndex(n, token.style.letterCase)
         }
         case 'dimensions':
-          return formatDimensions(token.format, context.width, context.height);
+          return formatDimensions(token.format, context.width, context.height)
       }
     })
-    .join('');
+    .join('')
 }
 
 export function applyRename(
@@ -158,24 +158,24 @@ export function applyRename(
   options: { now: Date },
 ): RenameResult[] {
   const named = inputs.map((input, index) => {
-    const { ext } = splitExtension(input.originalName);
+    const { ext } = splitExtension(input.originalName)
     const base = buildFileName(tokens, {
       index,
       fileDate: new Date(input.lastModified),
       now: options.now,
       width: input.width,
       height: input.height,
-    });
-    return { originalName: input.originalName, newName: base + ext };
-  });
+    })
+    return { originalName: input.originalName, newName: base + ext }
+  })
 
-  const counts = new Map<string, number>();
+  const counts = new Map<string, number>()
   for (const { newName } of named) {
-    counts.set(newName, (counts.get(newName) ?? 0) + 1);
+    counts.set(newName, (counts.get(newName) ?? 0) + 1)
   }
 
   return named.map((result) => ({
     ...result,
     isDuplicate: (counts.get(result.newName) ?? 0) > 1,
-  }));
+  }))
 }

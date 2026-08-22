@@ -46,7 +46,11 @@ describe('withField', () => {
 
   it('returns to ready when edited back to the original value', () => {
     const original = metadata({ title: 'Original' })
-    const edited = withField(item({ originalMetadata: original }), 'title', 'Changed')
+    const edited = withField(
+      item({ originalMetadata: original }),
+      'title',
+      'Changed',
+    )
     expect(withField(edited, 'title', 'Original').status).toBe('ready')
   })
 

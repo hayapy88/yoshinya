@@ -55,11 +55,17 @@ export function CompareView({
   }, [beforeUrl, fit])
 
   const zoomBy = useCallback((factor: number) => {
-    setScale((current) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, current * factor)))
+    setScale((current) =>
+      Math.min(MAX_SCALE, Math.max(MIN_SCALE, current * factor)),
+    )
   }, [])
 
   // Dragging: the divider when grabbing the handle, otherwise panning.
-  const dragState = useRef<{ mode: 'divider' | 'pan'; start: Point; origin: Point } | null>(null)
+  const dragState = useRef<{
+    mode: 'divider' | 'pan'
+    start: Point
+    origin: Point
+  } | null>(null)
 
   const moveDivider = (clientX: number) => {
     const rect = stageRef.current?.getBoundingClientRect()
@@ -101,7 +107,9 @@ export function CompareView({
 
   const endDrag = (event: React.PointerEvent) => {
     dragState.current = null
-    ;(event.currentTarget as HTMLElement).releasePointerCapture?.(event.pointerId)
+    ;(event.currentTarget as HTMLElement).releasePointerCapture?.(
+      event.pointerId,
+    )
   }
 
   // Global shortcuts, suppressed while a form control has focus so typing a
@@ -179,7 +187,10 @@ export function CompareView({
           // the image while the divider stays put — the two drift apart the
           // moment you zoom. Clipping the outer box keeps the boundary in stage
           // coordinates, where the divider also lives.
-          <div className="ic-clip" style={{ clipPath: `inset(0 0 0 ${reveal}%)` }}>
+          <div
+            className="ic-clip"
+            style={{ clipPath: `inset(0 0 0 ${reveal}%)` }}
+          >
             <div className="ic-layer" style={{ transform }}>
               <img src={afterUrl} alt="" draggable={false} />
             </div>
@@ -187,8 +198,12 @@ export function CompareView({
         )}
 
         {/* Labelled in words, not by colour alone. */}
-        <span className="ic-side ic-side-left">{t.imageCompressor.beforeLabel}</span>
-        <span className="ic-side ic-side-right">{t.imageCompressor.afterLabel}</span>
+        <span className="ic-side ic-side-left">
+          {t.imageCompressor.beforeLabel}
+        </span>
+        <span className="ic-side ic-side-right">
+          {t.imageCompressor.afterLabel}
+        </span>
 
         {afterUrl && !peeking && (
           <div
@@ -214,7 +229,11 @@ export function CompareView({
               }
             }}
           >
-            <span className="ic-divider-grip" data-role="divider" aria-hidden="true" />
+            <span
+              className="ic-divider-grip"
+              data-role="divider"
+              aria-hidden="true"
+            />
           </div>
         )}
 
@@ -283,7 +302,9 @@ export function CompareView({
           </button>
         )}
         <span className="ic-hint">
-          {isFullscreen ? t.imageCompressor.fullscreenHint : t.imageCompressor.compareHint}
+          {isFullscreen
+            ? t.imageCompressor.fullscreenHint
+            : t.imageCompressor.compareHint}
         </span>
       </div>
     </div>

@@ -40,7 +40,10 @@ export function foldersAreValid(state: SortingState): boolean {
 
 // The folder's 1-based number (position in display order). Only 1–9 are bound to
 // number keys; the rest are reachable by clicking their button.
-export function folderNumber(folders: SortingFolder[], folderId: string): number {
+export function folderNumber(
+  folders: SortingFolder[],
+  folderId: string,
+): number {
   const ordered = [...folders].sort((a, b) => a.order - b.order)
   return ordered.findIndex((folder) => folder.id === folderId) + 1
 }
@@ -94,7 +97,9 @@ export function sortingReducer(
       const images = state.images.filter((i) => i.id !== action.imageId)
       // Keep pointing at roughly the same spot after removal.
       const currentIndex = clampIndex(
-        index <= state.currentIndex ? state.currentIndex - 1 : state.currentIndex,
+        index <= state.currentIndex
+          ? state.currentIndex - 1
+          : state.currentIndex,
         images.length,
       )
       return {
@@ -117,7 +122,8 @@ export function sortingReducer(
 
     case 'add_folder': {
       const order =
-        state.folders.reduce((max, folder) => Math.max(max, folder.order), -1) + 1
+        state.folders.reduce((max, folder) => Math.max(max, folder.order), -1) +
+        1
       const folder: SortingFolder = { id: action.id, name: action.name, order }
       return { ...state, folders: [...state.folders, folder] }
     }
@@ -126,7 +132,9 @@ export function sortingReducer(
       return {
         ...state,
         folders: state.folders.map((folder) =>
-          folder.id === action.folderId ? { ...folder, name: action.name } : folder,
+          folder.id === action.folderId
+            ? { ...folder, name: action.name }
+            : folder,
         ),
       }
     }
@@ -137,7 +145,9 @@ export function sortingReducer(
         .map((folder, index) => ({ ...folder, order: index }))
       // Images in the removed folder return to unsorted; they are never deleted.
       const images = state.images.map((image) =>
-        image.folderId === action.folderId ? { ...image, folderId: null } : image,
+        image.folderId === action.folderId
+          ? { ...image, folderId: null }
+          : image,
       )
       return { ...state, folders, images }
     }
@@ -173,7 +183,9 @@ export function sortingReducer(
     case 'move_images': {
       const ids = new Set(action.imageIds)
       const changes = state.images
-        .filter((image) => ids.has(image.id) && image.folderId !== action.folderId)
+        .filter(
+          (image) => ids.has(image.id) && image.folderId !== action.folderId,
+        )
         .map((image) => ({ imageId: image.id, from: image.folderId }))
       if (changes.length === 0) {
         return state

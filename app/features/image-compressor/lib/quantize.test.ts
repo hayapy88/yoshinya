@@ -48,13 +48,25 @@ describe('buildPalette', () => {
 
 describe('quantize', () => {
   it('returns one index per pixel', () => {
-    const result = quantize(px([255, 0, 0, 255], [0, 0, 255, 255]), 2, 1, 2, false)
+    const result = quantize(
+      px([255, 0, 0, 255], [0, 0, 255, 255]),
+      2,
+      1,
+      2,
+      false,
+    )
     expect(result.indices).toHaveLength(2)
     expect(result.palette.count).toBe(2)
   })
 
   it('maps each pixel to its own colour when the palette is exact', () => {
-    const result = quantize(px([255, 0, 0, 255], [0, 0, 255, 255]), 2, 1, 2, false)
+    const result = quantize(
+      px([255, 0, 0, 255], [0, 0, 255, 255]),
+      2,
+      1,
+      2,
+      false,
+    )
     const [a, b] = result.indices
     expect(a).not.toBe(b)
     expect(result.palette.colors[a * 4]).toBe(255)
@@ -62,8 +74,16 @@ describe('quantize', () => {
   })
 
   it('keeps transparency rather than turning it opaque', () => {
-    const result = quantize(px([255, 0, 0, 0], [255, 0, 0, 255]), 2, 1, 2, false)
-    const alphas = [...result.indices].map((i) => result.palette.colors[i * 4 + 3])
+    const result = quantize(
+      px([255, 0, 0, 0], [255, 0, 0, 255]),
+      2,
+      1,
+      2,
+      false,
+    )
+    const alphas = [...result.indices].map(
+      (i) => result.palette.colors[i * 4 + 3],
+    )
     expect(alphas).toContain(0)
     expect(alphas).toContain(255)
   })
@@ -79,7 +99,10 @@ describe('quantize', () => {
     const plain = quantize(pixels, width, 1, 2, false)
     const dithered = quantize(pixels, width, 1, 2, true)
     const runs = (indices: Uint8Array) =>
-      indices.reduce((n, v, i) => (i > 0 && v !== indices[i - 1] ? n + 1 : n), 0)
+      indices.reduce(
+        (n, v, i) => (i > 0 && v !== indices[i - 1] ? n + 1 : n),
+        0,
+      )
     expect(runs(dithered.indices)).toBeGreaterThan(runs(plain.indices))
   })
 
@@ -90,8 +113,12 @@ describe('quantize', () => {
 })
 
 describe('encodeIndexedPng', () => {
-  const header = async (indices: Uint8Array, palette: Parameters<typeof encodeIndexedPng>[1], w: number, h: number) =>
-    encodeIndexedPng(indices, palette, w, h)
+  const header = async (
+    indices: Uint8Array,
+    palette: Parameters<typeof encodeIndexedPng>[1],
+    w: number,
+    h: number,
+  ) => encodeIndexedPng(indices, palette, w, h)
 
   it('writes a PNG signature and an indexed header', async () => {
     const palette = { colors: Uint8Array.from([255, 0, 0, 255]), count: 1 }
@@ -124,7 +151,10 @@ describe('encodeIndexedPng', () => {
   })
 
   it('writes a transparency chunk when an entry is not opaque', async () => {
-    const palette = { colors: Uint8Array.from([1, 2, 3, 0, 4, 5, 6, 255]), count: 2 }
+    const palette = {
+      colors: Uint8Array.from([1, 2, 3, 0, 4, 5, 6, 255]),
+      count: 2,
+    }
     const png = await header(new Uint8Array([0, 1]), palette, 2, 1)
     expect(new TextDecoder('latin1').decode(png)).toContain('tRNS')
   })

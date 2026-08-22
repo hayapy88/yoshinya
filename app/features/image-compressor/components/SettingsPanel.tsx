@@ -113,13 +113,22 @@ export function SettingsPanel({
       </fieldset>
 
       {scope === 'common' && adjustedCount > 0 && (
-        <p className="ic-hint">{t.imageCompressor.scopeCommonNote(adjustedCount)}</p>
+        <p className="ic-hint">
+          {t.imageCompressor.scopeCommonNote(adjustedCount)}
+        </p>
       )}
 
       {hasOverride && (
         <p className="ic-override-note">
-          <span className="ic-badge ic-badge-custom">● {t.imageCompressor.stateCustomized}</span>
-          <button type="button" className="ic-linkbtn" onClick={onResetToCommon} disabled={disabled}>
+          <span className="ic-badge ic-badge-custom">
+            ● {t.imageCompressor.stateCustomized}
+          </span>
+          <button
+            type="button"
+            className="ic-linkbtn"
+            onClick={onResetToCommon}
+            disabled={disabled}
+          >
             {t.imageCompressor.resetToCommon}
           </button>
         </p>
@@ -131,12 +140,16 @@ export function SettingsPanel({
           id="ic-format"
           value={settings.outputFormat}
           disabled={disabled}
-          onChange={(e) => onChange({ outputFormat: e.target.value as OutputFormat })}
+          onChange={(e) =>
+            onChange({ outputFormat: e.target.value as OutputFormat })
+          }
         >
           {FORMATS.map((value) => (
             <option key={value} value={value} disabled={isUnavailable(value)}>
               {isUnavailable(value)
-                ? t.imageCompressor.formatUnavailable(t.imageCompressor.formats[value])
+                ? t.imageCompressor.formatUnavailable(
+                    t.imageCompressor.formats[value],
+                  )
                 : t.imageCompressor.formats[value]}
             </option>
           ))}
@@ -191,20 +204,24 @@ export function SettingsPanel({
               high number is trying to avoid loss, so say where that actually
               is rather than letting them land in the worst spot. */}
           {format === 'webp' && settings.quality === 100 && (
-            <p className="ic-hint ic-lossless">{t.imageCompressor.losslessAt100}</p>
-          )}
-          {format === 'webp' && settings.quality >= 90 && settings.quality < 100 && (
-            <p className="ic-warn">
-              {t.imageCompressor.qualityFlatTop}{' '}
-              <button
-                type="button"
-                className="ic-linkbtn"
-                onClick={() => onChange({ quality: 100 })}
-              >
-                {t.imageCompressor.useLossless}
-              </button>
+            <p className="ic-hint ic-lossless">
+              {t.imageCompressor.losslessAt100}
             </p>
           )}
+          {format === 'webp' &&
+            settings.quality >= 90 &&
+            settings.quality < 100 && (
+              <p className="ic-warn">
+                {t.imageCompressor.qualityFlatTop}{' '}
+                <button
+                  type="button"
+                  className="ic-linkbtn"
+                  onClick={() => onChange({ quality: 100 })}
+                >
+                  {t.imageCompressor.useLossless}
+                </button>
+              </p>
+            )}
 
           {/* Placed beside the slider: the value you just settled on is the
               value you want the rest to start from. */}
@@ -213,11 +230,16 @@ export function SettingsPanel({
             className="ic-btn ic-btn-secondary ic-apply-rest"
             disabled={disabled || bulkQualityCount === 0}
             title={
-              bulkQualityCount === 0 ? t.imageCompressor.applyRestNone : undefined
+              bulkQualityCount === 0
+                ? t.imageCompressor.applyRestNone
+                : undefined
             }
             onClick={onApplyQualityToRest}
           >
-            {t.imageCompressor.applyQualityToRest(settings.quality, bulkQualityCount)}
+            {t.imageCompressor.applyQualityToRest(
+              settings.quality,
+              bulkQualityCount,
+            )}
           </button>
         </div>
       ) : (
@@ -258,7 +280,9 @@ export function SettingsPanel({
                   max={256}
                   value={settings.pngColors}
                   disabled={disabled}
-                  onChange={(e) => onChange({ pngColors: Number(e.target.value) })}
+                  onChange={(e) =>
+                    onChange({ pngColors: Number(e.target.value) })
+                  }
                 />
                 <input
                   type="number"
@@ -267,7 +291,9 @@ export function SettingsPanel({
                   value={settings.pngColors}
                   disabled={disabled}
                   aria-label={t.imageCompressor.pngColorsLabel}
-                  onChange={(e) => onChange({ pngColors: Number(e.target.value) })}
+                  onChange={(e) =>
+                    onChange({ pngColors: Number(e.target.value) })
+                  }
                 />
               </div>
               <label className="ic-check">
@@ -282,7 +308,9 @@ export function SettingsPanel({
               <p className="ic-hint">{t.imageCompressor.pngDitherHint}</p>
             </details>
           ) : (
-            <p className="ic-hint ic-lossless">{t.imageCompressor.pngLosslessOff}</p>
+            <p className="ic-hint ic-lossless">
+              {t.imageCompressor.pngLosslessOff}
+            </p>
           )}
         </div>
       )}
@@ -331,7 +359,9 @@ export function SettingsPanel({
                 />
               </div>
               <div className="ic-field">
-                <label htmlFor="ic-height">{t.imageCompressor.heightLabel}</label>
+                <label htmlFor="ic-height">
+                  {t.imageCompressor.heightLabel}
+                </label>
                 <input
                   id="ic-height"
                   type="number"
@@ -347,7 +377,9 @@ export function SettingsPanel({
                 type="checkbox"
                 checked={settings.keepAspectRatio}
                 disabled={disabled}
-                onChange={(e) => onChange({ keepAspectRatio: e.target.checked })}
+                onChange={(e) =>
+                  onChange({ keepAspectRatio: e.target.checked })
+                }
               />
               {t.imageCompressor.keepRatio}
             </label>
