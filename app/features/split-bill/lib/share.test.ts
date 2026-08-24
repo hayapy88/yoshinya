@@ -35,7 +35,7 @@ const build = (over: Partial<Parameters<typeof buildShareText>[0]> = {}) =>
   buildShareText({
     eventName: '',
     eventDate: '',
-    currency: 'JPY',
+    currency: 'yen',
     locale: 'ja',
     participants,
     result: calculateResults(participants, expenses),
@@ -69,7 +69,7 @@ describe('buildShareText', () => {
     const text = buildShareText({
       eventName: '',
       eventDate: '',
-      currency: 'JPY',
+      currency: 'yen',
       locale: 'ja',
       participants: even,
       result: calculateResults(even, [

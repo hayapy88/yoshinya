@@ -1,4 +1,4 @@
-import type { CurrencyCode } from './money';
+import type { Currency } from './money';
 import { parseAmountToMinor } from './money';
 import { sharesOf, type Expense, type Participant } from './calculate';
 
@@ -39,7 +39,7 @@ export type Problem = {
 export function validate(
   participants: Participant[],
   expenses: Expense[],
-  currency: CurrencyCode,
+  currency: Currency,
   rawAmounts: Map<string, string>,
 ): Problem[] {
   const problems: Problem[] = [];

@@ -604,7 +604,13 @@ export const ja: typeof en = {
     eventNameOptional: '任意',
     eventDate: '開催日',
     currency: '通貨',
-    currencyChangeNote: '金額は換算されません。記号と小数桁だけが変わります。',
+    currencies: {
+      yen: '円',
+      dollar: 'ドル',
+      euro: 'ユーロ',
+      pound: 'ポンド',
+      won: 'ウォン',
+    },
     participantName: '名前',
     participantNamePlaceholder: '例: Aさん',
     weight: '負担割合',
@@ -675,7 +681,9 @@ export const ja: typeof en = {
     workingStepStillOwes: (name: string, amount: string) =>
       `${name}はあと${amount}払います。`,
     workingNothing: '貸し借りは発生していません。',
-    statementsHeading: '各自の内訳',
+    // Named in full because three breakdowns sit near each other — this one,
+    // 「負担・立替内訳」 and 「立替明細」 — and each has to say which it is.
+    statementsHeading: '各自の負担額内訳',
     statementsHint:
       '負担していない項目も含めて全件を表示します。何にいくら負担しているかを1件ずつ確認できます。',
     statementNotShared: '負担なし',
@@ -688,11 +696,17 @@ export const ja: typeof en = {
     copyFailed:
       'コピーできませんでした。下のテキストを選択してコピーしてください。',
     createImage: '画像を作成',
+    imageVariantSimple: '精算方法だけ',
+    imageVariantDetailed: '内訳もつける',
+    imageVariantItems: '各自の明細もつける',
+    imageBuilding: '画像を作成しています…',
     imagePreviewHeading: '画像プレビュー',
     downloadImage: '画像をダウンロード',
     shareImage: '画像を共有',
     close: '閉じる',
     imageFailed: '画像の生成に失敗しました。もう一度お試しください。',
+    imageTooLong:
+      '内容が多すぎて1枚の画像に収まりません。短い版をお試しいただくか、結果をテキストでコピーしてください。',
     shareUnsupported:
       'この端末では画像を直接共有できません。画像をダウンロードして共有してください。',
     deleteData: '入力データを削除する',

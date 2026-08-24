@@ -1,5 +1,5 @@
 import type { Expense, Participant } from './calculate';
-import type { CurrencyCode } from './money';
+import type { Currency } from './money';
 import { LIMITS } from './validate';
 
 /**
@@ -7,7 +7,7 @@ import { LIMITS } from './validate';
  * this week's fields is how a saved draft turns into a crash, so anything that
  * does not match is discarded rather than repaired.
  */
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export const STORAGE_KEY = 'yoshinya.split-bill.v1';
 
@@ -25,7 +25,7 @@ export type SplitBillState = {
   schemaVersion: number;
   eventName: string;
   eventDate: string;
-  currency: CurrencyCode;
+  currency: Currency;
   participants: Participant[];
   expenses: Expense[];
   /** What was typed in each amount field, kept so editing does not reformat. */
@@ -55,7 +55,7 @@ const INITIAL_IDS = {
   expense: 'e-initial-1',
 } as const;
 
-export function emptyState(currency: CurrencyCode): SplitBillState {
+export function emptyState(currency: Currency): SplitBillState {
   return {
     schemaVersion: SCHEMA_VERSION,
     eventName: '',
@@ -86,7 +86,7 @@ export type Action =
       type: 'set_event';
       patch: Partial<Pick<SplitBillState, 'eventName' | 'eventDate'>>;
     }
-  | { type: 'set_currency'; currency: CurrencyCode }
+  | { type: 'set_currency'; currency: Currency }
   | { type: 'add_participant' }
   | { type: 'update_participant'; id: string; patch: Partial<Participant> }
   | { type: 'remove_participant'; id: string; withExpenses: boolean }
@@ -94,7 +94,7 @@ export type Action =
   | { type: 'update_expense'; id: string; patch: Partial<Expense> }
   | { type: 'set_amount_input'; id: string; value: string; amountMinor: number }
   | { type: 'remove_expense'; id: string }
-  | { type: 'reset'; currency: CurrencyCode }
+  | { type: 'reset'; currency: Currency }
   | { type: 'restore'; state: SplitBillState };
 
 export function reducer(state: SplitBillState, action: Action): SplitBillState {
@@ -280,7 +280,7 @@ export function parseStored(
       schemaVersion: SCHEMA_VERSION,
       eventName: typeof value.eventName === 'string' ? value.eventName : '',
       eventDate: typeof value.eventDate === 'string' ? value.eventDate : '',
-      currency: (value.currency ?? 'JPY') as CurrencyCode,
+      currency: (value.currency ?? 'yen') as Currency,
       participants,
       expenses,
       amountInputs:

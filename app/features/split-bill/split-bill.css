@@ -57,10 +57,16 @@
   font-size: 0.85rem;
   font-weight: 600;
 }
+/* Left to themselves these come out at three different heights — a select
+   ignores the inherited line-height, and a date input adds room for its picker
+   icon. Measured at 45.2, 47.2 and 39.6px side by side, which reads as
+   carelessness rather than as a form. */
 .sb-field input,
 .sb-field select {
   font: inherit;
-  padding: 0.55rem 0.6rem;
+  line-height: 1.5;
+  height: 2.85rem;
+  padding: 0 0.6rem;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   background: var(--bg);
@@ -479,12 +485,33 @@
   border-radius: 0.7rem;
   padding: 0.6rem 0.9rem;
 }
+/* Laying the summary out as a flex row removes the browser's own disclosure
+   triangle, which left nothing to suggest these open at all. This puts one
+   back, and turns it when the block is open. */
 .sb-statement summary {
   cursor: pointer;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.6rem;
+  list-style: none;
+}
+.sb-statement summary::-webkit-details-marker {
+  display: none;
+}
+.sb-statement summary::before {
+  content: '▶';
+  font-size: 0.7em;
+  color: var(--muted);
+  transition: transform 150ms ease;
+}
+.sb-statement[open] summary::before {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-statement summary::before {
+    transition: none;
+  }
 }
 .sb-statement summary .sb-hint {
   margin: 0;
@@ -527,4 +554,33 @@
    the part that stands out; the rest stays legible but recedes. */
 .sb-statement-items li:not(.sb-not-shared) .sb-item-name {
   font-weight: 600;
+}
+
+/* Image preview ----------------------------------------------------------- */
+.sb-image-preview {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+}
+.sb-image-preview h3 {
+  margin-top: 0;
+}
+.sb-image-variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.sb-selected {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  font-weight: 700;
+}
+.sb-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
 }
