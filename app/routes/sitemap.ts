@@ -9,6 +9,7 @@ const PATHS = [
   '/pdf-title-editor',
   '/image-compressor',
   '/csv-encoding-fixer',
+  '/split-bill',
   '/privacy',
   '/terms',
 ];

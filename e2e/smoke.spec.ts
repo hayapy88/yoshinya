@@ -548,6 +548,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'pdf-title-editor', heading: 'よしにゃにPDFタイトル変更' },
     { slug: 'image-compressor', heading: 'よしにゃにまとめて画像圧縮' },
     { slug: 'csv-encoding-fixer', heading: 'よしにゃにCSV文字化け修復' },
+    { slug: 'split-bill', heading: 'よしにゃに割り勘' },
   ];
 
   for (const tool of tools) {

@@ -37,6 +37,9 @@
 .tool-lead {
   color: var(--tool-muted);
   max-width: 44rem;
+  /* Lets a lead break where its author wants it to. Leads without a newline
+     are unaffected, and wrapping still happens normally. */
+  white-space: pre-line;
 }
 .tool-badges {
   display: flex;

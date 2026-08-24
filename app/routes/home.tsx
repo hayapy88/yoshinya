@@ -84,6 +84,11 @@ export default function Home() {
               name: t.csvEncodingFixerPage.toolName,
               description: t.csvEncodingFixerPage.toolDescription,
             },
+            {
+              slug: 'split-bill',
+              name: t.splitBillPage.toolName,
+              description: t.splitBillPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}
