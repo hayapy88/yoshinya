@@ -5,7 +5,7 @@
 // neither. The answer also depends on the file itself, so it is asked with the
 // real one rather than a guess.
 
-export const IMAGE_FILE_NAME = 'warikan-result.png';
+export const IMAGE_FILE_NAME = 'split-bill-result.png';
 
 export type ShareOutcome = 'shared' | 'cancelled' | 'unsupported' | 'failed';
 

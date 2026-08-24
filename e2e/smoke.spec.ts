@@ -1352,6 +1352,13 @@ test.describe('split bill workflow', () => {
     const descs = page.locator('input[id^="sb-desc-"]');
     const amounts = page.locator('input[id^="sb-amount-"]');
     for (let i = 0; i < rows.length; i += 1) {
+      // The options are named after the participants, so they only exist once
+      // the name fields above have been rendered back. Selecting into a list
+      // that has not caught up times out, which is how this first failed on
+      // WebKit.
+      await expect(
+        payers.nth(i).locator('option', { hasText: rows[i].payer }).first(),
+      ).toBeAttached();
       await payers.nth(i).selectOption({ label: rows[i].payer });
       await descs.nth(i).fill(rows[i].what);
       await amounts.nth(i).fill(rows[i].amount);
@@ -1524,7 +1531,7 @@ test.describe('split bill workflow', () => {
       page.waitForEvent('download'),
       page.getByRole('button', { name: '画像をダウンロード' }).click(),
     ]);
-    expect(download.suggestedFilename()).toBe('warikan-result.png');
+    expect(download.suggestedFilename()).toBe('split-bill-result.png');
   });
 
   test('keeps the draft, and lets it be deleted', async ({ page }) => {

@@ -169,7 +169,8 @@ worth showing.
 Nothing accompanies the file. Sending text alongside looks helpful and is not:
 iOS offers Copy among the share targets, and it takes one of whatever it was
 given — with any text present it takes the text, so someone pressing Copy after
-"share the image" ended up with "合計 ¥9,000" on their clipboard and no picture.
+"share the image" ended up with "合計 ¥9,000" on their clipboard and no picture. The saved file is named
+`split-bill-result.png`.
 That was reported from a real iPhone; no stubbed check could have seen it,
 because they all stop at the point the payload is handed over.
 

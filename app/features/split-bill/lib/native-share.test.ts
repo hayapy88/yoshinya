@@ -89,14 +89,14 @@ describe('shareFile', () => {
     });
     await shareFile(file());
     expect(Object.keys(seen[0])).toEqual(['files']);
-    expect((seen[0].files as File[])[0].name).toBe('warikan-result.png');
+    expect((seen[0].files as File[])[0].name).toBe('split-bill-result.png');
   });
 });
 
 describe('toShareFile', () => {
   it('names the file so it arrives as something recognisable', () => {
     const shared = toShareFile(new Blob(['x'], { type: 'image/png' }));
-    expect(shared.name).toBe('warikan-result.png');
+    expect(shared.name).toBe('split-bill-result.png');
     expect(shared.type).toBe('image/png');
   });
 });

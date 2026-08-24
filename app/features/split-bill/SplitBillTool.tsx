@@ -20,7 +20,12 @@ import {
   statementFor,
 } from './lib/explain';
 import { buildShareText } from './lib/share';
-import { canShareFile, shareFile, toShareFile } from './lib/native-share';
+import {
+  canShareFile,
+  IMAGE_FILE_NAME,
+  shareFile,
+  toShareFile,
+} from './lib/native-share';
 import { ImageTooLongError, renderShareImage } from './lib/share-image';
 import {
   emptyState,
@@ -391,7 +396,7 @@ function SplitBillTool() {
     }
     const anchorEl = document.createElement('a');
     anchorEl.href = imageUrl;
-    anchorEl.download = 'warikan-result.png';
+    anchorEl.download = IMAGE_FILE_NAME;
     anchorEl.click();
     track('download_completed', { tool: TOOL, file_count: 1 });
   };
