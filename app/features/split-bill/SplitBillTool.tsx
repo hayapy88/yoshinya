@@ -349,14 +349,7 @@ function SplitBillTool() {
     if (!imageBlob.current) {
       return;
     }
-    const outcome = await shareFile(
-      toShareFile(imageBlob.current),
-      state.eventName.trim() || s.defaultTitle,
-      // Short on purpose: the image already carries the detail, and a chat
-      // showing both the picture and the whole breakdown in text is worse than
-      // either alone.
-      `${s.total} ${money(result.totalMinor)}`,
-    );
+    const outcome = await shareFile(toShareFile(imageBlob.current));
     if (outcome === 'shared') {
       setNotice(s.imageShared);
       track('batch_action' as never, { tool: TOOL, action: 'share_image' });

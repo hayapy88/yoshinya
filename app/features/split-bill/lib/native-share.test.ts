@@ -46,7 +46,7 @@ describe('canShareFile', () => {
 describe('shareFile', () => {
   it('reports a completed share', async () => {
     stubNavigator({ share: async () => {}, canShare: () => true });
-    expect(await shareFile(file(), 'title', 'text')).toBe('shared');
+    expect(await shareFile(file())).toBe('shared');
   });
 
   // Closing the sheet is a decision, not a fault. Reporting it as a failure
@@ -59,7 +59,7 @@ describe('shareFile', () => {
       },
       canShare: () => true,
     });
-    expect(await shareFile(file(), 'title', 'text')).toBe('cancelled');
+    expect(await shareFile(file())).toBe('cancelled');
   });
 
   it('reports a genuine failure', async () => {
@@ -69,27 +69,27 @@ describe('shareFile', () => {
       },
       canShare: () => true,
     });
-    expect(await shareFile(file(), 'title', 'text')).toBe('failed');
+    expect(await shareFile(file())).toBe('failed');
   });
 
   it('says so rather than throwing when the device cannot', async () => {
     stubNavigator({});
-    expect(await shareFile(file(), 'title', 'text')).toBe('unsupported');
+    expect(await shareFile(file())).toBe('unsupported');
   });
 
-  it('passes the file along with what it is', async () => {
-    const seen: unknown[] = [];
+  // Reported from an iPhone: with text in the payload, the share sheet's Copy
+  // action put "合計 ¥9,000" on the clipboard instead of the picture.
+  it('sends the image on its own, with no text to be copied instead', async () => {
+    const seen: Record<string, unknown>[] = [];
     stubNavigator({
       canShare: () => true,
       share: async (data) => {
-        seen.push(data);
+        seen.push(data as Record<string, unknown>);
       },
     });
-    await shareFile(file(), '8月ワイン会', '合計 ¥9,000');
-    expect(seen[0]).toMatchObject({
-      title: '8月ワイン会',
-      text: '合計 ¥9,000',
-    });
+    await shareFile(file());
+    expect(Object.keys(seen[0])).toEqual(['files']);
+    expect((seen[0].files as File[])[0].name).toBe('warikan-result.png');
   });
 });
 
