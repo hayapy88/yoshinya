@@ -226,6 +226,75 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  splitBillGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Add everyone who was there, and give each a share: 1 for a normal share, 0.5 for half, 0 for someone who is not paying.',
+          'Add each payment — who paid, what for, and how much.',
+          'Press *Work out the split*.',
+          'Read who pays whom, then copy the result to send to the group.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Several people paid for different things and nobody knows where they stand.',
+          'Someone arrived late or left early and should not carry a full share.',
+          'One person drank nothing, or ate nothing, and it feels wrong to charge them the same.',
+          'A trip where the hotel, the car and the food were each put on a different card.',
+          'A group order where one person paid the lot and needs the rest sorted out.',
+        ],
+      },
+      {
+        heading: 'What the share means',
+        body: 'The share is relative, not a percentage. If four people carry 1 and one carries 0.5, the total is divided into 4.5 parts: a full share is one part and the half share is half a part. So the shares never need to add up to anything in particular — you set what feels right, and the arithmetic follows. A share of 0 means the person pays nothing, though they can still have paid for something and be repaid in full.',
+      },
+      {
+        heading: 'The awkward penny',
+        body: 'Three people splitting 1,000 yen cannot each pay the same whole yen. Rather than rounding each share and leaving the column a yen short, the tool gives the leftover to whoever was cut hardest by the rounding. The shares always add up to exactly what was spent, and after everyone has paid what the result says, every balance is zero.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'Names, amounts and the result stay in your browser. Nothing is sent to a server and no account is needed. What you type is kept on your own device so you can come back to it, and *Start over* erases that too.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Are the names and amounts sent anywhere?',
+        answer:
+          'No. Everything is worked out in your browser. Nothing you type is sent to a server, and the analytics record only that a calculation happened and roughly how many people were involved.',
+      },
+      {
+        question: 'Can someone pay for something without owing anything?',
+        answer:
+          'Yes. Give them a share of 0 and record what they paid. They will be owed all of it back.',
+      },
+      {
+        question: 'Does the result always add up?',
+        answer:
+          'Yes. The shares are worked out to the smallest unit of the currency, so they total exactly what was spent, and following the settlements leaves everyone at zero.',
+      },
+      {
+        question: 'Can I mix currencies in one event?',
+        answer:
+          'Not at present. One event uses one currency, and changing it does not convert the amounts — only the symbol and the number of decimals change.',
+      },
+      {
+        question: 'Is what I typed still here if I come back?',
+        answer:
+          'Yes, on the same device and browser. It is stored locally, never on a server, and *Start over* clears it.',
+      },
+      {
+        question: 'How many people and payments can I add?',
+        answer: 'Up to 20 people and 100 payments.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   fileRenamerGuide: {
     heading: 'Guide',
     sections: [
@@ -514,6 +583,154 @@ export const en = {
       empty_file: 'This file is empty.',
       file_too_large: 'This file is over the 50 MB limit.',
       too_many_files: 'You can check up to 50 files at a time.',
+    },
+  },
+  splitBillPage: {
+    metaTitle: '割り勘計算・立替精算 - Split Bill by Yoshinya｜無料・登録不要',
+    metaDescription:
+      'Split expenses several people paid for, with a share for each person — a full share, half, or none. See who should pay whom, copy the result, or share it as an image. Free, no sign-up, and nothing leaves your browser.',
+    heading: 'Split Bill by Yoshinya',
+    toolName: 'Split Bill by Yoshinya',
+    toolDescription:
+      'Works out who owes whom when several people paid and not everyone owes the same share.',
+    lead: 'A house party or a barbecue, with several people bringing food and drink — and then the part nobody enjoys: working out who owes what.\nThis nets what everyone paid against what they actually used, and lets you set the share per person or per item, so one glass of wine costs what one glass should.',
+    privacyNote:
+      'Your names and amounts are not sent to a server. All processing happens in your browser.',
+  },
+  splitBill: {
+    defaultTitle: 'Split Bill Result',
+    // Steps
+    eventHeading: '\u2460 The occasion',
+    participantsHeading: '\u2461 Who was there',
+    expensesHeading: '\u2462 Who paid for what',
+    resultHeading: '\u2463 The result',
+    // Event
+    eventName: 'Name',
+    eventNamePlaceholder: 'e.g. Wine night',
+    eventNameOptional: 'optional',
+    eventDate: 'Date',
+    currency: 'Currency',
+    currencyChangeNote:
+      'Amounts are not converted — only the symbol and decimals change.',
+    // Participants
+    participantName: 'Name',
+    participantNamePlaceholder: 'e.g. Alex',
+    weight: 'Share',
+    weightHint:
+      '1 is a normal share. 0.5 pays half of what a normal share pays, 2 pays double, and 0 pays nothing.',
+    weightExamples:
+      'Came for all of it: 1 / Came late: 0.5 / Looked in: 0.2 / Not paying: 0',
+    addParticipant: '+ Add someone',
+    removeParticipant: 'Remove',
+    removeWithExpenses: (name: string, count: number) =>
+      `${name} paid for ${count} ${count === 1 ? 'thing' : 'things'}. Remove those too?`,
+    removeKeepExpenses: 'Keep them, unassigned',
+    removeWithExpensesConfirm: 'Remove them as well',
+    cancel: 'Cancel',
+    // Expenses
+    payer: 'Paid by',
+    payerPlaceholder: 'Choose',
+    description: 'What for',
+    descriptionPlaceholder: 'e.g. Wine',
+    // Per-expense sharing. Named after the question it answers rather than the
+    // mechanism: nobody thinks of themselves as being in an expense's subset.
+    sharedByLabel: 'Split between',
+    sharedByEveryone: 'Everyone',
+    sharedBySome: (n: number, total: number) => `${n} of ${total}`,
+    sharedByNobody: 'Nobody',
+    sharedByEdit: 'Change',
+    sharedByAll: 'Select everyone',
+    sharedByNone: 'Clear',
+    sharedByDone: 'Done',
+    sharedByHint:
+      'Set who shares this particular cost, and how much of it each carries. Untick whoever did not have any; put 0.5 against someone who had one glass. Left alone, everyone carries their usual share.',
+    amount: 'Amount',
+    addExpense: '+ Add a payment',
+    removeExpense: 'Remove',
+    // Actions
+    calculate: 'Work out the split',
+    // Result
+    total: 'Total',
+    participantCount: (n: number) => `${n} people`,
+    expenseCount: (n: number) => `${n} payments`,
+    settlementsHeading: 'Who pays whom',
+    nothingToSettle: 'Nothing left to settle.',
+    breakdownHeading: 'Shares and payments',
+    colName: 'Name',
+    colWeight: 'Share',
+    colBurden: 'Owes',
+    colPaid: 'Paid',
+    colBalance: 'Balance',
+    receive: 'Receives',
+    pay: 'Pays',
+    settled: 'Settled',
+    // The workings, for the question the settlement list cannot answer on its
+    // own: why the person who bought the wine is owed less than they paid.
+    workingHeading: 'How this was worked out',
+    workingStep1: 'What each payment left people owing',
+    workingStep2: 'Added up between each pair of people',
+    workingStepNet: 'What that leaves each person',
+    workingNetPositionNote:
+      'Owing in one direction and being owed in another cancel out. What is left is what the payments below are built from — so someone who owes 500 but is owed 1,500 ends up receiving 1,000, not paying anything.',
+    workingPays: (amount: string) => `owes ${amount}`,
+    workingReceives: (amount: string) => `is owed ${amount}`,
+    workingColourNote:
+      'Each person keeps the same colour throughout, so a name can be followed from one step to the next.',
+    workingStep3: 'Combined, so there are fewer payments to make',
+    workingEach: (name: string, amount: string) => `${name}: ${amount}`,
+    workingPaidBy: (name: string) => `paid by ${name}`,
+    workingNetNote:
+      'Someone who paid for something they also shared is only owed the rest of it — and they may owe someone else in turn. Adding those up in both directions is where these numbers come from.',
+    workingCombineNote:
+      'The largest amount owed is set against the largest amount due, and so on until nothing is outstanding.',
+    workingStepWhy: (from: string, owes: string, to: string, due: string) =>
+      `${from} still owes ${owes}; ${to} is still due ${due}.`,
+    workingStepLeft: (name: string, amount: string) =>
+      `${name} is still due ${amount}.`,
+    workingStepStillOwes: (name: string, amount: string) =>
+      `${name} still owes ${amount}.`,
+    workingNothing: 'Nobody ended up owing anybody.',
+    statementsHeading: 'What each person is carrying',
+    statementsHint:
+      'Every cost is listed for everyone, including the ones they carry none of — so a share can be checked item by item.',
+    statementNotShared: 'not yours',
+    statementSplitAmong: (n: number) => `split ${n} ways`,
+    statementBurdenTotal: 'Owes in total',
+    statementPaidTotal: 'Paid',
+    detailsHeading: 'Every payment',
+    // Text and image
+    copyResult: 'Copy the result',
+    copied: 'Copied the result.',
+    copyFailed: 'Could not copy. Select the text below and copy it yourself.',
+    createImage: 'Make an image',
+    imagePreviewHeading: 'Image preview',
+    downloadImage: 'Download the image',
+    shareImage: 'Share the image',
+    close: 'Close',
+    imageFailed: 'Could not make the image. Please try again.',
+    shareUnsupported:
+      'This device cannot share the image directly. Download it and share it from there.',
+    // Housekeeping
+    deleteData: 'Delete what is saved',
+    dataDeleted: 'Deleted. Nothing is left on this device.',
+    resetConfirm:
+      'Clear the form and delete what is saved on this device? This cannot be undone.',
+    storageNote:
+      'What you type is kept on this device so you can come back to it, and is deleted automatically after 30 days. It is never sent to Yoshinya.',
+    resultPrivacyNote:
+      'Names, amounts and the result stay in your browser. Nothing is sent or stored on a server.',
+    footer: 'Split Bill by Yoshinya | yoshinya.com',
+    errors: {
+      name_required: 'Enter a name.',
+      name_duplicate: 'Two people have the same name.',
+      name_too_long: 'That name is too long.',
+      weight_invalid: 'A share must be between 0 and 10.',
+      all_weights_zero: 'At least one person needs a share above 0.',
+      payer_required: 'Choose who paid.',
+      amount_invalid: 'Enter an amount above 0.',
+      no_sharers: 'Choose at least one person to share this cost.',
+      no_expenses: 'Add at least one payment.',
+      too_few_participants: 'Add at least two people.',
     },
   },
   imageCompressorPage: {

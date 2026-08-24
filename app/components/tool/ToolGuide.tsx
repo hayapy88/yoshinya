@@ -16,6 +16,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'pdf-title-editor': 'pdfTitleEditorPage',
   'image-compressor': 'imageCompressorPage',
   'csv-encoding-fixer': 'csvEncodingFixerPage',
+  'split-bill': 'splitBillPage',
 };
 
 function Section({ section }: { section: GuideSection }) {

@@ -172,6 +172,14 @@ export function csvEncodingFixerJsonLd(
   );
 }
 
+export function splitBillJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃに割り勘' : 'Split Bill by Yoshinya',
+    '/split-bill',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 export function faqJsonLd(

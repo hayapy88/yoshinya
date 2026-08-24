@@ -225,6 +225,75 @@ export const ja: typeof en = {
     ],
     relatedHeading: '関連ツール',
   },
+  splitBillGuide: {
+    heading: '使い方ガイド',
+    sections: [
+      {
+        heading: '使い方',
+        steps: [
+          '参加者を追加し、それぞれの負担割合を入れます。通常は1、半分なら0.5、負担しない人は0です。',
+          '立替を追加します。誰が、何に、いくら払ったかを入れます。',
+          '「割り勘を計算」を押します。',
+          '誰が誰にいくら払うかを確認し、結果をコピーしてグループに送ります。',
+        ],
+      },
+      {
+        heading: 'こんなときに便利',
+        items: [
+          '複数人がそれぞれ立て替えていて、誰がいくら払えばいいのか分からない。',
+          '途中参加や途中退出の人がいて、全員同額では不公平になる。',
+          'お酒を飲まない人や、少ししか食べなかった人がいる。',
+          '旅行で、宿・レンタカー・食事をそれぞれ別の人が払った。',
+          '共同購入で1人がまとめて払い、あとから精算したい。',
+        ],
+      },
+      {
+        heading: '負担割合とは',
+        body: '負担割合は割合であって、パーセントではありません。4人が1で1人が0.5なら、合計は4.5等分され、1の人は1つ分、0.5の人は半分を負担します。全員の合計が特定の数になる必要はないので、感覚どおりに設定すれば計算は後からついてきます。0にした人は費用を負担しませんが、立替をしていればその全額を受け取れます。',
+      },
+      {
+        heading: '1円の端数について',
+        body: '3人で1,000円を分けると、全員が同じ整数の金額にはなりません。各自の負担額を単純に四捨五入すると合計が1円ずれますが、このツールでは端数を「切り捨てで最も損をした人」に割り当てます。そのため負担額の合計は必ず支出額とぴったり一致し、精算結果のとおりに払えば全員の差額が0になります。',
+      },
+      {
+        heading: 'プライバシーと安全性',
+        body: '名前・金額・精算結果はブラウザ内だけで扱われます。サーバーには送られず、アカウント登録も不要です。入力内容は次に開いたときのために端末内へ保存され、「最初からやり直す」で消えます。',
+      },
+    ],
+    faqHeading: 'よくある質問',
+    faq: [
+      {
+        question: '名前や金額はどこかに送信されますか？',
+        answer:
+          'いいえ。計算はすべてブラウザ内で行われます。入力内容がサーバーに送られることはなく、アクセス解析に記録されるのは「計算が行われたこと」と「おおよその人数」だけです。',
+      },
+      {
+        question: '費用を負担しない人が立替だけすることはできますか？',
+        answer:
+          'できます。負担割合を0にして、立替額を入力してください。その全額が受取対象になります。',
+      },
+      {
+        question: '金額はぴったり合いますか？',
+        answer:
+          '合います。負担額は通貨の最小単位まで計算され、合計は支出額と完全に一致します。精算結果のとおりに払えば、全員の差額が0になります。',
+      },
+      {
+        question: '1つのイベントで複数の通貨を混ぜられますか？',
+        answer:
+          '現在はできません。1つのイベントにつき1通貨です。通貨を変更しても金額は換算されず、記号と小数桁だけが変わります。',
+      },
+      {
+        question: '入力した内容は次に開いたときも残っていますか？',
+        answer:
+          '同じ端末・同じブラウザであれば残ります。保存先は端末内のみで、サーバーには保存されません。「最初からやり直す」で消去できます。',
+      },
+      {
+        question: '何人・何件まで登録できますか？',
+        answer: '参加者は20人、立替は100件までです。',
+      },
+    ],
+    relatedHeading: '関連ツール',
+  },
   fileRenamerGuide: {
     heading: '使い方ガイド',
     sections: [
@@ -510,6 +579,142 @@ export const ja: typeof en = {
       empty_file: 'このファイルは空です。',
       file_too_large: 'このファイルは上限の50MBを超えています。',
       too_many_files: '一度に判定できるファイルは50件までです。',
+    },
+  },
+  splitBillPage: {
+    metaTitle: '割り勘計算・立替精算 - よしにゃに割り勘｜無料・登録不要',
+    metaDescription:
+      '複数人が立て替えた費用を、参加者ごとの負担割合に応じて自動計算。誰が誰にいくら払えばいいかが分かり、結果を画像で共有できます。無料・登録不要で、入力内容はブラウザの外に出ません。',
+    heading: 'よしにゃに割り勘',
+    toolName: 'よしにゃに割り勘',
+    toolDescription:
+      '複数人の立替と、参加度に応じた負担割合をまとめて計算し、誰が誰にいくら払うかを出します。',
+    lead: 'ホームパーティーやバーベキューで、何人かが食材やお酒を買ってきてくれた。さて、どう精算しよう——計算が面倒で困った経験はありませんか？\nよしにゃに割り勘なら、各々の立替分と消費分を自動で相殺し、個々人の無駄なお金の支払いを無くします。参加度合いや飲んだ量に合わせて、人ごとにも食べ物や飲み物ごとにも負担割合を決められ、みんなに平等な精算が可能です。',
+    privacyNote:
+      '名前や金額はサーバーに送信されません。すべての処理はブラウザ内で完結します。',
+  },
+  splitBill: {
+    defaultTitle: '割り勘精算結果',
+    eventHeading: '\u2460 イベント情報',
+    participantsHeading: '\u2461 参加者',
+    expensesHeading: '\u2462 立替',
+    resultHeading: '\u2463 精算結果',
+    eventName: 'イベント名',
+    eventNamePlaceholder: '例: ワイン会',
+    eventNameOptional: '任意',
+    eventDate: '開催日',
+    currency: '通貨',
+    currencyChangeNote: '金額は換算されません。記号と小数桁だけが変わります。',
+    participantName: '名前',
+    participantNamePlaceholder: '例: Aさん',
+    weight: '負担割合',
+    weightHint:
+      '1が通常の負担です。0.5なら通常の人の半分、2なら2倍を負担します。0にすると費用を負担しません。',
+    weightExamples:
+      '通常参加: 1 ／ 途中参加: 0.5 ／ 少しだけ: 0.2 ／ 負担なし: 0',
+    addParticipant: '＋ 参加者を追加',
+    removeParticipant: '削除',
+    removeWithExpenses: (name: string, count: number) =>
+      `${name}の立替が${count}件あります。一緒に削除しますか？`,
+    removeKeepExpenses: '立替は残す（立替者を空にする）',
+    removeWithExpensesConfirm: '立替も削除する',
+    cancel: 'キャンセル',
+    payer: '立替者',
+    payerPlaceholder: '選択してください',
+    description: '内容',
+    descriptionPlaceholder: '例: ワイン',
+    sharedByLabel: '負担する人',
+    sharedByEveryone: '全員',
+    sharedBySome: (n: number, total: number) => `${total}人中${n}人`,
+    sharedByNobody: 'なし',
+    sharedByEdit: '変更',
+    sharedByAll: '全員を選択',
+    sharedByNone: '選択を解除',
+    sharedByDone: '完了',
+    sharedByHint:
+      'この費用だけ、負担する人や割合を変えられます。飲まない人のチェックを外す、1杯だけの人を0.5にする、といった指定ができます。変更しなければ、参加者ごとの負担割合がそのまま使われます。',
+    amount: '金額',
+    addExpense: '＋ 立替を追加',
+    removeExpense: '削除',
+    calculate: '割り勘を計算',
+    total: '合計',
+    participantCount: (n: number) => `${n}人`,
+    expenseCount: (n: number) => `立替${n}件`,
+    settlementsHeading: '精算方法',
+    nothingToSettle: '追加の精算は必要ありません。',
+    breakdownHeading: '負担・立替内訳',
+    colName: '名前',
+    colWeight: '割合',
+    colBurden: '負担額',
+    colPaid: '立替額',
+    colBalance: '差額',
+    receive: '受取',
+    pay: '支払',
+    settled: '精算不要',
+    workingHeading: 'この結果になる理由',
+    workingStep1: '① 立替ごとの貸し借り',
+    workingStep2: '② 同じ相手どうしをまとめる',
+    workingStepNet: '差引すると、各自はこうなる',
+    workingNetPositionNote:
+      '払う分と受け取る分は相殺されます。残った差引が、下の送金のもとになります。500円払う一方で1,500円受け取る人は、1,000円を受け取る側になります。',
+    workingPays: (amount: string) => `払う ${amount}`,
+    workingReceives: (amount: string) => `受け取る ${amount}`,
+    workingColourNote:
+      '同じ人には同じ色が付きます。色をたどれば、その人がどの段階でどう扱われたかが追えます。',
+    workingStep3: '③ さらにまとめて送金回数を減らす',
+    workingEach: (name: string, amount: string) => `${name}: ${amount}`,
+    workingPaidBy: (name: string) => `${name}が立替`,
+    workingNetNote:
+      '自分も使ったものを立て替えた人は、その差額だけを受け取ります。さらに他の人へ払う分があれば、それも差し引かれます。',
+    workingCombineNote:
+      '払う額がいちばん多い人と、受け取る額がいちばん多い人を突き合わせます。これを残額がなくなるまで繰り返します。',
+    workingStepWhy: (from: string, owes: string, to: string, due: string) =>
+      `${from}の残り${owes}、${to}の残り${due}。少ないほうの額を送ります。`,
+    workingStepLeft: (name: string, amount: string) =>
+      `${name}はあと${amount}受け取ります。`,
+    workingStepStillOwes: (name: string, amount: string) =>
+      `${name}はあと${amount}払います。`,
+    workingNothing: '貸し借りは発生していません。',
+    statementsHeading: '各自の内訳',
+    statementsHint:
+      '負担していない項目も含めて全件を表示します。何にいくら負担しているかを1件ずつ確認できます。',
+    statementNotShared: '負担なし',
+    statementSplitAmong: (n: number) => `${n}人で負担`,
+    statementBurdenTotal: '負担額の合計',
+    statementPaidTotal: '立替額',
+    detailsHeading: '立替明細',
+    copyResult: '結果をコピー',
+    copied: '精算結果をコピーしました。',
+    copyFailed:
+      'コピーできませんでした。下のテキストを選択してコピーしてください。',
+    createImage: '画像を作成',
+    imagePreviewHeading: '画像プレビュー',
+    downloadImage: '画像をダウンロード',
+    shareImage: '画像を共有',
+    close: '閉じる',
+    imageFailed: '画像の生成に失敗しました。もう一度お試しください。',
+    shareUnsupported:
+      'この端末では画像を直接共有できません。画像をダウンロードして共有してください。',
+    deleteData: '入力データを削除する',
+    dataDeleted: '削除しました。端末内にデータは残っていません。',
+    resetConfirm:
+      '入力内容と、端末内に保存されたデータをすべて削除しますか？元に戻せません。',
+    storageNote:
+      '入力内容はこの端末内に保存され、30日で自動的に削除されます。よしにゃのサーバーには送信されません。',
+    resultPrivacyNote:
+      '名前・金額・精算結果はブラウザ内だけで扱われ、サーバーには送られません。',
+    footer: 'よしにゃに割り勘｜yoshinya.com',
+    errors: {
+      name_required: '名前を入力してください。',
+      name_duplicate: '同じ名前の参加者がいます。',
+      name_too_long: '名前が長すぎます。',
+      weight_invalid: '負担割合は0〜10で入力してください。',
+      all_weights_zero: '少なくとも1人の負担割合を0より大きくしてください。',
+      payer_required: '立替者を選択してください。',
+      amount_invalid: '0より大きい金額を入力してください。',
+      no_sharers: 'この費用を負担する人を1人以上選んでください。',
+      no_expenses: '立替を1件以上追加してください。',
+      too_few_participants: '参加者を2人以上にしてください。',
     },
   },
   imageCompressorPage: {

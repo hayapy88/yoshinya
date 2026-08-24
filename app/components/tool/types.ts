@@ -29,7 +29,8 @@ export type ToolSlug =
   | 'image-sorter'
   | 'pdf-title-editor'
   | 'image-compressor'
-  | 'csv-encoding-fixer';
+  | 'csv-encoding-fixer'
+  | 'split-bill';
 
 // The published tools, in release order: what the related-tools list offers and
 // what the sitemap carries. A slug is added here when its page is complete —
@@ -40,4 +41,5 @@ export const TOOL_SLUGS: ToolSlug[] = [
   'pdf-title-editor',
   'image-compressor',
   'csv-encoding-fixer',
+  'split-bill',
 ];
