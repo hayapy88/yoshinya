@@ -610,8 +610,13 @@ export const en = {
     eventNameOptional: 'optional',
     eventDate: 'Date',
     currency: 'Currency',
-    currencyChangeNote:
-      'Amounts are not converted — only the symbol and decimals change.',
+    currencies: {
+      yen: 'Yen',
+      dollar: 'Dollar',
+      euro: 'Euro',
+      pound: 'Pound',
+      won: 'Won',
+    },
     // Participants
     participantName: 'Name',
     participantNamePlaceholder: 'e.g. Alex',
@@ -690,7 +695,7 @@ export const en = {
     workingStepStillOwes: (name: string, amount: string) =>
       `${name} still owes ${amount}.`,
     workingNothing: 'Nobody ended up owing anybody.',
-    statementsHeading: 'What each person is carrying',
+    statementsHeading: 'What each person owes, item by item',
     statementsHint:
       'Every cost is listed for everyone, including the ones they carry none of — so a share can be checked item by item.',
     statementNotShared: 'not yours',
@@ -703,11 +708,17 @@ export const en = {
     copied: 'Copied the result.',
     copyFailed: 'Could not copy. Select the text below and copy it yourself.',
     createImage: 'Make an image',
+    imageVariantSimple: 'Just the payments',
+    imageVariantDetailed: 'With the full breakdown',
+    imageVariantItems: 'With what each person had',
+    imageBuilding: 'Making the image…',
     imagePreviewHeading: 'Image preview',
     downloadImage: 'Download the image',
     shareImage: 'Share the image',
     close: 'Close',
     imageFailed: 'Could not make the image. Please try again.',
+    imageTooLong:
+      'There is too much here for one image. Try a shorter version, or copy the result as text.',
     shareUnsupported:
       'This device cannot share the image directly. Download it and share it from there.',
     // Housekeeping

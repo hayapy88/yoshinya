@@ -9,7 +9,7 @@ import {
   type SplitBillState,
 } from './state';
 
-const start = () => emptyState('JPY');
+const start = () => emptyState('yen');
 
 describe('reducer', () => {
   it('starts with the smallest arrangement that is still a split', () => {
@@ -84,7 +84,7 @@ describe('reducer', () => {
       value: '1000',
       amountMinor: 1000,
     });
-    const after = reducer(state, { type: 'set_currency', currency: 'AUD' });
+    const after = reducer(state, { type: 'set_currency', currency: 'dollar' });
     expect(after.expenses[0].amountMinor).toBe(1000);
   });
 

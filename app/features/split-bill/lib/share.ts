@@ -1,5 +1,5 @@
 import type { CalculationResult, Participant } from './calculate';
-import { formatMoney, type CurrencyCode } from './money';
+import { formatMoney, type Currency } from './money';
 
 /**
  * The words the text is built from, passed in rather than imported, so this
@@ -23,7 +23,7 @@ export type ShareLabels = {
 export type ShareInput = {
   eventName: string;
   eventDate: string;
-  currency: CurrencyCode;
+  currency: Currency;
   locale: string;
   participants: Participant[];
   result: CalculationResult;

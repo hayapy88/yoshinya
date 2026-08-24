@@ -9,7 +9,8 @@ import {
   decimalsFor,
   formatMoney,
   parseAmountToMinor,
-  type CurrencyCode,
+  symbolFor,
+  type Currency,
 } from './lib/money';
 import {
   breakDownExpenses,
@@ -19,6 +20,7 @@ import {
   statementFor,
 } from './lib/explain';
 import { buildShareText } from './lib/share';
+import { ImageTooLongError, renderShareImage } from './lib/share-image';
 import {
   emptyState,
   parseStored,
@@ -31,6 +33,8 @@ import './split-bill.css';
 
 const TOOL = 'split-bill' as const;
 
+type ImageVariant = 'simple' | 'detailed' | 'items';
+
 /** Coarse enough to be useless for identifying anyone, which is the point. */
 const sizeBand = (n: number) => (n <= 5 ? '2-5' : n <= 10 ? '6-10' : '11-20');
 
@@ -40,12 +44,16 @@ function SplitBillTool() {
 
   // The default currency follows the page, since that is the best guess
   // available without asking, and it is one control away from being changed.
-  const defaultCurrency: CurrencyCode = locale === 'ja' ? 'JPY' : 'AUD';
+  const defaultCurrency: Currency = locale === 'ja' ? 'yen' : 'dollar';
   const [state, dispatch] = useReducer(reducer, defaultCurrency, emptyState);
   const [showResult, setShowResult] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [copyFallback, setCopyFallback] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageVariant, setImageVariant] = useState<ImageVariant>('simple');
+  const [imageBusy, setImageBusy] = useState(false);
+  const imageBlob = useRef<Blob | null>(null);
   const [pendingRemoval, setPendingRemoval] = useState<string | null>(null);
   const [editingSharers, setEditingSharers] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -85,6 +93,15 @@ function SplitBillTool() {
     }, 400);
     return () => window.clearTimeout(id);
   }, [state]);
+
+  useEffect(
+    () => () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    },
+    [imageUrl],
+  );
 
   useEffect(() => {
     if (!notice) {
@@ -207,6 +224,133 @@ function SplitBillTool() {
     }
   };
 
+  const makeImage = async (variant: ImageVariant) => {
+    setImageBusy(true);
+    setImageVariant(variant);
+    try {
+      const blob = await renderShareImage({
+        title: state.eventName.trim() || s.defaultTitle,
+        date: state.eventDate.trim(),
+        total: money(result.totalMinor),
+        summary: `${s.participantCount(state.participants.length)} · ${s.expenseCount(state.expenses.length)}`,
+        settlementsHeading: s.settlementsHeading,
+        settlements: result.settlements.map((settlement) => ({
+          from: nameOf(settlement.fromParticipantId),
+          to: nameOf(settlement.toParticipantId),
+          amount: money(settlement.amountMinor),
+        })),
+        nothingToSettle: s.nothingToSettle,
+        // The expense list is deliberately absent from both: the image is for
+        // paying the right person, not for auditing the receipts.
+        // Travels with the itemised version: the person checking what is
+        // inside their share also wants to know whose money went out.
+        expenses:
+          variant === 'items'
+            ? {
+                heading: s.detailsHeading,
+                rows: state.expenses.map((expense) => ({
+                  payer: nameOf(expense.payerId),
+                  label: expense.description || s.amount,
+                  amount: money(expense.amountMinor),
+                })),
+              }
+            : null,
+        statements:
+          variant === 'items'
+            ? {
+                heading: s.statementsHeading,
+                people: state.participants.flatMap((participant) => {
+                  const r = result.participantResults.find(
+                    (x) => x.participantId === participant.id,
+                  );
+                  return r
+                    ? [
+                        {
+                          name: participant.name,
+                          total: `${s.statementBurdenTotal} ${money(r.burdenMinor)}`,
+                          items: statementFor(breakdowns, participant.id).map(
+                            (item) => ({
+                              label: item.expense.description || s.amount,
+                              amount:
+                                item.amountMinor === null
+                                  ? s.statementNotShared
+                                  : money(item.amountMinor),
+                              carried: item.amountMinor !== null,
+                            }),
+                          ),
+                        },
+                      ]
+                    : [];
+                }),
+              }
+            : null,
+        breakdown:
+          variant === 'simple'
+            ? null
+            : {
+                heading: s.breakdownHeading,
+                columns: [
+                  s.colName,
+                  s.colWeight,
+                  s.colBurden,
+                  s.colPaid,
+                  s.colBalance,
+                ],
+                rows: state.participants.flatMap((participant) => {
+                  const r = result.participantResults.find(
+                    (x) => x.participantId === participant.id,
+                  );
+                  return r
+                    ? [
+                        [
+                          participant.name,
+                          String(participant.weight),
+                          money(r.burdenMinor),
+                          money(r.paidMinor),
+                          r.balanceMinor > 0
+                            ? `${s.receive} ${money(r.balanceMinor)}`
+                            : r.balanceMinor < 0
+                              ? `${s.pay} ${money(-r.balanceMinor)}`
+                              : s.settled,
+                        ],
+                      ]
+                    : [];
+                }),
+              },
+        footer: s.footer,
+      });
+      imageBlob.current = blob;
+      setImageUrl((previous) => {
+        if (previous) {
+          URL.revokeObjectURL(previous);
+        }
+        return URL.createObjectURL(blob);
+      });
+      track('batch_action' as never, {
+        tool: TOOL,
+        action: 'create_image',
+        mode: variant,
+      });
+    } catch (error) {
+      setNotice(
+        error instanceof ImageTooLongError ? s.imageTooLong : s.imageFailed,
+      );
+    } finally {
+      setImageBusy(false);
+    }
+  };
+
+  const downloadImage = () => {
+    if (!imageBlob.current || !imageUrl) {
+      return;
+    }
+    const anchorEl = document.createElement('a');
+    anchorEl.href = imageUrl;
+    anchorEl.download = 'warikan-result.png';
+    anchorEl.click();
+    track('download_completed', { tool: TOOL, file_count: 1 });
+  };
+
   const removalTarget = state.participants.find((p) => p.id === pendingRemoval);
   const removalExpenseCount = state.expenses.filter(
     (e) => e.payerId === pendingRemoval,
@@ -282,17 +426,16 @@ function SplitBillTool() {
               onChange={(e) =>
                 dispatch({
                   type: 'set_currency',
-                  currency: e.target.value as CurrencyCode,
+                  currency: e.target.value as Currency,
                 })
               }
             >
               {CURRENCIES.map((code) => (
                 <option key={code} value={code}>
-                  {code}
+                  {symbolFor(code)} {s.currencies[code]}
                 </option>
               ))}
             </select>
-            <p className="sb-hint">{s.currencyChangeNote}</p>
           </div>
         </div>
       </section>
@@ -943,7 +1086,77 @@ function SplitBillTool() {
             >
               {s.copyResult}
             </button>
+            <button
+              type="button"
+              className="sb-btn sb-btn-secondary"
+              disabled={imageBusy}
+              onClick={() => void makeImage('simple')}
+            >
+              {imageBusy ? s.imageBuilding : s.createImage}
+            </button>
           </div>
+
+          {imageUrl && (
+            <div className="sb-image-preview">
+              <h3>{s.imagePreviewHeading}</h3>
+              {/* Two versions, switched here rather than chosen up front: the
+                  difference is easier to judge by looking at it. */}
+              <div className="sb-image-variants" role="group">
+                <button
+                  type="button"
+                  className={`sb-btn sb-btn-secondary${imageVariant === 'simple' ? ' sb-selected' : ''}`}
+                  aria-pressed={imageVariant === 'simple'}
+                  disabled={imageBusy}
+                  onClick={() => void makeImage('simple')}
+                >
+                  {s.imageVariantSimple}
+                </button>
+                <button
+                  type="button"
+                  className={`sb-btn sb-btn-secondary${imageVariant === 'detailed' ? ' sb-selected' : ''}`}
+                  aria-pressed={imageVariant === 'detailed'}
+                  disabled={imageBusy}
+                  onClick={() => void makeImage('detailed')}
+                >
+                  {s.imageVariantDetailed}
+                </button>
+                <button
+                  type="button"
+                  className={`sb-btn sb-btn-secondary${imageVariant === 'items' ? ' sb-selected' : ''}`}
+                  aria-pressed={imageVariant === 'items'}
+                  disabled={imageBusy}
+                  onClick={() => void makeImage('items')}
+                >
+                  {s.imageVariantItems}
+                </button>
+              </div>
+              <img src={imageUrl} alt="" className="sb-image" />
+              <div className="sb-actions">
+                <button
+                  type="button"
+                  className="sb-btn sb-btn-primary"
+                  onClick={downloadImage}
+                >
+                  {s.downloadImage}
+                </button>
+                <button
+                  type="button"
+                  className="sb-btn sb-btn-secondary"
+                  onClick={() => {
+                    setImageUrl((previous) => {
+                      if (previous) {
+                        URL.revokeObjectURL(previous);
+                      }
+                      return null;
+                    });
+                    imageBlob.current = null;
+                  }}
+                >
+                  {s.close}
+                </button>
+              </div>
+            </div>
+          )}
 
           {copyFallback && (
             <textarea
