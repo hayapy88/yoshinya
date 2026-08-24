@@ -20,6 +20,7 @@ import {
   statementFor,
 } from './lib/explain';
 import { buildShareText } from './lib/share';
+import { canShareFile, shareFile, toShareFile } from './lib/native-share';
 import { ImageTooLongError, renderShareImage } from './lib/share-image';
 import {
   emptyState,
@@ -53,6 +54,9 @@ function SplitBillTool() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageVariant, setImageVariant] = useState<ImageVariant>('simple');
   const [imageBusy, setImageBusy] = useState(false);
+  // Answered with the real file once there is one, because a browser can offer
+  // sharing and still refuse files.
+  const [canShare, setCanShare] = useState(false);
   const imageBlob = useRef<Blob | null>(null);
   const [pendingRemoval, setPendingRemoval] = useState<string | null>(null);
   const [editingSharers, setEditingSharers] = useState<string | null>(null);
@@ -320,6 +324,7 @@ function SplitBillTool() {
         footer: s.footer,
       });
       imageBlob.current = blob;
+      setCanShare(canShareFile(toShareFile(blob)));
       setImageUrl((previous) => {
         if (previous) {
           URL.revokeObjectURL(previous);
@@ -338,6 +343,29 @@ function SplitBillTool() {
     } finally {
       setImageBusy(false);
     }
+  };
+
+  const shareImage = async () => {
+    if (!imageBlob.current) {
+      return;
+    }
+    const outcome = await shareFile(
+      toShareFile(imageBlob.current),
+      state.eventName.trim() || s.defaultTitle,
+      // Short on purpose: the image already carries the detail, and a chat
+      // showing both the picture and the whole breakdown in text is worse than
+      // either alone.
+      `${s.total} ${money(result.totalMinor)}`,
+    );
+    if (outcome === 'shared') {
+      setNotice(s.imageShared);
+      track('batch_action' as never, { tool: TOOL, action: 'share_image' });
+    } else if (outcome === 'failed') {
+      setNotice(s.shareFailedDownload);
+    } else if (outcome === 'unsupported') {
+      setNotice(s.shareUnsupported);
+    }
+    // A cancelled share is a decision, not a fault, and says nothing.
   };
 
   const downloadImage = () => {
@@ -1132,9 +1160,21 @@ function SplitBillTool() {
               </div>
               <img src={imageUrl} alt="" className="sb-image" />
               <div className="sb-actions">
+                {/* Offered only where it will work. Elsewhere the download is
+                    the whole answer, and a button that explains itself only
+                    after being pressed is not worth showing. */}
+                {canShare && (
+                  <button
+                    type="button"
+                    className="sb-btn sb-btn-primary"
+                    onClick={() => void shareImage()}
+                  >
+                    {s.shareImage}
+                  </button>
+                )}
                 <button
                   type="button"
-                  className="sb-btn sb-btn-primary"
+                  className={`sb-btn ${canShare ? 'sb-btn-secondary' : 'sb-btn-primary'}`}
                   onClick={downloadImage}
                 >
                   {s.downloadImage}

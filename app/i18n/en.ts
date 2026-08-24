@@ -719,6 +719,9 @@ export const en = {
     imageFailed: 'Could not make the image. Please try again.',
     imageTooLong:
       'There is too much here for one image. Try a shorter version, or copy the result as text.',
+    imageShared: 'Shared.',
+    shareFailedDownload:
+      'Sharing did not work. You can download the image instead.',
     shareUnsupported:
       'This device cannot share the image directly. Download it and share it from there.',
     // Housekeeping
