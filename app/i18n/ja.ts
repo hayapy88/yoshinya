@@ -707,6 +707,9 @@ export const ja: typeof en = {
     imageFailed: '画像の生成に失敗しました。もう一度お試しください。',
     imageTooLong:
       '内容が多すぎて1枚の画像に収まりません。短い版をお試しいただくか、結果をテキストでコピーしてください。',
+    imageShared: '共有しました。',
+    shareFailedDownload:
+      '共有できませんでした。画像をダウンロードしてお使いください。',
     shareUnsupported:
       'この端末では画像を直接共有できません。画像をダウンロードして共有してください。',
     deleteData: '入力データを削除する',
