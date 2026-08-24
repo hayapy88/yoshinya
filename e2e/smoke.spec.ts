@@ -1353,12 +1353,23 @@ test.describe('split bill workflow', () => {
     const amounts = page.locator('input[id^="sb-amount-"]');
     for (let i = 0; i < rows.length; i += 1) {
       // The options are named after the participants, so they only exist once
-      // the name fields above have been rendered back. Selecting into a list
+      // the name fields above have been rendered back; selecting into a list
       // that has not caught up times out, which is how this first failed on
-      // WebKit.
-      await expect(
-        payers.nth(i).locator('option', { hasText: rows[i].payer }).first(),
-      ).toBeAttached();
+      // WebKit. Their text is read directly rather than matched with a
+      // locator, because an option is never laid out and WebKit does not
+      // surface it to one.
+      await expect
+        .poll(() =>
+          payers
+            .nth(i)
+            .evaluate((el) =>
+              Array.from(
+                (el as unknown as { options: ArrayLike<{ text: string }> })
+                  .options,
+              ).map((option) => option.text),
+            ),
+        )
+        .toContain(rows[i].payer);
       await payers.nth(i).selectOption({ label: rows[i].payer });
       await descs.nth(i).fill(rows[i].what);
       await amounts.nth(i).fill(rows[i].amount);
