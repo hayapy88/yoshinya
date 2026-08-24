@@ -169,6 +169,24 @@ function SplitBillTool() {
   );
 
   const money = (minor: number) => formatMoney(minor, state.currency, locale);
+
+  /**
+   * Whether this person's general share fails to describe what they carry.
+   *
+   * The share column exists to explain the burden beside it, and once an
+   * expense sets its own weights it cannot: someone shown as 1 can be down for
+   * half of the wine. Rather than print a number that contradicts the amount
+   * next to it, the row is marked and the reader is sent to the breakdown.
+   */
+  const weightIsAdjusted = (participant: (typeof state.participants)[number]) =>
+    state.expenses.some((expense) => {
+      const effective =
+        expense.shares === null
+          ? participant.weight
+          : (expense.shares[participant.id] ?? 0);
+      return effective !== participant.weight;
+    });
+  const anyWeightAdjusted = state.participants.some(weightIsAdjusted);
   const nameOf = (id: string) =>
     state.participants.find((p) => p.id === id)?.name ?? '';
 
@@ -274,7 +292,13 @@ function SplitBillTool() {
                           total: `${s.statementBurdenTotal} ${money(r.burdenMinor)}`,
                           items: statementFor(breakdowns, participant.id).map(
                             (item) => ({
-                              label: item.expense.description || s.amount,
+                              // The weight travels into the image too: it is
+                              // set on the form and would otherwise appear
+                              // nowhere in what gets shared.
+                              label:
+                                item.amountMinor !== null && !item.evenlyShared
+                                  ? `${item.expense.description || s.amount}（${s.statementWeighted(item.weight ?? 0, item.totalWeight)}）`
+                                  : item.expense.description || s.amount,
                               amount:
                                 item.amountMinor === null
                                   ? s.statementNotShared
@@ -995,7 +1019,10 @@ function SplitBillTool() {
                   return (
                     <tr key={participant.id}>
                       <th scope="row">{participant.name}</th>
-                      <td>{participant.weight}</td>
+                      <td>
+                        {participant.weight}
+                        {weightIsAdjusted(participant) && s.weightAdjustedMark}
+                      </td>
                       <td>{money(r.burdenMinor)}</td>
                       <td>{money(r.paidMinor)}</td>
                       {/* Worded, not just coloured: the sign of a number is a
@@ -1014,6 +1041,9 @@ function SplitBillTool() {
               </tbody>
             </table>
           </div>
+          {anyWeightAdjusted && (
+            <p className="sb-hint">{s.weightAdjustedNote}</p>
+          )}
 
           {/* One block per person, listing every cost — including the ones
               they carry none of. Someone handed a figure wants to check what
@@ -1052,7 +1082,14 @@ function SplitBillTool() {
                             {' '}
                             {money(item.expense.amountMinor)}
                             {item.amountMinor !== null &&
-                              ` · ${s.statementSplitAmong(item.sharerCount)}`}
+                              ` · ${
+                                item.evenlyShared
+                                  ? s.statementSplitAmong(item.sharerCount)
+                                  : s.statementWeighted(
+                                      item.weight ?? 0,
+                                      item.totalWeight,
+                                    )
+                              }`}
                           </span>
                         </span>
                         <strong>

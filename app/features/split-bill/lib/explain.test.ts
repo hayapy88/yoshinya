@@ -308,3 +308,40 @@ describe('statementFor', () => {
     expect(statement.map((item) => item.sharerCount)).toEqual([2, 3, 3]);
   });
 });
+
+describe('a statement when the weights differ', () => {
+  const weighted = [
+    {
+      id: 'wineB',
+      payerId: 'a',
+      description: 'ワインB',
+      amountMinor: 3000,
+      shares: { a: 0.5, b: 1, c: 1 },
+    },
+  ];
+
+  // The weight was set on the form and then appeared nowhere in the result, so
+  // there was no way to check that A really was down for half.
+  it('reports the weight the person carries', () => {
+    const [item] = statementFor(breakDownExpenses(weighted, people), 'a');
+    expect(item.weight).toBe(0.5);
+    expect(item.totalWeight).toBe(2.5);
+    expect(item.amountMinor).toBe(600);
+  });
+
+  // "Split 3 ways" reads as equal thirds, which is wrong here.
+  it('knows the cost is not shared evenly', () => {
+    const [item] = statementFor(breakDownExpenses(weighted, people), 'a');
+    expect(item.evenlyShared).toBe(false);
+  });
+
+  it('still calls an equal split even', () => {
+    const [item] = statementFor(breakDownExpenses(expenses, people), 'a');
+    expect(item.evenlyShared).toBe(true);
+  });
+
+  it('has no weight for someone who carries none of it', () => {
+    const [item] = statementFor(breakDownExpenses(expenses, people), 'b');
+    expect(item.weight).toBeNull();
+  });
+});

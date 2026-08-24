@@ -663,6 +663,9 @@ export const en = {
     breakdownHeading: 'Shares and payments',
     colName: 'Name',
     colWeight: 'Share',
+    weightAdjustedMark: '*',
+    weightAdjustedNote:
+      '* Some costs use a share set for that cost alone, so this column does not explain the whole amount. The per-person breakdown below does.',
     colBurden: 'Owes',
     colPaid: 'Paid',
     colBalance: 'Balance',
@@ -700,6 +703,10 @@ export const en = {
       'Every cost is listed for everyone, including the ones they carry none of — so a share can be checked item by item.',
     statementNotShared: 'not yours',
     statementSplitAmong: (n: number) => `split ${n} ways`,
+    // Shown instead when the weights differ, because "split 3 ways" reads as
+    // equal thirds and the amount would not follow from it.
+    statementWeighted: (weight: number, total: number) =>
+      `${weight} of ${total} shares`,
     statementBurdenTotal: 'Owes in total',
     statementPaidTotal: 'Paid',
     detailsHeading: 'Every payment',

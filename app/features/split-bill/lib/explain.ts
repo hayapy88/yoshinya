@@ -236,6 +236,17 @@ export type PersonalItem = {
   amountMinor: number | null;
   /** How many people carry it, so a portion can be checked against the total. */
   sharerCount: number;
+  /** Their weight on this cost, and the weights of everyone sharing it. */
+  weight: number | null;
+  totalWeight: number;
+  /**
+   * Whether everyone sharing it carries the same weight.
+   *
+   * When they do, "split 3 ways" says everything. When they do not, it is
+   * actively misleading — it reads as equal thirds — and the weights have to
+   * be shown instead.
+   */
+  evenlyShared: boolean;
 };
 
 /**
@@ -254,10 +265,19 @@ export function statementFor(
     const share = breakdown.shares.find(
       (candidate) => candidate.participantId === participantId,
     );
+    const totalWeight = breakdown.shares.reduce(
+      (sum, candidate) => sum + candidate.weight,
+      0,
+    );
     return {
       expense: breakdown.expense,
       amountMinor: share ? share.amountMinor : null,
       sharerCount: breakdown.shares.length,
+      weight: share ? share.weight : null,
+      totalWeight,
+      evenlyShared: breakdown.shares.every(
+        (candidate) => candidate.weight === breakdown.shares[0]?.weight,
+      ),
     };
   });
 }

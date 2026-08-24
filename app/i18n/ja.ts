@@ -651,6 +651,9 @@ export const ja: typeof en = {
     breakdownHeading: '負担・立替内訳',
     colName: '名前',
     colWeight: '割合',
+    weightAdjustedMark: '※',
+    weightAdjustedNote:
+      '※ 一部の費用は、その費用だけの割合で計算しています。この列だけでは負担額を説明できません。下の「各自の負担額内訳」をご覧ください。',
     colBurden: '負担額',
     colPaid: '立替額',
     colBalance: '差額',
@@ -688,6 +691,11 @@ export const ja: typeof en = {
       '負担していない項目も含めて全件を表示します。何にいくら負担しているかを1件ずつ確認できます。',
     statementNotShared: '負担なし',
     statementSplitAmong: (n: number) => `${n}人で負担`,
+    // "合計" read as this person's total, when it is the whole expense's — the
+    // same number appears against everyone sharing it, which is confusing
+    // rather than informative unless it says whose total it is.
+    statementWeighted: (weight: number, total: number) =>
+      `全体 ${total} のうち ${weight}`,
     statementBurdenTotal: '負担額の合計',
     statementPaidTotal: '立替額',
     detailsHeading: '立替明細',
