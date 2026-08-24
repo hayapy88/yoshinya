@@ -19,6 +19,7 @@ export function meta({ params, matches }: Route.MetaArgs) {
     title: t.splitBillPage.metaTitle,
     description: t.splitBillPage.metaDescription,
     noindex: !isProductionHost(rootData?.host),
+    ogImageSlug: 'split-bill',
     jsonLd: [
       splitBillJsonLd(locale),
       // Mirrors the FAQ rendered below the tool, as required for FAQPage.

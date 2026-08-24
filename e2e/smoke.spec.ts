@@ -1330,3 +1330,220 @@ test.describe('csv encoding fixer workflow', () => {
     expect(overflow.scroll).toBeLessThanOrEqual(overflow.client + 1);
   });
 });
+
+test.describe('split bill workflow', () => {
+  const addPeople = async (page: Page, names: string[]) => {
+    for (let i = 2; i < names.length; i += 1) {
+      await page.getByRole('button', { name: '＋ 参加者を追加' }).click();
+    }
+    const fields = page.locator('input[id^="sb-name-"]');
+    for (let i = 0; i < names.length; i += 1) {
+      await fields.nth(i).fill(names[i]);
+    }
+  };
+  const addExpenses = async (
+    page: Page,
+    rows: { payer: string; what: string; amount: string }[],
+  ) => {
+    for (let i = 1; i < rows.length; i += 1) {
+      await page.getByRole('button', { name: '＋ 立替を追加' }).click();
+    }
+    const payers = page.locator('select[id^="sb-payer-"]');
+    const descs = page.locator('input[id^="sb-desc-"]');
+    const amounts = page.locator('input[id^="sb-amount-"]');
+    for (let i = 0; i < rows.length; i += 1) {
+      await payers.nth(i).selectOption({ label: rows[i].payer });
+      await descs.nth(i).fill(rows[i].what);
+      await amounts.nth(i).fill(rows[i].amount);
+    }
+  };
+
+  // The worked example from the specification, end to end.
+  test('settles the specification\u2019s example', async ({ page }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B', 'C', 'D', 'E']);
+    const weights = page.locator('input[id^="sb-weight-"]');
+    await weights.nth(3).fill('0.5');
+    await weights.nth(4).fill('0.2');
+    await addExpenses(page, [
+      { payer: 'A', what: 'ワイン', amount: '15000' },
+      { payer: 'B', what: '食材', amount: '12000' },
+      { payer: 'C', what: 'タクシー', amount: '10000' },
+    ]);
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+
+    await expect(page.locator('.sb-summary strong')).toContainText('37,000');
+    const settlements = page.locator('.sb-settlements li');
+    await expect(settlements).toHaveCount(2);
+    await expect(settlements.nth(0)).toContainText('5,000');
+    await expect(settlements.nth(1)).toContainText('2,000');
+  });
+
+  test('refuses an incomplete form and says what is missing', async ({
+    page,
+  }) => {
+    await page.goto('/ja/split-bill');
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+    await expect(
+      page.getByText('名前を入力してください。').first(),
+    ).toBeVisible();
+    await expect(page.locator('.sb-result')).toHaveCount(0);
+  });
+
+  // The wine nobody else drank, which is why per-expense shares exist.
+  test('charges a cost only to the people who shared it', async ({ page }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B', 'C']);
+    await addExpenses(page, [
+      { payer: 'A', what: 'ワイン', amount: '3000' },
+      { payer: 'B', what: '食事', amount: '3000' },
+    ]);
+    await page
+      .locator('.sb-expense-row')
+      .nth(0)
+      .getByRole('button', { name: '変更' })
+      .click();
+    await page
+      .locator('.sb-sharer-picker')
+      .getByRole('checkbox')
+      .nth(2)
+      .uncheck();
+    await expect(page.locator('.sb-sharers-value').first()).toHaveText('A・B');
+    await page
+      .locator('.sb-sharer-picker')
+      .getByRole('button', { name: '完了' })
+      .click();
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+
+    // Wine 1,500 each for A and B; food 1,000 each for all three.
+    const rows = page.locator('.sb-table tbody tr');
+    await expect(rows.nth(0)).toContainText('2,500');
+    await expect(rows.nth(2)).toContainText('1,000');
+  });
+
+  test('shows the share a cost was split by, and marks the column that cannot explain it', async ({
+    page,
+  }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B']);
+    await addExpenses(page, [{ payer: 'A', what: 'ワイン', amount: '3000' }]);
+    await page
+      .locator('.sb-expense-row')
+      .nth(0)
+      .getByRole('button', { name: '変更' })
+      .click();
+    await page
+      .locator('.sb-sharer-picker input[type="number"]')
+      .nth(0)
+      .fill('0.5');
+    await page
+      .locator('.sb-sharer-picker')
+      .getByRole('button', { name: '完了' })
+      .click();
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+
+    await expect(page.locator('.sb-table tbody tr').nth(0)).toContainText('1※');
+    await expect(
+      page.getByText('この列だけでは負担額を説明できません', { exact: false }),
+    ).toBeVisible();
+    await page.locator('.sb-statement').first().locator('summary').click();
+    await expect(page.locator('.sb-statement').first()).toContainText(
+      '全体 1.5 のうち 0.5',
+    );
+  });
+
+  // Someone handed a figure wants to see that what they skipped is not in it.
+  test('lists costs a person carries none of', async ({ page }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B']);
+    await addExpenses(page, [
+      { payer: 'A', what: 'ワイン', amount: '2000' },
+      { payer: 'A', what: '食事', amount: '2000' },
+    ]);
+    await page
+      .locator('.sb-expense-row')
+      .nth(0)
+      .getByRole('button', { name: '変更' })
+      .click();
+    await page
+      .locator('.sb-sharer-picker')
+      .getByRole('checkbox')
+      .nth(1)
+      .uncheck();
+    await page
+      .locator('.sb-sharer-picker')
+      .getByRole('button', { name: '完了' })
+      .click();
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+
+    const b = page.locator('.sb-statement').nth(1);
+    await b.locator('summary').click();
+    await expect(b).toContainText('負担なし');
+  });
+
+  test('makes all three images, each longer than the last', async ({
+    page,
+  }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B']);
+    await addExpenses(page, [{ payer: 'A', what: 'ワイン', amount: '2000' }]);
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+    await page.getByRole('button', { name: '画像を作成' }).click();
+
+    const size = () =>
+      page.locator('.sb-image').evaluate(
+        (el) =>
+          ({
+            w: (el as unknown as { naturalWidth: number }).naturalWidth,
+            h: (el as unknown as { naturalHeight: number }).naturalHeight,
+          }) as { w: number; h: number },
+      );
+    await expect(page.locator('.sb-image')).toBeVisible();
+    const simple = await size();
+    expect(simple.w).toBe(1080);
+
+    await page.getByRole('button', { name: '内訳もつける' }).click();
+    await expect
+      .poll(async () => (await size()).h, { timeout: 10000 })
+      .toBeGreaterThan(simple.h);
+    const detailed = await size();
+
+    await page.getByRole('button', { name: '各自の明細もつける' }).click();
+    await expect
+      .poll(async () => (await size()).h, { timeout: 10000 })
+      .toBeGreaterThan(detailed.h);
+  });
+
+  test('downloads the image', async ({ page }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B']);
+    await addExpenses(page, [{ payer: 'A', what: 'ワイン', amount: '2000' }]);
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+    await page.getByRole('button', { name: '画像を作成' }).click();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: '画像をダウンロード' }).click(),
+    ]);
+    expect(download.suggestedFilename()).toBe('warikan-result.png');
+  });
+
+  test('keeps the draft, and lets it be deleted', async ({ page }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['あきら', 'ひろし']);
+    await addExpenses(page, [
+      { payer: 'あきら', what: 'ワイン', amount: '2000' },
+    ]);
+    await page.waitForTimeout(700);
+
+    await page.reload();
+    await expect(page.locator('input[id^="sb-name-"]').first()).toHaveValue(
+      'あきら',
+    );
+
+    page.once('dialog', (dialog) => void dialog.accept());
+    await page.getByRole('button', { name: '入力データを削除する' }).click();
+    await expect(page.locator('input[id^="sb-name-"]').first()).toHaveValue('');
+    await page.reload();
+    await expect(page.locator('input[id^="sb-name-"]').first()).toHaveValue('');
+  });
+});
