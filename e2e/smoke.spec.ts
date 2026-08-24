@@ -1332,14 +1332,36 @@ test.describe('csv encoding fixer workflow', () => {
 });
 
 test.describe('split bill workflow', () => {
+  /** The names as the payer dropdown sees them, which is the rendered truth. */
+  const optionTexts = (page: Page) =>
+    page
+      .locator('select[id^="sb-payer-"]')
+      .first()
+      .evaluate((el) =>
+        Array.from(
+          (el as unknown as { options: ArrayLike<{ text: string }> }).options,
+        ).map((option) => option.text),
+      );
+
   const addPeople = async (page: Page, names: string[]) => {
     for (let i = 2; i < names.length; i += 1) {
       await page.getByRole('button', { name: '＋ 参加者を追加' }).click();
     }
     const fields = page.locator('input[id^="sb-name-"]');
-    for (let i = 0; i < names.length; i += 1) {
-      await fields.nth(i).fill(names[i]);
-    }
+    // Retried as a whole, because a fill is what goes missing. On WebKit the
+    // first name never reached the application — the payer dropdown still
+    // offered "1" for that person while already offering "B" for the next —
+    // and waiting after a fill cannot help when it is the fill that vanished.
+    // The same thing, in a different form, as the file renamer's lost tokens.
+    await expect(async () => {
+      for (let i = 0; i < names.length; i += 1) {
+        await fields.nth(i).fill(names[i]);
+      }
+      const options = await optionTexts(page);
+      for (const name of names) {
+        expect(options).toContain(name);
+      }
+    }).toPass({ timeout: 20000 });
   };
   const addExpenses = async (
     page: Page,
@@ -1352,24 +1374,6 @@ test.describe('split bill workflow', () => {
     const descs = page.locator('input[id^="sb-desc-"]');
     const amounts = page.locator('input[id^="sb-amount-"]');
     for (let i = 0; i < rows.length; i += 1) {
-      // The options are named after the participants, so they only exist once
-      // the name fields above have been rendered back; selecting into a list
-      // that has not caught up times out, which is how this first failed on
-      // WebKit. Their text is read directly rather than matched with a
-      // locator, because an option is never laid out and WebKit does not
-      // surface it to one.
-      await expect
-        .poll(() =>
-          payers
-            .nth(i)
-            .evaluate((el) =>
-              Array.from(
-                (el as unknown as { options: ArrayLike<{ text: string }> })
-                  .options,
-              ).map((option) => option.text),
-            ),
-        )
-        .toContain(rows[i].payer);
       await payers.nth(i).selectOption({ label: rows[i].payer });
       await descs.nth(i).fill(rows[i].what);
       await amounts.nth(i).fill(rows[i].amount);
