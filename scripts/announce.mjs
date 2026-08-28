@@ -7,7 +7,8 @@
 // draft always turns out to need.
 //
 //   npm run announce
-//   npm run announce -- --title "PNGの減色" --bullet "..." --bullet "..."
+//   npm run announce -- --problem "…" --problem "…" \\
+//     --bullet "…" --bullet "…" --suits "…" --simple "…" --closing "…"
 //
 // What it works out on its own: which tool changed, whether this is a new tool
 // or an addition to one, and the URL. The bullets are written by hand, because
@@ -121,6 +122,22 @@ function warnIfAmbiguous(slug) {
   }
 }
 
+/**
+ * Which release this is.
+ *
+ * The published tools are listed in release order, so a tool's place in that
+ * list is its number — no second list to keep in step with the first.
+ */
+function releaseNumber(slug) {
+  const source = execSync('cat app/components/tool/types.ts', {
+    encoding: 'utf8',
+  });
+  const block = source.split('export const TOOL_SLUGS')[1] ?? '';
+  const slugs = [...block.matchAll(/'([a-z-]+)'/g)].map((match) => match[1]);
+  const index = slugs.indexOf(slug);
+  return index < 0 ? null : index + 1;
+}
+
 function toolName(slug) {
   // Read from the Japanese dictionary rather than a second list here, so the
   // post cannot end up calling a tool something the site does not.
@@ -131,39 +148,68 @@ function toolName(slug) {
   return match ? match[1] : slug;
 }
 
-function buildMessage({ kind, slug, name, title, bullets }) {
-  // The tool name is bracketed. A post opens with a long Japanese sentence in
-  // which the product name is itself Japanese, and without the brackets the
-  // reader has to work out where the name ends before anything else parses.
+/**
+ * The post, in the shape the account already uses.
+ *
+ * It opens with the problem rather than the product, because someone scrolling
+ * recognises their own annoyance before they recognise a tool they have never
+ * heard of. The name is bracketed: the sentence around it is Japanese and so is
+ * the name, and without brackets the reader has to work out where one ends.
+ *
+ * The parts that cannot be derived — the problem, what it suits, the closing
+ * line — are written per release and passed in. A commit explains a change to
+ * whoever made it; this is read by someone who has never seen the tool.
+ */
+function buildMessage({
+  kind,
+  slug,
+  name,
+  title,
+  number,
+  problems,
+  bullets,
+  suits,
+  simple,
+  closing,
+}) {
   const bracketed = `【${name}】`;
+  const release = number ? `第${number}弾` : null;
   const opening =
     kind === 'release'
-      ? `${bracketed}をリリースしたにゃ😺`
+      ? [`そんな不便を解決する、`, release, `${bracketed}を公開したにゃ🐱`]
+          .filter(Boolean)
+          .join('')
       : kind === 'feature'
-        ? `${bracketed}に新機能「${title}」を追加したにゃ😺`
-        : `${bracketed}を改善したにゃ😺`;
+        ? `そんな不便を解決する、${bracketed}に新機能「${title}」を追加したにゃ🐱`
+        : `そんな不便を解決する、${bracketed}を改善したにゃ🐱`;
 
   const listed = bullets.map((line) => `✅ ${line}`).join('\n');
 
   return [
+    ...(problems.length > 0 ? [problems.join('\n'), ''] : []),
     opening,
     ...(listed ? ['', listed] : []),
+    ...(suits ? ['', suits] : []),
+    ...(simple ? ['', simple] : []),
+    ...(closing ? ['', closing] : []),
     '',
-    'ぜひ使ってみてにゃ🐾',
-    '',
-    '🔗使ってみる👇',
+    '🔗 使ってみる 👇',
     slug ? `${SITE}/${slug}` : SITE,
     '',
-    '感想や要望があればぜひコメントで教えてにゃ🐾',
+    '使ってみた感想も、ぜひ教えてにゃ🐾',
   ].join('\n');
 }
 
 function parseArgs(argv) {
-  const args = { bullets: [] };
+  const args = { bullets: [], problems: [] };
   for (let i = 0; i < argv.length; i += 1) {
     const [flag, inline] = argv[i].split('=');
     const value = inline ?? argv[++i];
     if (flag === '--bullet') args.bullets.push(value);
+    else if (flag === '--problem') args.problems.push(value);
+    else if (flag === '--suits') args.suits = value;
+    else if (flag === '--simple') args.simple = value;
+    else if (flag === '--closing') args.closing = value;
     else if (flag === '--title') args.title = value;
     else if (flag === '--tool') args.tool = value;
     else if (flag === '--kind') args.kind = value;
@@ -192,7 +238,12 @@ const message = buildMessage({
   slug,
   name,
   title: args.title ?? '',
+  number: slug ? releaseNumber(slug) : null,
+  problems: args.problems,
   bullets: args.noPrivacy ? args.bullets : [...args.bullets, PRIVACY_BULLET],
+  suits: args.suits,
+  simple: args.simple,
+  closing: args.closing,
 });
 
 console.log(`\nCommits since the last announcement (${commits.length}):`);
