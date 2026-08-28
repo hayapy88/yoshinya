@@ -23,6 +23,8 @@ export function CompareView({
   onToggleFullscreen,
   onToggleSettings,
   isSettingsOpen = false,
+  outputWidth = null,
+  outputHeight = null,
 }: {
   beforeUrl: string;
   afterUrl: string | null;
@@ -33,6 +35,17 @@ export function CompareView({
   /** Only supplied in full screen; the row hides it above the narrow layout. */
   onToggleSettings?: () => void;
   isSettingsOpen?: boolean;
+  /**
+   * The pixel size of the image being produced.
+   *
+   * Both sides fill the stage, so an output with fewer pixels than the frame is
+   * stretched to sit beside the original and looks soft for that reason alone.
+   * Someone resizing a photo to 700px then sees a blurred After and concludes
+   * the tool ruined it, when nothing is wrong with the file. Knowing the real
+   * size lets the stage refuse to draw it any larger than it is.
+   */
+  outputWidth?: number | null;
+  outputHeight?: number | null;
 }) {
   const { t } = useLocale();
   const stageRef = useRef<HTMLDivElement>(null);
@@ -42,10 +55,59 @@ export function CompareView({
   // Space held down shows the original full-frame, for a quick sanity check.
   const [peeking, setPeeking] = useState(false);
 
+  /**
+   * The scale at which one pixel of the output lands on one pixel of the
+   * screen. Null while the output size is unknown.
+   *
+   * Measured in device pixels rather than CSS pixels, because that is where the
+   * softness actually comes from: on a 2x display an image drawn at its CSS
+   * width is still being stretched across twice as many real pixels.
+   */
+  const [nativeScale, setNativeScale] = useState<number | null>(null);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || !outputWidth || !outputHeight) {
+      setNativeScale(null);
+      return;
+    }
+    const measure = () => {
+      const { width, height } = stage.getBoundingClientRect();
+      if (width === 0 || height === 0) {
+        return;
+      }
+      // object-fit: contain, so the drawn width is whichever of the two
+      // constraints bites first.
+      const drawn = Math.min(width, height * (outputWidth / outputHeight));
+      const dpr = window.devicePixelRatio || 1;
+      setNativeScale(outputWidth / dpr / drawn);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, [outputWidth, outputHeight]);
+
+  /**
+   * Never past the output's own resolution. Beyond it the browser is inventing
+   * pixels, and inspecting invented pixels says nothing about the file — this
+   * is what made a photo resized to 700px look ruined when the frame was wider
+   * than that.
+   */
+  const maxScale = Math.min(MAX_SCALE, nativeScale ?? MAX_SCALE);
+
   const fit = useCallback(() => {
-    setScale(1);
+    // Fitting must not upscale either: a small output starts below 1, sitting
+    // inside the stage at the size it now is.
+    setScale(Math.min(1, maxScale));
     setOffset({ x: 0, y: 0 });
-  }, []);
+  }, [maxScale]);
+
+  // Zooming in and then shrinking the output must not leave the picture
+  // stranded above its own resolution.
+  useEffect(() => {
+    setScale((current) => Math.min(current, maxScale));
+  }, [maxScale]);
 
   // A new image starts fitted rather than inheriting the previous zoom, which
   // would drop the user into an arbitrary corner of a differently sized photo.
@@ -54,11 +116,14 @@ export function CompareView({
     setDivider(50);
   }, [beforeUrl, fit]);
 
-  const zoomBy = useCallback((factor: number) => {
-    setScale((current) =>
-      Math.min(MAX_SCALE, Math.max(MIN_SCALE, current * factor)),
-    );
-  }, []);
+  const zoomBy = useCallback(
+    (factor: number) => {
+      setScale((current) =>
+        Math.min(maxScale, Math.max(MIN_SCALE, current * factor)),
+      );
+    },
+    [maxScale],
+  );
 
   // Dragging: the divider when grabbing the handle, otherwise panning.
   const dragState = useRef<{
@@ -161,11 +226,20 @@ export function CompareView({
   const transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`;
   const reveal = peeking ? 100 : divider;
 
+  /**
+   * How large the picture is against its own pixels, which is what the reading
+   * on the zoom control means. Not the same as `scale`, which is measured from
+   * whatever happened to fit the frame: an output smaller than the stage is
+   * shown at 100% of itself while scale sits below 1, and reporting that scale
+   * would tell someone looking at an untouched image that it is shrunk.
+   */
+  const displayRatio = nativeScale ? scale / nativeScale : scale;
+
   return (
     <div className="ic-compare">
       <div
         ref={stageRef}
-        className={`ic-stage${scale > 1 ? ' ic-zoomed' : ''}`}
+        className={`ic-stage${displayRatio > 1 ? ' ic-zoomed' : ''}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -256,7 +330,9 @@ export function CompareView({
           >
             −
           </button>
-          <span className="ic-zoom-value">{Math.round(scale * 100)}%</span>
+          <span className="ic-zoom-value">
+            {Math.round(displayRatio * 100)}%
+          </span>
           <button
             type="button"
             className="ic-zoom-step"

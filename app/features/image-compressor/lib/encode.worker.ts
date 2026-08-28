@@ -86,6 +86,11 @@ export async function encode(request: EncodeRequest): Promise<EncodeResponse> {
       context.fillStyle = request.background;
       context.fillRect(0, 0, target.width, target.height);
     }
+    // Shrinking a photo by a factor of two or more with the default sampling
+    // drops detail the source had; 'high' asks the browser for a proper
+    // downscale instead. Costs nothing on images that are not being resized.
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
     context.drawImage(bitmap, 0, 0, target.width, target.height);
 
     // PNG takes its own path. The canvas encoder always writes 8-bit RGBA with

@@ -429,6 +429,43 @@ whole purpose is accurate visual comparison.
 Past 100% the images render with `image-rendering: pixelated`, so what is on
 screen is the actual pixels rather than the browser's interpolation of them.
 
+## Nothing is drawn above its own resolution
+
+Both sides fill the stage, so an output resized to 700px was stretched to sit
+beside a 1727px original — and looked ruined for that reason alone. Someone
+comparing them concluded the tool had destroyed the picture, when the file was
+fine and the frame was lying about it.
+
+The stage now measures itself and refuses to draw past the point where one pixel
+of the output lands on one pixel of the screen. Measured in device pixels, not
+CSS pixels: on a 2x display an image drawn at its CSS width is still spread
+across twice as many real pixels, and capping in CSS pixels would leave half the
+problem in place. A small output therefore sits inside the frame with space
+around it, at the size it now is.
+
+The reading on the zoom control changed with it, from "how far this is zoomed
+past whatever fitted the frame" to "how large this is against its own pixels" —
+the meaning every image viewer gives it. The old reading called an untouched
+picture 69%, which says it is shrunk when it is not. The pixel dimensions are
+printed beside the file sizes so the smaller frame has a stated reason rather
+than an inferred one.
+
+Not applying the resize to the preview was considered and rejected. The
+comparison has to be the file that gets saved, and resizing is itself capable of
+the artefacts — moiré, unreadable text — that someone opens the comparison to
+find.
+
+## Downscaling asks for the good sampler
+
+`imageSmoothingQuality` defaults to `'low'`, which shows when a photo is halved
+or more. Set to `'high'` before the draw. It costs nothing on images that are
+not being resized, since there is no resampling to do.
+
+Worth knowing what this does not fix: PNG output is quantised to 256 colours by
+default, and that — not the resize — is where a resized photo loses its
+gradients. The confusion is easy to have twice, because the checkbox reads as an
+optional extra rather than as something already applied.
+
 ## The clip must live in stage coordinates
 
 `clip-path` resolves in the clipped element's own coordinate space. Applying it

@@ -812,6 +812,11 @@ export const en = {
     // Sizes
     beforeSize: (size: string) => `Before: ${size}`,
     afterSize: (size: string) => `After: ${size}`,
+    // The comparison never draws an image above its own resolution, so a
+    // resized output sits smaller in the frame. Printing the pixel size says
+    // why, where the picture alone leaves it to be guessed.
+    pixelSize: (size: string, width: number, height: number) =>
+      `${size} (${width} × ${height} px)`,
     savedBy: (bytes: string, percent: string) =>
       `${bytes} smaller (${percent})`,
     grewBy: (percent: string) => `${percent} larger`,
