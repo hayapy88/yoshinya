@@ -66,6 +66,14 @@ function download(blob: Blob, name: string) {
 
 function ImageCompressorTool() {
   const { t } = useLocale();
+  // Dimensions are absent until the image has been decoded or encoded, and a
+  // half-written "1727 ×  px" is worse than the file size on its own.
+  const withPixels = (
+    size: string,
+    width: number | null,
+    height: number | null,
+  ) =>
+    width && height ? t.imageCompressor.pixelSize(size, width, height) : size;
   const [state, dispatch] = useReducer(compressorReducer, initialState);
   const [toast, setToast] = useState<Toast | null>(null);
   const [zipProgress, setZipProgress] = useState<number | null>(null);
@@ -623,6 +631,8 @@ function ImageCompressorTool() {
                             : undefined
                         }
                         isSettingsOpen={isSettingsOpen}
+                        outputWidth={item.outputWidth}
+                        outputHeight={item.outputHeight}
                       />
                       {isFullscreen && (
                         <div
@@ -679,13 +689,23 @@ function ImageCompressorTool() {
                   <div className="ic-sizes">
                     <span>
                       {t.imageCompressor.beforeSize(
-                        formatBytes(item.sourceFile.size),
+                        withPixels(
+                          formatBytes(item.sourceFile.size),
+                          item.sourceWidth,
+                          item.sourceHeight,
+                        ),
                       )}
                     </span>
                     {size && (
                       <>
                         <span>
-                          {t.imageCompressor.afterSize(formatBytes(size.after))}
+                          {t.imageCompressor.afterSize(
+                            withPixels(
+                              formatBytes(size.after),
+                              item.outputWidth,
+                              item.outputHeight,
+                            ),
+                          )}
                         </span>
                         <span className={size.grew ? 'ic-grew' : 'ic-saved'}>
                           {size.grew

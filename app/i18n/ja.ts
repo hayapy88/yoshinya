@@ -801,6 +801,8 @@ export const ja: typeof en = {
     // Sizes
     beforeSize: (size: string) => `変換前: ${size}`,
     afterSize: (size: string) => `変換後: ${size}`,
+    pixelSize: (size: string, width: number, height: number) =>
+      `${size}（${width} × ${height} px）`,
     savedBy: (bytes: string, percent: string) => `${bytes} 削減（${percent}）`,
     grewBy: (percent: string) => `${percent} 増加`,
     grewNote:
