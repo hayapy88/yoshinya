@@ -515,26 +515,6 @@ export const en = {
     heading: 'Guide',
     sections: [
       {
-        heading: 'What is a PDF title?',
-        body: 'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
-      },
-      {
-        heading: 'Filename vs PDF title',
-        body: 'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
-        terms: [
-          {
-            term: 'Filename',
-            definition:
-              'The name your operating system shows, such as proposal.pdf. Renaming the file changes only this.',
-          },
-          {
-            term: 'PDF title',
-            definition:
-              'A value stored inside the PDF. It is what a browser tab displays, and it stays the same no matter how many times you rename the file.',
-          },
-        ],
-      },
-      {
         heading: 'How to use the tool',
         steps: [
           'Drop one or more PDFs onto the area above. They are read in your browser and never uploaded.',
@@ -552,6 +532,26 @@ export const en = {
           'Handouts and teaching material need consistent titles before distribution.',
           'PDFs collected from customers or suppliers have inconsistent or missing document properties.',
           'You want the author field cleared before sharing a document outside your organisation.',
+        ],
+      },
+      {
+        heading: 'What is a PDF title?',
+        body: 'Every PDF carries a set of document properties inside the file itself, and one of them is the title. Browsers show it in the tab, PDF readers show it in the window and in the document properties dialog, and search engines may use it when the PDF appears in results. It is written when the PDF is created, which is why an exported document often ends up titled after the template, the slide deck, or the original Word file it came from.',
+      },
+      {
+        heading: 'Filename vs PDF title',
+        body: 'These are two different things, and changing one does not change the other. That is the whole reason this tool exists.',
+        terms: [
+          {
+            term: 'Filename',
+            definition:
+              'The name your operating system shows, such as proposal.pdf. Renaming the file changes only this.',
+          },
+          {
+            term: 'PDF title',
+            definition:
+              'A value stored inside the PDF. It is what a browser tab displays, and it stays the same no matter how many times you rename the file.',
+          },
         ],
       },
       {

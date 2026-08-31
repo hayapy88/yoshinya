@@ -226,6 +226,17 @@ before the next word, because the space is removed as it is typed. Split into
 `sanitizeInput` (per keystroke, no trim) and `normalizeTextField` (at the PDF
 boundary, trims).
 
+### The guide explained before it instructed
+
+The guide opened with "PDFのタイトルとは？" and "ファイル名とPDFタイトルの違い",
+pushing 使い方 below them. Someone who has just landed on the page wants to use
+the tool, not read about it. The two explanatory sections were moved after
+使い方 and こんなときに便利 — the text itself is unchanged, only the order.
+
+This is now a rule for every tool rather than a one-off fix: see
+`docs/tools/shared-page-structure.md`, pinned by the "a guide opens with what
+the visitor came for" block in `app/i18n/guide-accuracy.test.ts`.
+
 ## Privacy
 
 PDFs are read, edited, and rebuilt entirely in the browser. Nothing is uploaded,
