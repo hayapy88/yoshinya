@@ -149,12 +149,19 @@ function toolName(slug) {
 }
 
 /**
- * The post, in the shape the account already uses.
+ * The post, in the shape the account uses. The order is fixed:
+ *
+ *   the problem → そんな不便を解決する、第◯弾「name」を公開したにゃ🐱 →
+ *   ✅ list → who it suits → how little it takes →
+ *   「…は、よしにゃにおまかせにゃ！」 → link → comments
  *
  * It opens with the problem rather than the product, because someone scrolling
  * recognises their own annoyance before they recognise a tool they have never
  * heard of. The name is bracketed: the sentence around it is Japanese and so is
  * the name, and without brackets the reader has to work out where one ends.
+ *
+ * Spacing is deliberate and tight — ✅ and 🔗 sit against their text with no
+ * space, because a gap there reads as a stray character on a phone.
  *
  * The parts that cannot be derived — the problem, what it suits, the closing
  * line — are written per release and passed in. A commit explains a change to
@@ -172,18 +179,18 @@ function buildMessage({
   simple,
   closing,
 }) {
-  const bracketed = `【${name}】`;
-  const release = number ? `第${number}弾` : null;
+  const bracketed = `「${name}」`;
+  const release = number ? `第${number}弾` : '';
+  // The bridge carries the reader from their own annoyance to the tool; the
+  // opening only works because the lines above it named the annoyance.
   const opening =
     kind === 'release'
-      ? [`そんな不便を解決する、`, release, `${bracketed}を公開したにゃ🐱`]
-          .filter(Boolean)
-          .join('')
+      ? `そんな不便を解決する、${release}${bracketed}を公開したにゃ🐱`
       : kind === 'feature'
         ? `そんな不便を解決する、${bracketed}に新機能「${title}」を追加したにゃ🐱`
         : `そんな不便を解決する、${bracketed}を改善したにゃ🐱`;
 
-  const listed = bullets.map((line) => `✅ ${line}`).join('\n');
+  const listed = bullets.map((line) => `✅${line}`).join('\n');
 
   return [
     ...(problems.length > 0 ? [problems.join('\n'), ''] : []),
@@ -193,10 +200,10 @@ function buildMessage({
     ...(simple ? ['', simple] : []),
     ...(closing ? ['', closing] : []),
     '',
-    '🔗 使ってみる 👇',
+    '🔗使ってみる👇',
     slug ? `${SITE}/${slug}` : SITE,
     '',
-    '使ってみた感想も、ぜひ教えてにゃ🐾',
+    '使ってみた感想、要望などあったらぜひコメントで教えてにゃ🐾',
   ].join('\n');
 }
 
