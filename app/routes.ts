@@ -10,6 +10,7 @@ export default [
     route('image-compressor', 'routes/image-compressor.tsx'),
     route('csv-encoding-fixer', 'routes/csv-encoding-fixer.tsx'),
     route('split-bill', 'routes/split-bill.tsx'),
+    route('icon-generator', 'routes/icon-generator.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -32,6 +33,9 @@ export default [
   }),
   route('split-bill', 'routes/locale-redirect.tsx', {
     id: 'redirect-split-bill',
+  }),
+  route('icon-generator', 'routes/locale-redirect.tsx', {
+    id: 'redirect-icon-generator',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),
