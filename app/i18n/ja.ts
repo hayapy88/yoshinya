@@ -294,6 +294,96 @@ export const ja: typeof en = {
     ],
     relatedHeading: '関連ツール',
   },
+  iconGeneratorGuide: {
+    heading: '使い方ガイド',
+    sections: [
+      {
+        heading: '使い方',
+        steps: [
+          '色・線の太さ・サイズを決めます。ページ上のアイコンすべてに即座に反映されます。',
+          '欲しいアイコンにチェックを入れます。「すべて選択」で全部が選べます。',
+          '1個だけなら「SVGをコピー」でコードがクリップボードに入ります。カード上のSVG・PNGボタンから個別にダウンロードもできます。',
+          'まとめて欲しいときは、SVG・PNGのどちらか（または両方）を選び、必要なPNGサイズにチェックを入れて、「③ 書き出す」のダウンロードボタンを押します。',
+        ],
+      },
+      {
+        heading: 'こんなときに便利',
+        items: [
+          '資料やスライドに、色と線の太さを揃えたアイコンを並べたい。',
+          '手元のアイコンが黒のままで、ブランドカラーに合っていない。',
+          '同じアイコンの32px・128px・512pxが必要で、3回書き出すのが面倒。',
+          'デザイン指定の線が、ダウンロードしたアイコンより太い。',
+          'SVGのコードそのものが欲しい（コンポーネントに直接貼りたい）。',
+        ],
+      },
+      {
+        heading: 'SVGとPNG、どちらを選ぶか',
+        terms: [
+          {
+            term: 'SVG',
+            definition:
+              '写真ではなく図形のデータなので、どんなサイズに拡大しても輪郭がぼやけません。Webサイトやデザインツールで使うならこちらです。SVGの書き出しにサイズ指定がないのは、1つのファイルがすべてのサイズを兼ねるためです。',
+          },
+          {
+            term: 'PNG',
+            definition:
+              'ピクセルが固定された画像です。SVGを受け付けない場所——一部のプレゼンソフト、各種マーケットプレイス、アプリのアイコン——で使います。自分のサイズを超えて引き伸ばすとぼやけるので、必要なサイズを選んで書き出してください。',
+          },
+        ],
+      },
+      {
+        heading: 'サイズを大きくすると線も太くなる理由',
+        body: '線の太さは画面上のピクセルではなく、アイコンの内側の座標で決まります。そのためアイコンを大きくすると線も同じ比率で太くなります。これは「大きく描き直した」のと同じ状態で、サイズ違いのアイコンを並べても同じシリーズに見えるのはこの仕組みのおかげです。大きいアイコンを細い線にしたい場合は、線の太さを下げてください。すべてのアイコンにまとめて反映されます。',
+      },
+      {
+        heading: 'アイコンの出典',
+        body: 'アイコンは Lucide（lucide.dev）を ISC ライセンスのもとで使用しています。一部は Feather プロジェクト由来で MIT ライセンスです。よしにゃはその両方を表記しており、ライセンスが求めているのはこの表記だけです。使う側には何の義務もありません。ここでダウンロードしたアイコンは、商用利用も改変も自由で、クレジット表記は不要です。',
+      },
+      {
+        heading: 'プライバシーと安全性',
+        body: '入力するのは色の値と検索語だけで、そのどちらもサーバーには送られません。アイコンの生成、PNGへの変換、ZIPの作成はすべてブラウザ内だけで完結します。設定はこの端末のブラウザにのみ保存され、ブラウザのデータを消せば一緒に消えます。',
+      },
+    ],
+    faqHeading: 'よくある質問',
+    faq: [
+      {
+        question: '商用利用はできますか？',
+        answer:
+          'できます。Lucide の ISC ライセンスのアイコンなので、商用利用・改変・再配布のいずれも許可されており、利用者側のクレジット表記も不要です。',
+      },
+      {
+        question: 'よしにゃや Lucide のクレジット表記は必要ですか？',
+        answer:
+          '不要です。ライセンスが表記を求めているのは配布する側——つまりこのサイト——で、その表記はこのページに記載しています。あなたの制作物に何かを入れる必要はありません。',
+      },
+      {
+        question: '操作した内容はサーバーに送られますか？',
+        answer:
+          '送られません。選んだ色も、検索した言葉も、ダウンロードしたファイルもブラウザの中だけで完結します。アクセス解析に記録されるのは、ダウンロードが行われたことと、その件数だけです。',
+      },
+      {
+        question: 'サイズを大きくすると線が太くなるのはなぜですか？',
+        answer:
+          'アイコン全体を線ごと拡大しているためです。これによりサイズ違いのアイコンが同じシリーズに見えます。大きいアイコンを細い線にしたい場合は、線の太さを下げてください。',
+      },
+      {
+        question: 'faviconや.icoファイルは作れますか？',
+        answer:
+          '現時点では作れません。16pxや32pxのPNGは書き出せるのでfaviconに必要な素材はほぼ揃いますが、.icoファイルやmanifestの生成は別の作業になるため、専用のツールとして用意する予定です。',
+      },
+      {
+        question: '一度に何個までダウンロードできますか？',
+        answer:
+          '全アイコンを、複数のPNGサイズで同時に書き出せます。ZIPはブラウザ内で作られるので、上限はお使いの端末の性能だけです。',
+      },
+      {
+        question: '次に開いたとき、設定は残っていますか？',
+        answer:
+          '同じ端末・同じブラウザなら残っています。色・線の太さ・サイズ・背景はこの端末に保存され、サーバーには送られません。選択していたアイコンは保存されません。',
+      },
+    ],
+    relatedHeading: '関連ツール',
+  },
   fileRenamerGuide: {
     heading: '使い方ガイド',
     sections: [
@@ -424,26 +514,6 @@ export const ja: typeof en = {
     heading: '使い方ガイド',
     sections: [
       {
-        heading: 'PDFのタイトルとは？',
-        body: 'PDFには、ファイルそのものの中に文書のプロパティが保存されていて、そのひとつがタイトルです。ブラウザはこれをタブに表示し、PDFリーダーはウィンドウやプロパティ画面に表示します。検索結果にPDFが出るときに使われることもあります。タイトルはPDFを作成した時点で書き込まれるため、書き出した文書のタイトルが、元になったテンプレートやスライド、Wordファイルの名前のままになっていることがよくあります。',
-      },
-      {
-        heading: 'ファイル名とPDFタイトルの違い',
-        body: 'この2つは別物で、片方を変えてももう片方は変わりません。このツールが存在する理由がまさにそこにあります。',
-        terms: [
-          {
-            term: 'ファイル名',
-            definition:
-              'OSが表示する名前（例: proposal.pdf）。ファイルの名前を変更しても、変わるのはこちらだけです。',
-          },
-          {
-            term: 'PDFタイトル',
-            definition:
-              'PDFの内部に保存されている値。ブラウザのタブに表示されるのはこちらで、ファイル名を何度変えても変わりません。',
-          },
-        ],
-      },
-      {
         heading: '使い方',
         steps: [
           '上のエリアにPDFをドロップします。ブラウザ内で読み込まれ、アップロードは行われません。',
@@ -461,6 +531,26 @@ export const ja: typeof en = {
           '配布前に、資料や教材のタイトルを統一しておきたい。',
           '取引先やお客様から集めたPDFの文書プロパティがバラバラ、または空になっている。',
           '社外に共有する前に、作成者の情報を消しておきたい。',
+        ],
+      },
+      {
+        heading: 'PDFのタイトルとは？',
+        body: 'PDFには、ファイルそのものの中に文書のプロパティが保存されていて、そのひとつがタイトルです。ブラウザはこれをタブに表示し、PDFリーダーはウィンドウやプロパティ画面に表示します。検索結果にPDFが出るときに使われることもあります。タイトルはPDFを作成した時点で書き込まれるため、書き出した文書のタイトルが、元になったテンプレートやスライド、Wordファイルの名前のままになっていることがよくあります。',
+      },
+      {
+        heading: 'ファイル名とPDFタイトルの違い',
+        body: 'この2つは別物で、片方を変えてももう片方は変わりません。このツールが存在する理由がまさにそこにあります。',
+        terms: [
+          {
+            term: 'ファイル名',
+            definition:
+              'OSが表示する名前（例: proposal.pdf）。ファイルの名前を変更しても、変わるのはこちらだけです。',
+          },
+          {
+            term: 'PDFタイトル',
+            definition:
+              'PDFの内部に保存されている値。ブラウザのタブに表示されるのはこちらで、ファイル名を何度変えても変わりません。',
+          },
         ],
       },
       {
@@ -740,6 +830,335 @@ export const ja: typeof en = {
       no_sharers: 'この費用を負担する人を1人以上選んでください。',
       no_expenses: '立替を1件以上追加してください。',
       too_few_participants: '参加者を2人以上にしてください。',
+    },
+  },
+  iconGeneratorPage: {
+    metaTitle: 'SVG素材を色・サイズ変更 - よしにゃにアイコン作成｜無料・登録不要',
+    metaDescription:
+      '使いたいアイコンを選んで、色・線の太さ・サイズをまとめて指定。SVGコードをコピーしたり、SVGとPNGをZIPで一括ダウンロードできます。無料・登録不要で、生成はすべてブラウザ内で完結します。',
+    heading: 'よしにゃにアイコン作成',
+    toolName: 'よしにゃにアイコン作成',
+    toolDescription:
+      'アイコンの色・線の太さ・サイズをまとめて指定し、SVGやPNGで書き出します。',
+    lead: 'アイコンを1個ずつダウンロードして、ファイルを開いて色を書き換えて……小さな作業のわりに手間がかかります。ここでは使いたいアイコンを選び、色・線の太さ・サイズを一度決めるだけ。SVGコードをそのままコピーすることも、必要なサイズのSVGとPNGをまとめてZIPで持ち帰ることもできます。',
+    privacyNote:
+      '入力した内容はサーバーに送信されません。すべての処理はブラウザ内で完結します。',
+  },
+  iconGenerator: {
+    styleHeading: '① 見た目を決める',
+    previewLabel: 'プレビュー',
+    color: '色',
+    colorPicker: (label: string) => `${label}のカラーピッカー`,
+    colorInvalid: '#1a2b3c のような形式で入力してください。',
+    strokeWidth: '線の太さ',
+    strokeWidthHint:
+      '線はアイコンと一緒に拡大されるため、大きいアイコンほど線も太くなります。',
+    size: 'サイズ',
+    background: '背景',
+    backgrounds: {
+      none: 'なし',
+      circle: '円',
+      rounded: '角丸四角',
+      square: '四角',
+    },
+    backgroundColor: '背景の色',
+    padding: 'アイコンの周りの余白',
+    resetStyle: '初期設定に戻す',
+    pickHeading: '② アイコンを選ぶ',
+    searchLabel: '検索',
+    searchPlaceholder: '例：メール、フォルダ、警告',
+    categories: {
+      all: 'すべて',
+      basic: '基本',
+      action: '操作',
+      arrow: '矢印',
+      file: 'ファイル',
+      contact: '連絡',
+      business: 'ビジネス',
+      money: 'お金',
+      place: '施設',
+      transport: '乗り物',
+      device: 'デバイス・IT',
+    },
+    resultCount: (n: number) => `${n}個`,
+    noResults: '該当するアイコンがありません。',
+    clearSearch: '検索条件をクリア',
+    selectAll: 'すべて選択',
+    clearSelection: '選択を解除',
+    selectedCount: (n: number) => `${n}個を選択中`,
+    selectIcon: (name: string) => `${name}を選択`,
+    copySvg: 'SVGをコピー',
+    copied: 'コピーしました',
+    copyFailed: 'コピーできませんでした。ブラウザに拒否されています。',
+    downloadSvgOne: 'SVG',
+    downloadPngOne: 'PNG',
+    exportHeading: '③ 書き出す',
+    formatLabel: '形式',
+    formatSvg: 'SVG',
+    formatPng: 'PNG',
+    svgSizeNote:
+      'SVGは1つのファイルがすべてのサイズを兼ねるため、サイズの選択はありません。',
+    pngSizesLabel: 'PNGのサイズ',
+    downloadZip: (n: number) => `${n}個のファイルをZIPでダウンロード`,
+    downloadZipEmpty: 'ZIPでダウンロード',
+    zipping: 'ZIPを作成中…',
+    zipFailed: (message: string) => `ZIPの作成に失敗しました：${message}`,
+    pngFailed: 'PNGを作成できませんでした。もう一度お試しください。',
+    needSelection: '上でアイコンを1つ以上選んでください。',
+    needFormat: 'SVGかPNG、または両方を選んでください。',
+    credit: 'アイコン素材：Lucide（ISCライセンス）',
+  },
+  iconLabels: {
+    house: { name: 'ホーム', keywords: '家 住宅 建物 トップ' },
+    search: { name: '検索', keywords: '虫眼鏡 探す ルーペ サーチ' },
+    settings: { name: '設定', keywords: '歯車 環境設定 コンフィグ ギア' },
+    user: {
+      name: 'ユーザー',
+      keywords: '人 人物 アカウント プロフィール 会員',
+    },
+    bell: { name: '通知', keywords: 'ベル お知らせ アラート 鈴' },
+    heart: { name: 'ハート', keywords: '好き お気に入り いいね 心' },
+    star: { name: '星', keywords: 'スター お気に入り 評価 レビュー' },
+    bookmark: { name: 'ブックマーク', keywords: 'しおり 保存 あとで読む' },
+    menu: {
+      name: 'メニュー',
+      keywords: 'ハンバーガー ナビゲーション 三本線',
+    },
+    'layout-grid': {
+      name: 'グリッド',
+      keywords: 'タイル 一覧 ダッシュボード レイアウト 格子',
+    },
+    list: { name: 'リスト', keywords: '一覧 箇条書き 目次 項目 行' },
+    sun: { name: '太陽', keywords: 'ライトモード 昼 天気 明るい' },
+    moon: { name: '月', keywords: 'ダークモード 夜 就寝' },
+    plus: { name: '追加', keywords: 'プラス 新規 作成 足す' },
+    minus: { name: 'マイナス', keywords: '引く 減らす 除く' },
+    equal: { name: 'イコール', keywords: '等号 同じ 計算 結果' },
+    check: { name: 'チェック', keywords: '完了 確認 レ点 済み' },
+    x: { name: '閉じる', keywords: 'バツ キャンセル 中止 削除' },
+    'circle-check': {
+      name: '成功',
+      keywords: 'チェック 丸 完了 承認 済み OK',
+    },
+    'circle-x': { name: 'エラー', keywords: 'バツ 丸 失敗 却下 NG' },
+    pencil: { name: '編集', keywords: '鉛筆 書く 修正 ペン' },
+    'trash-2': { name: 'ゴミ箱', keywords: '削除 捨てる 破棄' },
+    download: { name: 'ダウンロード', keywords: '保存 取得 落とす' },
+    upload: { name: 'アップロード', keywords: '送信 アップ 投稿' },
+    'refresh-cw': {
+      name: '更新',
+      keywords: 'リロード 再読み込み 同期 やり直し',
+    },
+    copy: { name: 'コピー', keywords: '複製 クローン 複写' },
+    filter: { name: 'フィルター', keywords: '絞り込み 抽出 漏斗 並べ替え' },
+    eye: { name: '表示', keywords: '目 プレビュー 見る 閲覧 公開' },
+    'eye-off': {
+      name: '非表示',
+      keywords: '目 閉じた 隠す 伏せる 非公開 パスワード',
+    },
+    link: { name: 'リンク', keywords: 'URL 鎖 チェーン 接続' },
+    'log-in': {
+      name: 'ログイン',
+      keywords: 'サインイン 入る アカウント 認証',
+    },
+    'log-out': {
+      name: 'ログアウト',
+      keywords: 'サインアウト 出る 退出 終了',
+    },
+    'arrow-up': { name: '上矢印', keywords: '上 アップ 矢印' },
+    'arrow-down': { name: '下矢印', keywords: '下 ダウン 矢印' },
+    'arrow-left': { name: '左矢印', keywords: '左 戻る 矢印' },
+    'arrow-right': { name: '右矢印', keywords: '右 進む 次へ 矢印' },
+    'arrow-left-right': {
+      name: '左右の矢印',
+      keywords: '双方向 往復 入れ替え 交換 横 相互',
+    },
+    'arrow-up-down': {
+      name: '上下の矢印',
+      keywords: '双方向 並べ替え ソート 縦 相互',
+    },
+    'chevron-up': {
+      name: '上向き山かっこ',
+      keywords: '閉じる 折りたたむ アコーディオン 上',
+    },
+    'chevron-down': {
+      name: '下向き山かっこ',
+      keywords: '開く ドロップダウン プルダウン 展開 アコーディオン',
+    },
+    'chevron-left': {
+      name: '左向き山かっこ',
+      keywords: '戻る 前へ 左 スライダー',
+    },
+    'chevron-right': {
+      name: '右向き山かっこ',
+      keywords: '次へ 詳細 進む 開く',
+    },
+    'external-link': {
+      name: '外部リンク',
+      keywords: '別ウィンドウ 新しいタブ 外部 遷移',
+    },
+    move: { name: '移動', keywords: 'ドラッグ 動かす 十字' },
+    file: { name: 'ファイル', keywords: '書類 ドキュメント 白紙' },
+    'file-text': {
+      name: '文書',
+      keywords: 'テキスト 書類 記事 ドキュメント',
+    },
+    'file-down': {
+      name: '資料ダウンロード',
+      keywords: '書類 保存 パンフレット 資料請求 PDF',
+    },
+    folder: { name: 'フォルダ', keywords: 'ディレクトリ 整理 保管' },
+    'folder-open': {
+      name: '開いたフォルダ',
+      keywords: 'ディレクトリ 展開 参照',
+    },
+    image: { name: '画像', keywords: '写真 イメージ ピクチャ' },
+    camera: { name: 'カメラ', keywords: '写真 撮影 シャッター' },
+    paperclip: { name: '添付', keywords: 'クリップ 添付ファイル' },
+    clipboard: { name: 'クリップボード', keywords: 'コピー 貼り付け 板' },
+    printer: { name: '印刷', keywords: 'プリンター プリント 出力' },
+    archive: { name: 'アーカイブ', keywords: '保管 箱 倉庫 書庫' },
+    database: {
+      name: 'データベース',
+      keywords: 'DB データ 保存 サーバー レコード',
+    },
+    package: { name: '荷物', keywords: '箱 梱包 配送 商品 パッケージ' },
+    mail: { name: 'メール', keywords: '封筒 手紙 メッセージ 連絡' },
+    phone: { name: '電話', keywords: 'コール 通話 連絡先 受話器' },
+    'message-circle': {
+      name: 'メッセージ',
+      keywords: 'チャット コメント 吹き出し 会話',
+    },
+    send: { name: '送信', keywords: '送る 紙飛行機 投稿' },
+    users: { name: 'グループ', keywords: '人々 チーム メンバー 複数人' },
+    calendar: {
+      name: 'カレンダー',
+      keywords: '日付 予定 スケジュール 日程',
+    },
+    clock: { name: '時計', keywords: '時間 時刻 スケジュール' },
+    'map-pin': { name: '地図ピン', keywords: '場所 位置 住所 マップ' },
+    globe: {
+      name: '地球',
+      keywords: '世界 言語 国際 グローバル ウェブ',
+    },
+    headset: {
+      name: 'カスタマーサポート',
+      keywords: 'ヘッドセット 問い合わせ コールセンター 窓口 相談 サポート',
+    },
+    video: { name: 'ビデオ', keywords: '動画 会議 撮影 カメラ' },
+    'share-2': { name: '共有', keywords: 'シェア 送る ネットワーク' },
+    briefcase: {
+      name: 'ビジネス',
+      keywords: '鞄 仕事 ブリーフケース 法人 業務',
+    },
+    'building-2': { name: '会社', keywords: 'オフィス 企業 本社 ビル' },
+    'trending-up': {
+      name: '成長',
+      keywords: '上昇 伸び グラフ 実績 右肩上がり',
+    },
+    'chart-column': {
+      name: '棒グラフ',
+      keywords: '統計 分析 グラフ レポート 実績',
+    },
+    'chart-pie': { name: '円グラフ', keywords: '統計 割合 内訳 シェア' },
+    award: { name: '受賞', keywords: '賞 メダル 実績 認定 品質' },
+    handshake: {
+      name: '握手',
+      keywords: 'パートナー 提携 契約 信頼 協業',
+    },
+    lightbulb: {
+      name: 'アイデア',
+      keywords: '電球 ひらめき 発想 提案 ヒント',
+    },
+    megaphone: {
+      name: 'お知らせ',
+      keywords: '拡声器 告知 ニュース 広報 宣伝',
+    },
+    lock: { name: 'ロック', keywords: '鍵 施錠 セキュリティ 非公開 安全' },
+    key: { name: '鍵', keywords: 'キー パスワード アクセス ログイン' },
+    'shield-check': {
+      name: 'セキュリティ',
+      keywords: '盾 保護 安全 認証 守る',
+    },
+    info: { name: '情報', keywords: 'インフォ 詳細 案内 説明' },
+    'triangle-alert': {
+      name: '警告',
+      keywords: '注意 アラート 危険 エラー ビックリマーク',
+    },
+    'circle-help': {
+      name: 'ヘルプ',
+      keywords: '疑問 質問 サポート はてな 問い合わせ',
+    },
+    zap: { name: '稲妻', keywords: '高速 電気 パワー エネルギー 雷' },
+    'japanese-yen': {
+      name: '円マーク',
+      keywords: 'お金 通貨 金額 価格 日本円 給与',
+    },
+    'dollar-sign': { name: 'ドル', keywords: 'お金 通貨 金額 価格 米ドル' },
+    euro: { name: 'ユーロ', keywords: 'お金 通貨 金額 価格 欧州' },
+    'credit-card': {
+      name: 'クレジットカード',
+      keywords: '支払い 決済 カード 会計',
+    },
+    wallet: { name: '財布', keywords: 'お金 残高 ウォレット 家計' },
+    banknote: { name: '紙幣', keywords: 'お金 現金 お札 通貨' },
+    coins: { name: 'コイン', keywords: 'お金 硬貨 小銭 貯金 費用' },
+    'piggy-bank': { name: '貯金', keywords: 'お金 預金 貯蓄 豚 積立' },
+    receipt: { name: 'レシート', keywords: '領収書 請求書 経費 明細' },
+    calculator: { name: '電卓', keywords: '計算 見積もり 集計 算出' },
+    percent: { name: 'パーセント', keywords: '割引 率 セール 利率 ％' },
+    'shopping-cart': {
+      name: 'カート',
+      keywords: '買い物 購入 ショッピング 通販',
+    },
+    landmark: {
+      name: '銀行',
+      keywords: '金融機関 役所 公共 博物館 建物 神殿',
+    },
+    'graduation-cap': {
+      name: '卒業',
+      keywords: '学校 大学 学生 教育 学習 角帽',
+    },
+    school: { name: '学校', keywords: '教育 校舎 授業 学習 スクール' },
+    hospital: { name: '病院', keywords: 'クリニック 医療 健康 診療' },
+    store: { name: '店舗', keywords: 'ショップ 小売 お店 販売' },
+    building: { name: 'ビル', keywords: 'オフィス 建物 不動産 物件' },
+    factory: { name: '工場', keywords: '製造 生産 プラント 産業' },
+    warehouse: { name: '倉庫', keywords: '保管 物流 在庫 デポ' },
+    hotel: { name: 'ホテル', keywords: '宿泊 旅行 宿 客室' },
+    utensils: { name: '飲食', keywords: 'レストラン 食事 料理 カトラリー' },
+    car: { name: '車', keywords: '自動車 乗り物 ドライブ 車両' },
+    bus: { name: 'バス', keywords: '乗り物 交通 路線 車両' },
+    'train-front': { name: '電車', keywords: '鉄道 乗り物 駅 通勤 列車' },
+    plane: { name: '飛行機', keywords: '航空 空港 旅行 乗り物 フライト' },
+    bike: { name: '自転車', keywords: '乗り物 サイクル バイク 自転車' },
+    ship: { name: '船', keywords: '船舶 海運 港 乗り物 貨物' },
+    truck: { name: 'トラック', keywords: '配送 輸送 物流 乗り物 運送' },
+    fuel: { name: '給油', keywords: 'ガソリン スタンド 燃料 エネルギー' },
+    map: { name: '地図', keywords: 'マップ 経路 案内 エリア' },
+    navigation: { name: 'ナビ', keywords: '方向 GPS 経路 案内 現在地' },
+    smartphone: {
+      name: 'スマートフォン',
+      keywords: 'スマホ 携帯 モバイル アプリ 端末',
+    },
+    tablet: { name: 'タブレット', keywords: 'iPad 端末 画面 モバイル' },
+    laptop: { name: 'ノートPC', keywords: 'パソコン ノートパソコン 端末' },
+    monitor: {
+      name: 'デスクトップ',
+      keywords: 'モニター 画面 パソコン ディスプレイ',
+    },
+    wifi: {
+      name: 'Wi-Fi',
+      keywords: '無線 ネットワーク インターネット 電波 通信',
+    },
+    cloud: { name: 'クラウド', keywords: 'オンライン 雲 SaaS サーバー' },
+    server: { name: 'サーバー', keywords: 'ホスティング インフラ ラック' },
+    cpu: { name: 'プロセッサ', keywords: 'チップ CPU ハードウェア AI 半導体' },
+    code: { name: 'コード', keywords: '開発 プログラミング エンジニア 山かっこ' },
+    bot: { name: 'ボット', keywords: 'AI ロボット チャットボット 自動化' },
+    'mouse-pointer-click': {
+      name: 'クリック',
+      keywords: 'カーソル ポインタ タップ 選択 操作',
     },
   },
   imageCompressorPage: {

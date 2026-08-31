@@ -89,6 +89,11 @@ export default function Home() {
               name: t.splitBillPage.toolName,
               description: t.splitBillPage.toolDescription,
             },
+            {
+              slug: 'icon-generator',
+              name: t.iconGeneratorPage.toolName,
+              description: t.iconGeneratorPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

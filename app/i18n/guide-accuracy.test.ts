@@ -80,34 +80,60 @@ describe.each([
     const text = guideText(t, 'csvEncodingFixerGuide');
     expect(text).toContain(t.csvEncodingFixer.download);
   });
+
+  it('icon generator names the controls it tells people to press', () => {
+    const text = guideText(t, 'iconGeneratorGuide');
+    for (const label of [
+      t.iconGenerator.selectAll,
+      t.iconGenerator.copySvg,
+      t.iconGenerator.exportHeading,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
 });
 
-describe('every guide has the same shape in both locales', () => {
-  const keys = [
-    'fileRenamerGuide',
-    'imageSorterGuide',
-    'pdfTitleEditorGuide',
-    // csvEncodingFixerGuide is not here on purpose: it opens with the steps and
-    // keeps the explanation near the end, because someone arriving with a
-    // garbled export wants it fixed rather than explained.
-  ] as const;
+const ALL_GUIDES = [
+  'fileRenamerGuide',
+  'imageSorterGuide',
+  'pdfTitleEditorGuide',
+  'csvEncodingFixerGuide',
+  'splitBillGuide',
+  'iconGeneratorGuide',
+] as const;
 
-  it.each(keys)('%s has matching section and FAQ counts', (key) => {
+describe('every guide has the same shape in both locales', () => {
+  it.each(ALL_GUIDES)('%s has matching section and FAQ counts', (key) => {
     const enGuide = en[key];
     const jaGuide = ja[key];
     expect(jaGuide.sections).toHaveLength(enGuide.sections.length);
     expect(jaGuide.faq).toHaveLength(enGuide.faq.length);
   });
 
-  it.each(keys)('%s carries the five common sections', (key) => {
-    // Tool-specific sections may come first; the shared ones always close it.
-    const headings = en[key].sections.map((section) => section.heading);
-    expect(headings.slice(-3)).toEqual([
-      'How to use the tool',
-      'When is it useful?',
-      'Privacy and security',
-    ]);
+  it.each(ALL_GUIDES)('%s uses the shared headings', (key) => {
     expect(en[key].faqHeading).toBe('Frequently asked questions');
     expect(en[key].relatedHeading).toBe('Related tools');
+    const headings = en[key].sections.map((section) => section.heading);
+    expect(headings).toContain('How to use the tool');
+    expect(headings).toContain('When is it useful?');
+    expect(headings.at(-1)).toBe('Privacy and security');
+  });
+});
+
+describe('a guide opens with what the visitor came for', () => {
+  // The steps and the cases come first, then anything tool-specific. Someone
+  // landing on a tool page wants to use it, not to read about it, and a guide
+  // that opens with an explanation buries the instructions below the fold.
+  //
+  // Every tool follows this, with no exceptions to remember.
+  it.each(ALL_GUIDES)('%s leads with the steps and the cases', (key) => {
+    expect(en[key].sections.slice(0, 2).map((s) => s.heading)).toEqual([
+      'How to use the tool',
+      'When is it useful?',
+    ]);
+    expect(ja[key].sections.slice(0, 2).map((s) => s.heading)).toEqual([
+      '使い方',
+      'こんなときに便利',
+    ]);
   });
 });

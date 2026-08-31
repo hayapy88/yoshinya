@@ -10,6 +10,7 @@ const PATHS = [
   '/image-compressor',
   '/csv-encoding-fixer',
   '/split-bill',
+  '/icon-generator',
   '/privacy',
   '/terms',
 ];

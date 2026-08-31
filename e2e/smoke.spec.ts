@@ -549,6 +549,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'image-compressor', heading: 'よしにゃにまとめて画像圧縮' },
     { slug: 'csv-encoding-fixer', heading: 'よしにゃにCSV文字化け修復' },
     { slug: 'split-bill', heading: 'よしにゃに割り勘' },
+    { slug: 'icon-generator', heading: 'よしにゃにアイコン作成' },
   ];
 
   for (const tool of tools) {
@@ -1567,5 +1568,104 @@ test.describe('split bill workflow', () => {
     await expect(page.locator('input[id^="sb-name-"]').first()).toHaveValue('');
     await page.reload();
     await expect(page.locator('input[id^="sb-name-"]').first()).toHaveValue('');
+  });
+});
+
+test.describe('icon generator workflow', () => {
+  // The page is server-rendered, so anything typed before React hydrates is
+  // dropped without a trace — the input keeps the value but no state changes.
+  // Every test starts by proving the grid is live rather than assuming it.
+  const openTool = async (page: Page) => {
+    await page.goto('/ja/icon-generator');
+    const search = page.getByRole('searchbox');
+    await expect(async () => {
+      await search.fill('メール');
+      await expect(page.locator('.ig-card')).toHaveCount(1, { timeout: 500 });
+    }).toPass({ timeout: 10_000 });
+    await search.fill('');
+  };
+
+  const selectIcon = async (page: Page, name: string) => {
+    await page
+      .locator('.ig-card', { hasText: name })
+      .getByRole('checkbox')
+      .check();
+  };
+
+  test('recolours every icon on the page at once', async ({ page }) => {
+    await openTool(page);
+    const hex = page.getByRole('textbox', { name: '色', exact: true });
+    await hex.fill('#fb713c');
+
+    // The whole grid, not just the preview: seeing how a set looks together is
+    // the reason the tool exists.
+    await expect(page.locator('g[stroke="#fb713c"]').first()).toBeVisible();
+    await expect(page.locator('g[stroke="#000000"]')).toHaveCount(0);
+  });
+
+  test('copies the SVG for one icon with the chosen settings', async ({
+    page,
+    context,
+    browserName,
+  }) => {
+    // Playwright only grants clipboard permissions on Chromium; the other
+    // engines would reject the call before the tool ever ran.
+    test.skip(browserName !== 'chromium', 'clipboard permissions');
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await openTool(page);
+    await page.getByRole('textbox', { name: '色', exact: true }).fill('#162e64');
+    await page
+      .locator('.ig-card', { hasText: 'カメラ' })
+      .getByRole('button', { name: 'SVGをコピー' })
+      .click();
+
+    // The e2e project is typed without the DOM lib, so the clipboard API has
+    // to be named here rather than looked up.
+    const copied = await page.evaluate(() =>
+      (
+        navigator as unknown as { clipboard: { readText(): Promise<string> } }
+      ).clipboard.readText(),
+    );
+    expect(copied).toContain('<svg');
+    expect(copied).toContain('stroke="#162e64"');
+  });
+
+  test('downloads one PNG at the chosen size', async ({ page }) => {
+    await openTool(page);
+    await page.locator('#ig-size').fill('128');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page
+        .locator('.ig-card', { hasText: 'メール' })
+        .getByRole('button', { name: 'PNG', exact: true })
+        .click(),
+    ]);
+    expect(download.suggestedFilename()).toBe('mail-128.png');
+  });
+
+  test('packs the selection into a ZIP of both formats', async ({ page }) => {
+    await openTool(page);
+    await selectIcon(page, 'ホーム');
+    await selectIcon(page, 'メール');
+    await page.getByRole('checkbox', { name: 'PNG', exact: true }).check();
+
+    // One SVG plus one PNG size, for two icons.
+    const button = page.getByRole('button', {
+      name: '4個のファイルをZIPでダウンロード',
+    });
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      button.click(),
+    ]);
+    expect(download.suggestedFilename()).toBe('yoshinya-icons.zip');
+  });
+
+  test('remembers the look on the next visit', async ({ page }) => {
+    await openTool(page);
+    await page.getByRole('textbox', { name: '色', exact: true }).fill('#dc2626');
+    await expect(page.locator('g[stroke="#dc2626"]').first()).toBeVisible();
+
+    await page.reload();
+    await expect(page.locator('g[stroke="#dc2626"]').first()).toBeVisible();
   });
 });

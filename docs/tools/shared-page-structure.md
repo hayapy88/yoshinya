@@ -11,13 +11,20 @@ h1   <tool name>                     ToolIntro
      🔒 privacy note
 h2   ① … ② … ③ …                     the tool's own working area
 h2   使い方ガイド / Guide             ToolGuide
-h3     (tool-specific sections)
 h3     使い方 / How to use the tool
 h3     こんなときに便利 / When is it useful?
+h3     (tool-specific sections)
 h3     プライバシーと安全性 / Privacy and security
 h3     よくある質問 / FAQ
 h3     関連ツール / Related tools
 ```
+
+**The guide opens with 使い方 and こんなときに便利.** Someone who has just
+landed on a tool page wants to use it, not read about it; anything explanatory
+goes after those two, and プライバシーと安全性 always closes the sections.
+Every tool follows this — PDF Title Editor opened with two explanatory
+sections until it was reordered — and `app/i18n/guide-accuracy.test.ts`
+enforces it for all of them.
 
 ## Components
 
@@ -68,5 +75,7 @@ inheriting, because they render inside whichever tool root wraps them.
 
 `e2e/smoke.spec.ts` has a `shared tool page structure` block that loops over
 every tool and asserts the badges, the privacy note, the guide heading, all five
-common section headings, and that related tools links to exactly the other two.
-Adding a tool without its guide content will fail that loop.
+common section headings, and that related tools links to every other tool and
+never to itself. The count comes from the list rather than being written down,
+so it does not need revisiting each time a tool ships. Adding a tool without its
+guide content will fail that loop.

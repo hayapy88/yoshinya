@@ -17,6 +17,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'image-compressor': 'imageCompressorPage',
   'csv-encoding-fixer': 'csvEncodingFixerPage',
   'split-bill': 'splitBillPage',
+  'icon-generator': 'iconGeneratorPage',
 };
 
 function Section({ section }: { section: GuideSection }) {
