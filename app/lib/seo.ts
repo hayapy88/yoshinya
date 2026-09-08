@@ -1,5 +1,6 @@
 import type { MetaDescriptor } from 'react-router';
 import type { Locale } from '~/i18n/locale';
+import { stripEmphasis } from './emphasis';
 
 export const SITE_ORIGIN = 'https://yoshinya.com';
 export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com'];
@@ -198,6 +199,10 @@ export function pdfMergerJsonLd(locale: Locale): Record<string, unknown> {
 
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
+//
+// The emphasis markers are stripped rather than kept: the page renders them as
+// bold, and publishing the raw asterisks to search engines would put markup
+// nobody wrote into the snippet.
 export function faqJsonLd(
   faq: readonly { question: string; answer: string }[],
 ): Record<string, unknown> {
@@ -206,8 +211,11 @@ export function faqJsonLd(
     '@type': 'FAQPage',
     mainEntity: faq.map((entry) => ({
       '@type': 'Question',
-      name: entry.question,
-      acceptedAnswer: { '@type': 'Answer', text: entry.answer },
+      name: stripEmphasis(entry.question),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: stripEmphasis(entry.answer),
+      },
     })),
   };
 }

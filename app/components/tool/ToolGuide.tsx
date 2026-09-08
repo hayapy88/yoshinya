@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { useLocale, type Dictionary } from '~/i18n/locale';
+import { splitEmphasis } from '~/lib/emphasis';
 import {
   TOOL_SLUGS,
   type GuideSection,
@@ -7,6 +8,23 @@ import {
   type ToolSlug,
 } from './types';
 import './tool-shared.css';
+
+// Guide copy marks the button names it quotes with *asterisks*. Every place a
+// guide string reaches the page goes through this, so a marker can never be
+// rendered literally again.
+function Copy({ children }: { children: string }) {
+  return (
+    <>
+      {splitEmphasis(children).map((run, index) =>
+        run.strong ? (
+          <strong key={index}>{run.text}</strong>
+        ) : (
+          <span key={index}>{run.text}</span>
+        ),
+      )}
+    </>
+  );
+}
 
 // Maps a slug to the dictionary entry that names and describes it, so the
 // related-tools list stays correct without each tool repeating the others.
@@ -25,13 +43,19 @@ function Section({ section }: { section: GuideSection }) {
   return (
     <>
       <h3>{section.heading}</h3>
-      {section.body && <p>{section.body}</p>}
+      {section.body && (
+        <p>
+          <Copy>{section.body}</Copy>
+        </p>
+      )}
       {section.terms && (
         <dl>
           {section.terms.map((entry) => (
             <div key={entry.term}>
               <dt>{entry.term}</dt>
-              <dd>{entry.definition}</dd>
+              <dd>
+                <Copy>{entry.definition}</Copy>
+              </dd>
             </div>
           ))}
         </dl>
@@ -39,14 +63,18 @@ function Section({ section }: { section: GuideSection }) {
       {section.steps && (
         <ol>
           {section.steps.map((step) => (
-            <li key={step}>{step}</li>
+            <li key={step}>
+              <Copy>{step}</Copy>
+            </li>
           ))}
         </ol>
       )}
       {section.items && (
         <ul>
           {section.items.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>
+              <Copy>{item}</Copy>
+            </li>
           ))}
         </ul>
       )}
@@ -84,7 +112,9 @@ export function ToolGuide({
         {guide.faq.map((entry) => (
           <div key={entry.question}>
             <dt>{entry.question}</dt>
-            <dd>{entry.answer}</dd>
+            <dd>
+              <Copy>{entry.answer}</Copy>
+            </dd>
           </div>
         ))}
       </dl>
