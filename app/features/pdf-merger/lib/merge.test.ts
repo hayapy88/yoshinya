@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
-import {
-  MergeError,
-  inspectPdf,
-  mergePdfs,
-  totalOutputPages,
-} from './merge';
+import { MergeError, inspectPdf, mergePdfs, totalOutputPages } from './merge';
 import type { MergeItem } from './types';
 
 // Integration coverage against the real pdf-lib. Page order and page selection
@@ -182,8 +177,8 @@ describe('mergePdfs', () => {
   });
 
   it('refuses to produce an empty document', async () => {
-    await expect(mergePdfs([], { outputName: 'out.pdf' })).rejects.toMatchObject(
-      { code: 'merge_failed' },
-    );
+    await expect(
+      mergePdfs([], { outputName: 'out.pdf' }),
+    ).rejects.toMatchObject({ code: 'merge_failed' });
   });
 });

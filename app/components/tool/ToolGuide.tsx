@@ -18,6 +18,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'csv-encoding-fixer': 'csvEncodingFixerPage',
   'split-bill': 'splitBillPage',
   'icon-generator': 'iconGeneratorPage',
+  'pdf-merger': 'pdfMergerPage',
 };
 
 function Section({ section }: { section: GuideSection }) {

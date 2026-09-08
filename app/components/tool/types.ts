@@ -31,7 +31,8 @@ export type ToolSlug =
   | 'image-compressor'
   | 'csv-encoding-fixer'
   | 'split-bill'
-  | 'icon-generator';
+  | 'icon-generator'
+  | 'pdf-merger';
 
 // The published tools, in release order: what the related-tools list offers and
 // what the sitemap carries. A slug is added here when its page is complete —
@@ -44,4 +45,5 @@ export const TOOL_SLUGS: ToolSlug[] = [
   'csv-encoding-fixer',
   'split-bill',
   'icon-generator',
+  'pdf-merger',
 ];

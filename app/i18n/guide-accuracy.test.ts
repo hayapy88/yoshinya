@@ -81,6 +81,18 @@ describe.each([
     expect(text).toContain(t.csvEncodingFixer.download);
   });
 
+  it('pdf merger names the controls it tells people to press', () => {
+    const text = guideText(t, 'pdfMergerGuide');
+    for (const label of [
+      t.pdfMerger.sortByName,
+      t.pdfMerger.reverse,
+      t.pdfMerger.pageRangeLabel,
+      t.pdfMerger.merge,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -100,6 +112,7 @@ const ALL_GUIDES = [
   'csvEncodingFixerGuide',
   'splitBillGuide',
   'iconGeneratorGuide',
+  'pdfMergerGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {

@@ -188,6 +188,14 @@ export function iconGeneratorJsonLd(locale: Locale): Record<string, unknown> {
   );
 }
 
+export function pdfMergerJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃにPDF結合' : 'PDF Merger by Yoshinya',
+    '/pdf-merger',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 export function faqJsonLd(

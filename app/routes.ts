@@ -11,6 +11,7 @@ export default [
     route('csv-encoding-fixer', 'routes/csv-encoding-fixer.tsx'),
     route('split-bill', 'routes/split-bill.tsx'),
     route('icon-generator', 'routes/icon-generator.tsx'),
+    route('pdf-merger', 'routes/pdf-merger.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -36,6 +37,9 @@ export default [
   }),
   route('icon-generator', 'routes/locale-redirect.tsx', {
     id: 'redirect-icon-generator',
+  }),
+  route('pdf-merger', 'routes/locale-redirect.tsx', {
+    id: 'redirect-pdf-merger',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

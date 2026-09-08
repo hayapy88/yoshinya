@@ -1,8 +1,7 @@
 export type PageRangeError = 'range_invalid' | 'range_out_of_bounds';
 
 export type PageRangeResult =
-  | { ok: true; pages: number[] }
-  | { ok: false; error: PageRangeError };
+  { ok: true; pages: number[] } | { ok: false; error: PageRangeError };
 
 // Japanese keyboards produce full-width digits and punctuation without the user
 // noticing, and a tool that rejects "１-３" for looking wrong is just broken.

@@ -550,6 +550,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'csv-encoding-fixer', heading: 'よしにゃにCSV文字化け修復' },
     { slug: 'split-bill', heading: 'よしにゃに割り勘' },
     { slug: 'icon-generator', heading: 'よしにゃにアイコン作成' },
+    { slug: 'pdf-merger', heading: 'よしにゃにPDF結合' },
   ];
 
   for (const tool of tools) {

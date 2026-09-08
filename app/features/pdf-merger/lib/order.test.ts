@@ -21,9 +21,10 @@ describe('sortByName', () => {
   });
 
   it('sorts numbered Japanese names naturally', () => {
-    expect(
-      names(sortByName(items('請求書-10.pdf', '請求書-2.pdf'))),
-    ).toEqual(['請求書-2.pdf', '請求書-10.pdf']);
+    expect(names(sortByName(items('請求書-10.pdf', '請求書-2.pdf')))).toEqual([
+      '請求書-2.pdf',
+      '請求書-10.pdf',
+    ]);
   });
 
   it('does not mutate the input', () => {

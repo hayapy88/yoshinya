@@ -8,9 +8,7 @@ export type { RejectedFile } from '~/lib/pdf/types';
 // merge itself. Nothing here ever carries a file name or a PDF's own text: the
 // UI looks the message up from the code.
 export type MergeErrorCode =
-  | SharedPdfErrorCode
-  | PageRangeError
-  | 'merge_failed';
+  SharedPdfErrorCode | PageRangeError | 'merge_failed';
 
 export type MergeItemStatus = 'loading' | 'ready' | 'error';
 

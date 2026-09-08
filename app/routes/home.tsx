@@ -94,6 +94,11 @@ export default function Home() {
               name: t.iconGeneratorPage.toolName,
               description: t.iconGeneratorPage.toolDescription,
             },
+            {
+              slug: 'pdf-merger',
+              name: t.pdfMergerPage.toolName,
+              description: t.pdfMergerPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}
