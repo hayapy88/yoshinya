@@ -153,6 +153,28 @@ The shared `PdfErrorCode` covers only the intake failures every PDF tool can
 produce. Each tool widens it locally — PDF Title Editor adds `signed` and
 `write_failed`, PDF Merger adds the two page-range codes and `merge_failed`.
 
+### No preview, and what it would cost
+
+Measured on 2026-09-09, then deferred.
+
+Page thumbnails are not possible with what is already here: pdf-lib reads and
+writes, it does not render. That needs pdf.js, and pdfjs-dist 6.3.289 costs
+**494 KB gzipped** — 128 KB for the library plus 366 KB for the worker —
+against pdf-lib's 201 KB. Lazy-loading moves when that arrives, not whether.
+On top of the bytes it needs worker-URL resolution through Vite into Cloudflare
+Workers, render memory for up to a hundred files, and render cancellation.
+
+An iframe preview of the *merged result* needs no library at all, about twenty
+lines, but iOS Safari and Android Chrome do not render PDFs inline in an
+iframe, so on mobile it degrades to a fallback message. With the predicted page
+count already shown in step ③, a mistake is visible before downloading anyway,
+which is most of what a preview would have bought.
+
+The point to revisit is Week 9's page organiser: extracting, deleting and
+rotating pages cannot work without thumbnails, so pdf.js is required there.
+Build it then as `app/lib/pdf/render.ts` and add thumbnails here on the back of
+it, rather than paying 494 KB for this tool alone.
+
 ## Privacy
 
 PDFs are read with `File.arrayBuffer()` and merged with pdf-lib in the browser.
