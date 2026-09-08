@@ -1,3 +1,8 @@
+import type { PdfErrorCode as SharedPdfErrorCode } from '~/lib/pdf/types';
+
+export { LIMITS } from '~/lib/pdf/types';
+export type { RejectedFile } from '~/lib/pdf/types';
+
 export type PdfItemStatus =
   | 'loading'
   | 'ready'
@@ -14,19 +19,10 @@ export type PdfMetadataForm = {
   keywords: string[];
 };
 
-// Stable codes so the UI can look up localized copy without ever putting a
-// filename or a PDF's own text into an error message.
-export type PdfErrorCode =
-  | 'not_pdf'
-  | 'empty_file'
-  | 'corrupted'
-  | 'encrypted'
-  | 'signed'
-  | 'file_too_large'
-  | 'total_too_large'
-  | 'too_many_files'
-  | 'out_of_memory'
-  | 'write_failed';
+// The shared intake codes plus the two only this tool can produce: it is the
+// only PDF tool that re-saves a document in place, so a signature it would void
+// blocks editing, and a failed write is distinct from a file that never parsed.
+export type PdfErrorCode = SharedPdfErrorCode | 'signed' | 'write_failed';
 
 export type PdfItem = {
   id: string;
@@ -41,19 +37,3 @@ export type PdfItem = {
   errorCode?: PdfErrorCode;
   outputBlob?: Blob;
 };
-
-// A file that was refused before it could become a PdfItem.
-export type RejectedFile = {
-  id: string;
-  name: string;
-  errorCode: PdfErrorCode;
-};
-
-// Configurable per the spec: browser memory may bite well before these.
-export const LIMITS = {
-  maxFileBytes: 100 * 1024 * 1024,
-  maxTotalBytes: 500 * 1024 * 1024,
-  maxFiles: 100,
-  maxTextLength: 1000,
-  maxKeywords: 100,
-} as const;
