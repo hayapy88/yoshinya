@@ -11,6 +11,7 @@ const PATHS = [
   '/csv-encoding-fixer',
   '/split-bill',
   '/icon-generator',
+  '/pdf-merger',
   '/privacy',
   '/terms',
 ];

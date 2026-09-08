@@ -7,7 +7,7 @@ import {
   type EditableField,
 } from '../lib/edits';
 import { formatKeywords } from '../lib/metadata';
-import { formatBytes } from '../lib/format';
+import { formatBytes } from '~/lib/format';
 import { LIMITS, type PdfItem } from '../lib/types';
 
 // Status is never signalled by colour alone: every state carries a symbol and

@@ -1,0 +1,337 @@
+/* Palette aligned with the other PDF tools: navy accent on light, coral orange
+   on dark. */
+.pdm-root {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --error: #c22f2f;
+  --error-bg: #fdecec;
+  --warn-text: #9a3b12;
+  --warn-bg: #fdeee5;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  accent-color: var(--yoshinyan-orange);
+}
+
+@media (prefers-color-scheme: dark) {
+  .pdm-root {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --error: #ef8080;
+    --error-bg: #3a1d1d;
+    --warn-text: #f2b28c;
+    --warn-bg: #3a2417;
+  }
+}
+
+/* Sections ---------------------------------------------------------------- */
+.pdm-section,
+.pdm-run,
+.pdm-rejected {
+  margin-top: 2rem;
+}
+.pdm-section h2,
+.pdm-run h2,
+.pdm-rejected h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+.pdm-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.4rem 0 0;
+}
+.pdm-muted {
+  color: var(--muted);
+}
+.pdm-summary {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Dropzone ---------------------------------------------------------------- */
+.pdm-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 2px dashed var(--border);
+  border-radius: 1rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--panel);
+}
+.pdm-dropzone.pdm-compact {
+  padding: 1rem;
+}
+.pdm-dropzone:hover,
+.pdm-dropzone.pdm-over {
+  border-color: var(--accent);
+}
+.pdm-dropzone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pdm-dropzone-label {
+  font-weight: 600;
+}
+.pdm-dropzone-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Cards ------------------------------------------------------------------- */
+.pdm-cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.pdm-card {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 0.85rem;
+  background: var(--panel);
+  min-width: 0;
+}
+.pdm-card.pdm-dragging {
+  opacity: 0.7;
+  /* Lifts the dragged card over its neighbours while dnd-kit translates it. */
+  position: relative;
+  z-index: 1;
+}
+.pdm-card-failed {
+  border-color: var(--error);
+}
+.pdm-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.pdm-handle {
+  flex: none;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.35rem 0.15rem;
+  cursor: grab;
+  touch-action: none;
+}
+.pdm-handle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pdm-position {
+  flex: none;
+  min-width: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+.pdm-card-id {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pdm-filename {
+  font-weight: 600;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.pdm-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.pdm-card-move {
+  flex: none;
+  display: flex;
+  gap: 0.15rem;
+}
+.pdm-card-error,
+.pdm-card-warning {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+.pdm-card-error {
+  border-left: 3px solid var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+}
+.pdm-card-warning {
+  border-left: 3px solid var(--warn-text);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+
+/* Fields ------------------------------------------------------------------ */
+.pdm-field {
+  margin-top: 0.75rem;
+  min-width: 0;
+}
+.pdm-field-name {
+  max-width: 24rem;
+}
+.pdm-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.pdm-field input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  background: canvas;
+  color: inherit;
+}
+.pdm-field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.pdm-field input:disabled {
+  opacity: 0.6;
+}
+.pdm-field input[aria-invalid='true'] {
+  border-color: var(--error);
+}
+.pdm-range-note,
+.pdm-range-hint,
+.pdm-range-error {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+}
+.pdm-range-note {
+  color: var(--muted);
+}
+.pdm-range-hint {
+  color: var(--muted);
+  opacity: 0.85;
+}
+.pdm-range-error {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.pdm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.pdm-btn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+.pdm-btn-primary {
+  font-size: 1.05rem;
+}
+.pdm-btn-small {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.9rem;
+}
+.pdm-btn-secondary {
+  background: transparent;
+  color: inherit;
+  border-color: var(--border);
+}
+.pdm-iconbtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.5rem;
+  /* Kept at the 44px touch target: these sit close together on a phone. */
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  font: inherit;
+  cursor: pointer;
+}
+.pdm-btn:disabled,
+.pdm-iconbtn:disabled,
+.pdm-linkbtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pdm-btn:focus-visible,
+.pdm-iconbtn:focus-visible,
+.pdm-linkbtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pdm-linkbtn {
+  background: none;
+  border: none;
+  padding: 0.35rem 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.pdm-remove {
+  color: var(--error);
+}
+
+/* Run --------------------------------------------------------------------- */
+.pdm-run {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+.pdm-outcome {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+}
+.pdm-progress {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  min-height: 1.4em;
+}
+
+/* Rejected ---------------------------------------------------------------- */
+.pdm-rejected {
+  border: 1px solid var(--error);
+  background: var(--error-bg);
+  border-radius: 0.9rem;
+  padding: 1rem;
+}
+.pdm-rejected ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.pdm-rejected li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}

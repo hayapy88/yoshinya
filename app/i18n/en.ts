@@ -385,6 +385,81 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  pdfMergerGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop your PDFs onto the upload area, or click to choose them.',
+          'Drag the cards into the order you want. *Name order* and *Reverse* are there if that is quicker.',
+          'To use only part of a file, type the pages into *Pages to use*. Leave it empty for the whole document.',
+          'Press *Merge and download*.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Invoices and receipts that have to go out as one file at the end of the month.',
+          'A scanner that saved every sheet as its own PDF, and now the document has to be put back together.',
+          'A submission where only a few pages of each form are actually wanted.',
+          'A report split into chapters that needs to be one file before it is handed round.',
+          'Anything confidential, where uploading a document to a website is not an option.',
+        ],
+      },
+      {
+        heading: 'Choosing which pages to use',
+        body: 'Leave *Pages to use* empty and the whole document goes in. Otherwise, type the page numbers as you would say them: 3 for a single page, 1-5 for a run, 2,5,7 for a few, 4- for everything from page 4 onwards, and -3 for the first three. Two things happen exactly as written rather than being tidied up: 1,1,2 really does put page 1 in twice, and 3,1 really does put page 3 before page 1. Writing the pages backwards, as in 5-2, reverses them. Under the box you will see how many pages your entry works out to, so a mistake shows up before you download anything.',
+      },
+      {
+        heading: 'PDFs that cannot be merged',
+        body: 'A password-protected PDF cannot be opened without its password, and a file that will not parse cannot be read at all; both are marked and left out, and the rest still merge. A signed PDF is different — it merges, but the signature does not survive, because the result is a new document and no signature can cover pages it never signed. Fillable forms lose their fields for the same reason: what is copied is the page, not the form. Both are flagged on the card before you merge.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'Your PDFs stay inside your browser and are not sent to a server, which is what makes this safe to use with contracts, invoices and medical records. There is no upload, no account, and nothing is stored: closing the page discards everything. Your original files are never modified — the merged document is a new file you download.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Are my PDFs uploaded to a server?',
+        answer:
+          'No. They are read and merged inside your browser. Neither the contents nor the file names are sent anywhere, so a confidential document never leaves your device.',
+      },
+      {
+        question: 'How many files can I merge at once?',
+        answer:
+          'Up to 100 files, 100 MB each and 500 MB in total. There is no daily limit and no sign-up.',
+      },
+      {
+        question: 'Will a digital signature still be valid afterwards?',
+        answer:
+          'No. Merging always produces a new document, and a signature only covers the file it was applied to. If the signature has to survive, the signed PDF has to stay as it is.',
+      },
+      {
+        question: 'What happens to a fillable form?',
+        answer:
+          'The pages come across but the fields do not, so the merged file is no longer fillable. Fill the form in and save it first if the answers need to be kept.',
+      },
+      {
+        question: 'Can I merge a password-protected PDF?',
+        answer:
+          'Not at the moment. Remove the password in the application you normally open it with, then merge the unprotected copy.',
+      },
+      {
+        question: 'Can I put the pages in any order I like?',
+        answer:
+          'Yes. The files merge in the order of the list, and within a file the pages merge in the order you typed them, so 3,1 puts page 3 first.',
+      },
+      {
+        question: 'Are my original files changed?',
+        answer:
+          'No. They are only read. The merged document is downloaded as a separate new file.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   fileRenamerGuide: {
     heading: 'Guide',
     sections: [
@@ -1103,6 +1178,77 @@ export const en = {
     'mouse-pointer-click': {
       name: 'Click',
       keywords: 'cursor pointer tap select action',
+    },
+  },
+  pdfMergerPage: {
+    metaTitle:
+      'Combine Files Into One - PDF Merger by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Put several PDFs together in the order you choose, and take only the pages you need. Up to 100 files at once, free, no sign-up, and nothing is ever uploaded — your PDFs stay in your browser.',
+    heading: 'PDF Merger by Yoshinya',
+    toolName: 'PDF Merger by Yoshinya',
+    toolDescription:
+      'Puts several PDFs into one file, in your order, using only the pages you pick.',
+    lead: 'Drop your PDFs in, put them in the order you want, and download one file. You can take just a few pages out of each one, and up to 100 files go in at a time. Everything happens inside your browser and nothing is uploaded, so contracts and invoices are safe here.',
+    privacyNote:
+      'Your PDFs are not sent to a server. All processing happens in your browser.',
+  },
+  pdfMerger: {
+    // Input
+    addHeading: '① Add PDFs',
+    dropzone: 'Drop PDF files here, or click to choose',
+    dropzoneHint: 'Several at once is fine',
+    supportedFormats: 'Supported: .pdf',
+    addMore: '+ Add files',
+    rejectedHeading: 'Files that could not be added',
+    dismiss: 'Dismiss',
+    // The list
+    orderHeading: '② Set the order and the pages',
+    summary: (files: number, pages: number) =>
+      `${files} file${files === 1 ? '' : 's'}, ${pages} page${pages === 1 ? '' : 's'}`,
+    sortByName: 'Name order',
+    reverse: 'Reverse',
+    removeAll: 'Remove all',
+    removeAllConfirm: 'Remove every file from the list?',
+    dragHandle: 'Drag to reorder',
+    moveUp: 'Move up',
+    moveDown: 'Move down',
+    remove: 'Remove',
+    pageCount: (n: number) => `${n} page${n === 1 ? '' : 's'}`,
+    reading: 'Reading…',
+    pageRangeLabel: 'Pages to use',
+    pageRangePlaceholder: 'All pages',
+    pageRangeHint: 'e.g. 1-3, 5, 8-',
+    usingAll: 'Using all pages',
+    usingSome: (n: number) => `Using ${n} page${n === 1 ? '' : 's'}`,
+    // Output
+    runHeading: '③ Merge and download',
+    outputNameLabel: 'File name',
+    outputPages: (n: number) =>
+      `The merged file will have ${n} page${n === 1 ? '' : 's'}.`,
+    merge: 'Merge and download',
+    merging: (done: number, total: number) =>
+      `Merging… ${done} / ${total} files`,
+    merged: (files: number, pages: number) =>
+      `Done. ${files} file${files === 1 ? '' : 's'} became ${pages} page${pages === 1 ? '' : 's'}.`,
+    needTwo: 'Add at least one PDF that can be merged.',
+    // Warnings and errors
+    warnings: {
+      signed: 'Signed. The signature will not survive the merge.',
+      has_form: 'Has form fields. They will not survive the merge.',
+    },
+    errors: {
+      not_pdf: 'Not a PDF file.',
+      empty_file: 'The file is empty.',
+      corrupted: 'This PDF could not be read.',
+      encrypted: 'Password-protected PDFs cannot be merged.',
+      file_too_large: 'Larger than the 100 MB per-file limit.',
+      total_too_large: 'Over the 500 MB total limit.',
+      too_many_files: 'Over the limit of 100 files.',
+      out_of_memory: 'Not enough memory to handle this file.',
+      range_invalid: 'This page range cannot be read.',
+      range_out_of_bounds: 'That page does not exist in this file.',
+      merge_failed: 'The merge failed.',
     },
   },
   imageCompressorPage: {

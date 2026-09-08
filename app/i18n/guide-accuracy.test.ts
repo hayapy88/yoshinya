@@ -81,6 +81,18 @@ describe.each([
     expect(text).toContain(t.csvEncodingFixer.download);
   });
 
+  it('pdf merger names the controls it tells people to press', () => {
+    const text = guideText(t, 'pdfMergerGuide');
+    for (const label of [
+      t.pdfMerger.sortByName,
+      t.pdfMerger.reverse,
+      t.pdfMerger.pageRangeLabel,
+      t.pdfMerger.merge,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -100,6 +112,7 @@ const ALL_GUIDES = [
   'csvEncodingFixerGuide',
   'splitBillGuide',
   'iconGeneratorGuide',
+  'pdfMergerGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {
@@ -118,6 +131,51 @@ describe('every guide has the same shape in both locales', () => {
     expect(headings).toContain('When is it useful?');
     expect(headings.at(-1)).toBe('Privacy and security');
   });
+});
+
+describe('emphasis markers are closed', () => {
+  // A guide marks the button names it quotes with *asterisks*, and ToolGuide
+  // turns each pair into bold. An unclosed marker is not turned into anything —
+  // it is printed on the page as an asterisk, which is how a whole release
+  // shipped with "Press *Work out the split*" visible in the English guides.
+  it.each(ALL_GUIDES)(
+    '%s has an even number of markers in every string',
+    (key) => {
+      for (const [locale, dictionary] of [
+        ['en', en],
+        ['ja', ja],
+      ] as const) {
+        // Cast for the same reason guideText above does: each dictionary
+        // narrows every section to the exact shape it was written with, so the
+        // optional fields are not visible on the union.
+        const guide = dictionary[key] as {
+          sections: {
+            body?: string;
+            steps?: string[];
+            items?: string[];
+            terms?: { definition: string }[];
+          }[];
+          faq: { question: string; answer: string }[];
+        };
+        const strings = [
+          ...guide.sections.flatMap((section) => [
+            section.body ?? '',
+            ...(section.steps ?? []),
+            ...(section.items ?? []),
+            ...(section.terms ?? []).map((term) => term.definition),
+          ]),
+          ...guide.faq.flatMap((entry) => [entry.question, entry.answer]),
+        ];
+        for (const text of strings) {
+          const markers = (text.match(/\*/g) ?? []).length;
+          expect(
+            markers % 2,
+            `${locale} ${key}: unclosed marker in "${text.slice(0, 60)}"`,
+          ).toBe(0);
+        }
+      }
+    },
+  );
 });
 
 describe('a guide opens with what the visitor came for', () => {

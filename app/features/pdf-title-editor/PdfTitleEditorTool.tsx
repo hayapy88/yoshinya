@@ -21,7 +21,7 @@ import {
 import { normalizeTextField } from './lib/metadata';
 import { PdfToolError, readPdf, writePdf } from './lib/pdf';
 import { resolveDuplicateNames } from './lib/filename';
-import { classifyFiles } from './lib/validate';
+import { classifyFiles } from '~/lib/pdf/validate';
 import { createPdfZip, zipFileName } from './lib/zip';
 import type { PdfErrorCode, PdfItem, PdfMetadataForm } from './lib/types';
 import './pdf-title-editor.css';
