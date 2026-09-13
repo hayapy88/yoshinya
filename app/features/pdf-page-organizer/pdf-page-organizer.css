@@ -1,0 +1,478 @@
+/* Palette aligned with the other PDF tools: navy accent on light, coral orange
+   on dark. */
+.ppo-root {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --error: #c22f2f;
+  --error-bg: #fdecec;
+  --warn-text: #9a3b12;
+  --warn-bg: #fdeee5;
+  /* A rendered page is white in both themes, so the space around it has to be
+     something else — otherwise a landscape page inside a portrait frame has no
+     visible edges at all. */
+  --paper-surround: #e9e8ee;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  accent-color: var(--yoshinyan-orange);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ppo-root {
+    --paper-surround: #15141a;
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --error: #ef8080;
+    --error-bg: #3a1d1d;
+    --warn-text: #f2b28c;
+    --warn-bg: #3a2417;
+  }
+}
+
+/* Sections ---------------------------------------------------------------- */
+.ppo-section,
+.ppo-run,
+.ppo-rejected {
+  margin-top: 2rem;
+}
+.ppo-section h2,
+.ppo-run h2,
+.ppo-rejected h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+.ppo-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.4rem 0 0;
+}
+.ppo-summary {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.ppo-filename {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  color: var(--text, inherit);
+}
+.ppo-empty {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border: 1px dashed var(--border);
+  border-radius: 0.9rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Dropzone ---------------------------------------------------------------- */
+.ppo-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 2px dashed var(--border);
+  border-radius: 1rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--panel);
+}
+.ppo-dropzone.ppo-compact {
+  padding: 1rem;
+}
+.ppo-dropzone:hover,
+.ppo-dropzone.ppo-over {
+  border-color: var(--accent);
+}
+.ppo-dropzone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.ppo-dropzone-label {
+  font-weight: 600;
+}
+.ppo-dropzone-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Toolbar ----------------------------------------------------------------- */
+.ppo-toolbar {
+  position: sticky;
+  /* Clears the site header, which is what a three-hundred-page grid scrolls
+     under. Without this the controls are hundreds of cards away. */
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0.6rem 0;
+  background: var(--bg, canvas);
+  border-bottom: 1px solid var(--border);
+}
+.ppo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ppo-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The grid ---------------------------------------------------------------- */
+.ppo-grid {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: 1rem;
+}
+.ppo-card {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 0.5rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.ppo-card.ppo-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.ppo-card.ppo-cut {
+  /* A cut is a property of the gap before the card, so it is drawn on that
+     edge rather than round the whole card, which selection already owns. */
+  border-left: 4px solid var(--warn-text);
+}
+.ppo-card.ppo-dragging {
+  opacity: 0.7;
+  position: relative;
+  z-index: 1;
+}
+.ppo-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.ppo-position {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+}
+.ppo-source {
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ppo-handle {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.25rem;
+  cursor: grab;
+  touch-action: none;
+}
+.ppo-thumb {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--paper-surround);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+.ppo-thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.ppo-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* A4 portrait, so the grid does not reflow as pages arrive. */
+  aspect-ratio: 1 / 1.414;
+  width: 100%;
+}
+.ppo-image {
+  /* Fills the frame at whatever width the column came out to, rather than
+     sitting at the raster's own size and leaving the grid ragged. */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* A quarter turn swaps the image's axes against the frame, so the box it is
+   contained in has to be swapped too: as wide as the frame is tall, and as tall
+   as the frame is wide. The frame is A4, so that is 141.4% and 70.7%. */
+.ppo-image-quarter {
+  width: 141.4%;
+  height: 70.7%;
+}
+.ppo-thumb-loading {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    var(--panel) 30%,
+    var(--border) 50%,
+    var(--panel) 70%
+  );
+  background-size: 200% 100%;
+  animation: ppo-shimmer 1.4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ppo-thumb-loading {
+    animation: none;
+  }
+}
+@keyframes ppo-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.ppo-thumb-failed {
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.5rem;
+  text-align: center;
+}
+.ppo-card-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.15rem;
+}
+.ppo-cutbtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  min-height: 2rem;
+}
+.ppo-cutbtn[aria-pressed='true'] {
+  border-color: var(--warn-text);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  font-weight: 600;
+}
+
+/* Fields ------------------------------------------------------------------ */
+.ppo-fieldset {
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  padding: 0.75rem 1rem;
+  margin: 0;
+}
+.ppo-fieldset legend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0 0.35rem;
+}
+.ppo-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  min-height: 2.25rem;
+}
+.ppo-split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.ppo-split .ppo-hint {
+  flex-basis: 100%;
+  margin: 0;
+}
+.ppo-field {
+  margin-top: 0.75rem;
+  min-width: 0;
+}
+.ppo-field-name {
+  max-width: 24rem;
+}
+.ppo-field-number {
+  max-width: 10rem;
+}
+.ppo-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.ppo-field input,
+.ppo-field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  background: canvas;
+  color: inherit;
+  min-height: 2.75rem;
+}
+.ppo-field input:focus-visible,
+.ppo-field select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.ppo-field input:disabled,
+.ppo-field select:disabled {
+  opacity: 0.6;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.ppo-btn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+.ppo-btn-primary {
+  font-size: 1.05rem;
+  margin-top: 0.5rem;
+}
+.ppo-btn-small {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+}
+.ppo-btn-secondary {
+  background: transparent;
+  color: inherit;
+  border-color: var(--border);
+}
+.ppo-iconbtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.4rem;
+  min-width: 2rem;
+  min-height: 2.25rem;
+  font: inherit;
+  cursor: pointer;
+}
+.ppo-danger {
+  color: var(--error);
+}
+.ppo-btn:disabled,
+.ppo-iconbtn:disabled,
+.ppo-cutbtn:disabled,
+.ppo-linkbtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ppo-btn:focus-visible,
+.ppo-iconbtn:focus-visible,
+.ppo-cutbtn:focus-visible,
+.ppo-handle:focus-visible,
+.ppo-linkbtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.ppo-linkbtn {
+  background: none;
+  border: none;
+  padding: 0.35rem 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Run --------------------------------------------------------------------- */
+.ppo-run {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+.ppo-outcome {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+}
+.ppo-progress {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  min-height: 1.4em;
+}
+
+/* Warnings and errors ------------------------------------------------------ */
+.ppo-warning,
+.ppo-error {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+.ppo-warning {
+  border-left: 3px solid var(--warn-text);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+.ppo-error {
+  border-left: 3px solid var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+}
+.ppo-rejected {
+  border: 1px solid var(--error);
+  background: var(--error-bg);
+  border-radius: 0.9rem;
+  padding: 1rem;
+}
+.ppo-rejected ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.ppo-rejected li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 30rem) {
+  .ppo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  }
+  .ppo-toolbar {
+    gap: 0.4rem 0.75rem;
+  }
+}

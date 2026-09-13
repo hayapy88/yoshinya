@@ -99,6 +99,11 @@ export default function Home() {
               name: t.pdfMergerPage.toolName,
               description: t.pdfMergerPage.toolDescription,
             },
+            {
+              slug: 'pdf-page-organizer',
+              name: t.pdfPageOrganizerPage.toolName,
+              description: t.pdfPageOrganizerPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

@@ -23,6 +23,7 @@ const GUIDE_KEY = {
   'split-bill': 'splitBillGuide',
   'icon-generator': 'iconGeneratorGuide',
   'pdf-merger': 'pdfMergerGuide',
+  'pdf-page-organizer': 'pdfPageOrganizerGuide',
 } as const;
 
 function renderGuide(slug: keyof typeof GUIDE_KEY, locale: Locale) {

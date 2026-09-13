@@ -12,6 +12,7 @@ export default [
     route('split-bill', 'routes/split-bill.tsx'),
     route('icon-generator', 'routes/icon-generator.tsx'),
     route('pdf-merger', 'routes/pdf-merger.tsx'),
+    route('pdf-page-organizer', 'routes/pdf-page-organizer.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -40,6 +41,9 @@ export default [
   }),
   route('pdf-merger', 'routes/locale-redirect.tsx', {
     id: 'redirect-pdf-merger',
+  }),
+  route('pdf-page-organizer', 'routes/locale-redirect.tsx', {
+    id: 'redirect-pdf-page-organizer',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

@@ -457,6 +457,95 @@ export const en = {
         answer:
           'No. They are only read. The merged document is downloaded as a separate new file.',
       },
+      {
+        question: 'Can I reorder or delete pages inside one PDF?',
+        answer:
+          'Not with this tool — merging works across files, and within a file it only takes the pages you name. PDF Page Organizer by Yoshinya is the one for that: it shows a thumbnail of every page, and pages can be moved, turned, deleted, or cut into separate files.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
+  pdfPageOrganizerGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop one PDF onto the upload area, or click to choose it. Every page appears as a thumbnail.',
+          'Click the pages you want to work on. Shift-click picks a run of them, and *Select all* takes the lot.',
+          'Turn them with *Rotate right* or *Rotate left*, drop them with *Delete selected*, or drag a page to move it.',
+          'Choose whether to save one PDF or several, name the file, and press the download button.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'A scan came out with some pages sideways or upside down.',
+          'Blank sheets and duplicates are mixed into a document that has to be sent on.',
+          'Only part of a form is wanted, and the rest should not be shared.',
+          'One PDF holds forty invoices that have to become forty files.',
+          'Anything confidential, where uploading a document to a website is not an option.',
+        ],
+      },
+      {
+        heading: 'Splitting one PDF into several',
+        body: 'Pick *Save as separate files (zip)* and then choose how the cuts are made. With *Cut where I say*, pressing *Cut before this page* on a card starts a new file at that page — the usual choice when the parts are different lengths. *Every N pages* divides the document into equal runs, and a size of 1 gives you a file per page. *Cut at the selected pages* uses your selection instead, which is the quickest way through a scan of forty invoices: select the first page of each one. Before anything is downloaded you are told how many files there will be and which pages go into each, and the files arrive as a zip named after your document, numbered so they stay in order.',
+      },
+      {
+        heading: 'Turning pages and taking them out',
+        body: 'A rotation is added to the way the page already sits, so a page scanned sideways and a page scanned upright both end up where you expect after one press. Deleting removes pages from the list only — your own file is never touched — and *Keep selected only* does the opposite, throwing away everything you did not pick, which is faster when you only want three pages out of ninety. Nothing is final until you download: *Undo* steps back through the last fifty changes, and *Redo* puts them back.',
+      },
+      {
+        heading: 'PDFs that cannot be opened',
+        body: 'A password-protected PDF cannot be opened without its password, and a file that will not parse cannot be read at all. Both are refused with a reason rather than a blank page. A document longer than 1,000 pages is also turned away, because that many thumbnails is more than a browser tab can hold. A signed PDF opens and edits, but the signature does not survive, because what you download is a new document and no signature can cover pages it never signed. Fillable forms lose their fields for the same reason. Both are flagged when the file opens. If one page will not draw, its card shows its number instead of a picture and everything else still works — the thumbnail is a preview, not the document.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'Your PDF stays inside your browser and is not sent to a server, which is what makes this safe to use with contracts, invoices and medical records. There is no upload, no account, and nothing is stored: closing the page discards everything. Even the font and image data the page previews need comes from this site rather than an outside service, so opening a document tells nobody anything. Your original file is never modified — what you download is a new file.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Is my PDF uploaded to a server?',
+        answer:
+          'No. It is read, drawn and rewritten inside your browser. Neither the contents nor the file name is sent anywhere, so a confidential document never leaves your device.',
+      },
+      {
+        question: 'Can I organize several PDFs at once?',
+        answer:
+          'Not here — this tool works on one document at a time, because the page grid is the working area. To put several files together, use PDF Merger by Yoshinya, which can also take just the pages you name from each file.',
+      },
+      {
+        question: 'What are the split files called?',
+        answer:
+          'They take the name you chose with a number on the end, padded so they sort correctly: report-01.pdf to report-12.pdf. They download together as report-split.zip.',
+      },
+      {
+        question: 'Will a digital signature still be valid afterwards?',
+        answer:
+          'No. Editing pages always produces a new document, and a signature only covers the file it was applied to. If the signature has to survive, the signed PDF has to stay as it is.',
+      },
+      {
+        question: 'What happens to a fillable form?',
+        answer:
+          'The pages come across but the fields do not, so the saved file is no longer fillable. Fill the form in and save it first if the answers need to be kept.',
+      },
+      {
+        question: 'How many pages can it handle?',
+        answer:
+          'Up to 1,000 pages, in a file of up to 100 MB. Thumbnails are drawn as you scroll rather than all at once, so a long document opens quickly.',
+      },
+      {
+        question: 'Do bookmarks survive?',
+        answer:
+          'No. The outline is not carried over, which is deliberate: once pages are moved or removed, a bookmark that still pointed at "page 12" would take the reader somewhere it was never meant to.',
+      },
+      {
+        question: 'Is my original file changed?',
+        answer:
+          'No. It is only read. What you download is a separate new file, so the original stays exactly as it was until you replace it yourself.',
+      },
     ],
     relatedHeading: 'Related tools',
   },
@@ -1249,6 +1338,107 @@ export const en = {
       range_invalid: 'This page range cannot be read.',
       range_out_of_bounds: 'That page does not exist in this file.',
       merge_failed: 'The merge failed.',
+    },
+  },
+  pdfPageOrganizerPage: {
+    metaTitle:
+      'Split, Extract, Delete and Rotate - PDF Page Organizer by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Reorder, rotate and delete the pages of a PDF, or split one document into several, working from thumbnails. Free, no sign-up, and nothing is ever uploaded — your PDF stays in your browser.',
+    heading: 'PDF Page Organizer by Yoshinya',
+    toolName: 'PDF Page Organizer by Yoshinya',
+    toolDescription:
+      'Reorders, rotates and deletes the pages of a PDF, and splits one document into several.',
+    lead: 'Drop a PDF in and every page appears as a thumbnail you can turn, move, delete or cut into separate files. Hundreds of pages at a time, and undo for everything. It all happens inside your browser and nothing is uploaded, so contracts and invoices are safe here.',
+    privacyNote:
+      'Your PDF is not sent to a server. All processing happens in your browser.',
+  },
+  pdfPageOrganizer: {
+    // Input
+    addHeading: '① Add a PDF',
+    dropzone: 'Drop a PDF file here, or click to choose',
+    dropzoneHint: 'One document at a time, up to 1,000 pages',
+    supportedFormats: 'Supported: .pdf',
+    replaceFile: 'Open a different PDF',
+    replaceConfirm:
+      'Open a different PDF? The changes you have made will be lost.',
+    reading: 'Opening…',
+    fileSummary: (pages: number, size: string) =>
+      `${pages} page${pages === 1 ? '' : 's'}, ${size}`,
+    rejectedHeading: 'This file could not be opened',
+    dismiss: 'Dismiss',
+    warnings: {
+      signed: 'This PDF is signed. The signature will not survive editing.',
+      has_form: 'This PDF has form fields. They will not survive editing.',
+    },
+    // The grid
+    editHeading: '② Edit the pages',
+    selectAll: 'Select all',
+    clearSelection: 'Clear selection',
+    invertSelection: 'Invert selection',
+    selectedCount: (n: number) =>
+      n === 0 ? 'Nothing selected' : `${n} page${n === 1 ? '' : 's'} selected`,
+    selectHint:
+      'Click a page to select it, shift-click for a run of pages. With nothing selected, rotating turns every page.',
+    rotateLeftAll: 'Rotate left',
+    rotateRightAll: 'Rotate right',
+    deleteSelected: 'Delete selected',
+    keepSelected: 'Keep selected only',
+    reverse: 'Reverse order',
+    undo: 'Undo',
+    redo: 'Redo',
+    noPagesLeft: 'Every page has been deleted. Undo to bring one back.',
+    // Cards
+    dragHandle: 'Drag to reorder',
+    sourcePage: (n: number) => `Originally page ${n}`,
+    selectPage: (n: number) => `Select page ${n}`,
+    moveBack: 'Move back',
+    moveForward: 'Move forward',
+    rotateLeft: 'Rotate this page left',
+    rotateRight: 'Rotate this page right',
+    deletePage: 'Delete this page',
+    cutBefore: 'Cut before this page',
+    cutHere: 'New file starts here',
+    // Output
+    runHeading: '③ Save',
+    outputModeLegend: 'How to save',
+    singleMode: 'Save as one PDF',
+    splitMode: 'Save as separate files (zip)',
+    splitModeLabel: 'Where to cut',
+    splitByCuts: 'Cut where I say',
+    splitEveryN: 'Every N pages',
+    splitBySelection: 'Cut at the selected pages',
+    splitSizeLabel: 'Pages per file',
+    cutsHint:
+      'Press *Cut before this page* on a card to start a new file there.',
+    selectionHint: 'Each selected page becomes the first page of a new file.',
+    everyNHint: 'A size of 1 gives you one file per page.',
+    outputNameLabel: 'File name',
+    outcomeSingle: (from: number, to: number) =>
+      `${from} page${from === 1 ? '' : 's'} → ${to} page${to === 1 ? '' : 's'}.`,
+    outcomeSplit: (files: number, ranges: string) =>
+      `${files} files (${ranges}).`,
+    download: 'Download',
+    downloadZip: 'Download as zip',
+    working: (done: number, total: number) =>
+      `Saving… ${done} / ${total} files`,
+    done: (files: number, pages: number) =>
+      `Done. ${pages} page${pages === 1 ? '' : 's'} saved as ${files} file${files === 1 ? '' : 's'}.`,
+    errors: {
+      not_pdf: 'Not a PDF file.',
+      empty_file: 'The file is empty.',
+      corrupted: 'This PDF could not be read.',
+      encrypted: 'Password-protected PDFs cannot be opened.',
+      file_too_large: 'Larger than the 100 MB limit.',
+      total_too_large: 'Over the 500 MB total limit.',
+      too_many_files: 'One PDF at a time, please.',
+      out_of_memory: 'Not enough memory to handle this file.',
+      too_many_pages: 'Longer than the 1,000 page limit.',
+      render_failed: 'No preview',
+      no_pages_left: 'There are no pages left to save.',
+      split_no_boundary: 'Nothing is cut yet, so this would save one file.',
+      split_invalid: 'Pages per file has to be a whole number of at least 1.',
+      organize_failed: 'The file could not be saved.',
     },
   },
   imageCompressorPage: {

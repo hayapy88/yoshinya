@@ -1,4 +1,5 @@
 import { stripPdfExtension } from '~/lib/pdf/filename';
+import { hasAcroForm, isSigned, sharedPdfFailure } from '~/lib/pdf/inspect';
 import { parsePageRange } from './page-range';
 import type { MergeErrorCode, MergeItem, MergeWarning } from './types';
 
@@ -7,9 +8,6 @@ import type { MergeErrorCode, MergeItem, MergeWarning } from './types';
 async function loadPdfLib() {
   return import('pdf-lib');
 }
-
-type PdfLib = Awaited<ReturnType<typeof loadPdfLib>>;
-type LoadedDocument = Awaited<ReturnType<PdfLib['PDFDocument']['load']>>;
 
 export class MergeError extends Error {
   constructor(readonly code: MergeErrorCode) {
@@ -22,37 +20,13 @@ function toMergeError(error: unknown, fallback: MergeErrorCode): MergeError {
   if (error instanceof MergeError) {
     return error;
   }
-  const name = error instanceof Error ? error.name : '';
-  const message = error instanceof Error ? error.message : String(error);
-  if (name === 'EncryptedPDFError' || /encrypt/i.test(message)) {
-    return new MergeError('encrypted');
-  }
-  if (name === 'RangeError' || /allocation|out of memory/i.test(message)) {
-    return new MergeError('out_of_memory');
-  }
-  return new MergeError(fallback);
+  return new MergeError(sharedPdfFailure(error) ?? fallback);
 }
 
 export type PdfInspection = {
   pageCount: number;
   warnings: MergeWarning[];
 };
-
-// A digital signature lives in a signature dictionary with a /ByteRange
-// covering the bytes it signed. This is a byte scan, not a full parse: it can
-// produce a false positive on a PDF that merely mentions the string, and the
-// warning is only a disclosure, so that costs a sentence rather than a
-// blocked file. It works because a signature's ByteRange has to stay directly
-// locatable in the file — it cannot hide inside a compressed object stream.
-function isSigned(bytes: Uint8Array): boolean {
-  return new TextDecoder('latin1').decode(bytes).includes('/ByteRange');
-}
-
-// An interactive form does hide inside a compressed object stream, so scanning
-// the bytes for /AcroForm misses most of them. Read the catalog instead.
-function hasAcroForm(lib: PdfLib, doc: LoadedDocument): boolean {
-  return doc.catalog.get(lib.PDFName.of('AcroForm')) !== undefined;
-}
 
 /** Reads page count and disclosures for one file as it is added to the list. */
 export async function inspectPdf(file: File): Promise<PdfInspection> {

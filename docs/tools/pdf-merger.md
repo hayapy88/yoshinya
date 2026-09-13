@@ -175,6 +175,11 @@ rotating pages cannot work without thumbnails, so pdf.js is required there.
 Build it then as `app/lib/pdf/render.ts` and add thumbnails here on the back of
 it, rather than paying 494 KB for this tool alone.
 
+**Week 9 update:** that renderer now exists — `app/lib/pdf/render.ts`, loaded on
+demand, with the same-origin worker and font data described in
+`docs/tools/pdf-page-organizer.md`. Adding thumbnails to this tool is now a
+small change against an already-paid-for dependency; it has not been made yet.
+
 ## Privacy
 
 PDFs are read with `File.arrayBuffer()` and merged with pdf-lib in the browser.
