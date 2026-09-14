@@ -78,8 +78,11 @@ export async function createRenderer(bytes: Uint8Array): Promise<PdfRenderer> {
     // Served from our own origin by scripts/copy-pdfjs-assets.mjs. Without the
     // CMaps, a Japanese PDF that relies on a system font — an everyday case
     // here — draws its pages with the text missing. The default is to fetch
-    // none of them; the common alternative is a CDN, which would tell someone
-    // else's server which documents a visitor opened.
+    // none of them, and the common alternative is a CDN. What a CDN would see
+    // is not the document — it never leaves the device — but it would see a
+    // request per PDF opened, carrying the visitor's address and this page's
+    // URL. A tool that exists because nothing is uploaded should not be making
+    // third-party requests every time it is used.
     cMapUrl: '/pdfjs/cmaps/',
     cMapPacked: true,
     standardFontDataUrl: '/pdfjs/standard_fonts/',

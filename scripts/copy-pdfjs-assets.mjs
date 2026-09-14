@@ -9,8 +9,10 @@
 // PDFs), the 14 standard fonts, and the WebAssembly image decoders. Left
 // unconfigured, pdf.js skips them and the thumbnail comes out missing its text.
 // Pointed at a CDN, which is the usual fix, every PDF a visitor opens would
-// announce itself to someone else's server — the one thing this project does
-// not do.
+// send a request to someone else's server. The document itself would not go
+// anywhere, but the visit would: the address it came from, the page it was on,
+// and which character tables the file needed. For a tool whose whole premise is
+// that nothing is uploaded, that is the wrong default.
 //
 // The copies are gitignored: they are vendored bytes, reproduced from the
 // pinned pdfjs-dist version on every install.
