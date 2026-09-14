@@ -1278,7 +1278,7 @@ export const en = {
     toolName: 'PDF Merger by Yoshinya',
     toolDescription:
       'Puts several PDFs into one file, in your order, using only the pages you pick.',
-    lead: 'Drop your PDFs in, put them in the order you want, and download one file. You can take just a few pages out of each one, and up to 100 files go in at a time. Everything happens inside your browser and nothing is uploaded, so contracts and invoices are safe here.',
+    lead: 'Invoices and receipts that have to go out as one file at month end, a scanner that saved every sheet separately, a submission that wants only some pages of each form — merging PDFs is the chore every free service asks you to upload for. PDF Merger by Yoshinya puts up to 100 files together in the order you choose, taking only the pages you name from each. Your PDFs are never sent to a server — it all happens inside your browser — so contracts and invoices are safe here.',
     privacyNote:
       'Your PDFs are not sent to a server. All processing happens in your browser.',
   },
@@ -1349,7 +1349,7 @@ export const en = {
     toolName: 'PDF Page Organizer by Yoshinya',
     toolDescription:
       'Reorders, rotates and deletes the pages of a PDF, and splits one document into several.',
-    lead: 'Drop a PDF in and every page appears as a thumbnail you can turn, move, delete or cut into separate files. Hundreds of pages at a time, and undo for everything. It all happens inside your browser and nothing is uploaded, so contracts and invoices are safe here.',
+    lead: "A scan came out with some pages sideways, blank sheets and duplicates are mixed in, or only part of the document should be passed on — tidying up a PDF's pages is fiddly work. PDF Page Organizer by Yoshinya shows every page as a thumbnail and rotates, deletes, reorders and splits hundreds of them at a time, with undo for everything you do. Your PDF is never sent to a server — it all happens inside your browser — so contracts and invoices are safe here.",
     privacyNote:
       'Your PDF is not sent to a server. All processing happens in your browser.',
   },
