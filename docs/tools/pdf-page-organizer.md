@@ -124,11 +124,15 @@ pdf.js needs three sets of data files to draw certain pages: predefined CMaps
 for CJK text in a font the document does not embed (routine in Japanese
 business PDFs), the 14 standard fonts, and WebAssembly image decoders. Left
 unconfigured it skips them, and the thumbnail comes out missing its text. The
-usual fix is to point it at a CDN, which would tell someone else's server which
-documents a visitor opened — so `scripts/copy-pdfjs-assets.mjs` copies them out
-of `pdfjs-dist` into `public/pdfjs/` before dev and build, gitignored, and
-`getDocument` is pointed there. An e2e test asserts that opening a PDF makes no
-request to any other host.
+usual fix is to point it at a CDN. That does not put the document anywhere —
+the file never leaves the device either way — but it does mean a request to a
+third party every time a visitor opens a PDF, carrying their address, the page
+they were on, and which character tables the file called for. A tool that
+exists because nothing is uploaded should not be making those requests, so
+`scripts/copy-pdfjs-assets.mjs` copies the data out of `pdfjs-dist` into
+`public/pdfjs/` before dev and build, gitignored, and `getDocument` is pointed
+there. An e2e test asserts that opening a PDF makes no request to any other
+host.
 
 ### No preview beyond the thumbnail, no page insertion
 
