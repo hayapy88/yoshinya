@@ -197,6 +197,18 @@ export function pdfMergerJsonLd(locale: Locale): Record<string, unknown> {
   );
 }
 
+export function pdfPageOrganizerJsonLd(
+  locale: Locale,
+): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja'
+      ? 'よしにゃにPDFページ整理'
+      : 'PDF Page Organizer by Yoshinya',
+    '/pdf-page-organizer',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 //

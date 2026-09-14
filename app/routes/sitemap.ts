@@ -12,6 +12,7 @@ const PATHS = [
   '/split-bill',
   '/icon-generator',
   '/pdf-merger',
+  '/pdf-page-organizer',
   '/privacy',
   '/terms',
 ];

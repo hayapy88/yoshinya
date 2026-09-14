@@ -42,6 +42,9 @@ test-results
 docs/roadmap.md
 docs/tools/specifications/
 
+# pdf.js runtime data, copied from node_modules before dev and build
+public/pdfjs
+
 # wrangler files
 .wrangler
 .dev.vars*

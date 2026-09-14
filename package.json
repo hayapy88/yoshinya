@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
+    "predev": "node scripts/copy-pdfjs-assets.mjs",
     "build": "react-router build",
+    "prebuild": "node scripts/copy-pdfjs-assets.mjs",
     "lint": "oxlint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -17,7 +19,8 @@
     "announce": "node scripts/announce.mjs",
     "cf-typegen": "wrangler types",
     "postinstall": "wrangler types",
-    "build:icons": "node scripts/build-icons.mjs"
+    "build:icons": "node scripts/build-icons.mjs",
+    "build:pdfjs-assets": "node scripts/copy-pdfjs-assets.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -26,6 +29,7 @@
     "isbot": "^5.2.1",
     "jszip": "^3.10.1",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.3.289",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router": "^8.2.0"

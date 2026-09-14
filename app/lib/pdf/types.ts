@@ -24,6 +24,10 @@ export type RejectedFile = {
 // Configurable per the spec: browser memory may bite well before these.
 export const LIMITS = {
   maxFileBytes: 100 * 1024 * 1024,
+  // Page thumbnails are rendered one by one and cached, so a document's page
+  // count costs memory in a way a file's byte size does not. A thousand pages
+  // is well past any real document and still leaves the grid usable.
+  maxPages: 1000,
   maxTotalBytes: 500 * 1024 * 1024,
   maxFiles: 100,
   maxTextLength: 1000,

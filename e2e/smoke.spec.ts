@@ -551,6 +551,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'split-bill', heading: 'よしにゃに割り勘' },
     { slug: 'icon-generator', heading: 'よしにゃにアイコン作成' },
     { slug: 'pdf-merger', heading: 'よしにゃにPDF結合' },
+    { slug: 'pdf-page-organizer', heading: 'よしにゃにPDFページ整理' },
   ];
 
   for (const tool of tools) {
@@ -1668,5 +1669,107 @@ test.describe('icon generator workflow', () => {
 
     await page.reload();
     await expect(page.locator('g[stroke="#dc2626"]').first()).toBeVisible();
+  });
+});
+
+test.describe('pdf page organizer workflow', () => {
+  // Pages of different widths, so a saved file can be told apart by its shape
+  // if a later test ever needs to read one back.
+  async function multiPagePdf(name: string, pages: number) {
+    const doc = await PDFDocument.create();
+    for (let i = 0; i < pages; i += 1) {
+      doc.addPage([200 + i * 20, 400]);
+    }
+    return {
+      name,
+      mimeType: 'application/pdf',
+      buffer: Buffer.from(await doc.save()),
+    };
+  }
+
+  test('draws a thumbnail per page, deletes one, and downloads the rest', async ({
+    page,
+  }) => {
+    await page.goto('/en/pdf-page-organizer');
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([await multiPagePdf('report.pdf', 4)]);
+
+    await expect(page.locator('.ppo-card')).toHaveCount(4);
+    // This is the only place pdf.js actually draws: jsdom has no canvas, so a
+    // real image appearing here is what proves the worker and its data files
+    // are being served.
+    await expect(page.locator('.ppo-card img').first()).toBeVisible();
+    // Thumbnails are drawn as they come into view, so on a phone-sized screen
+    // the ones below the fold do not exist until they are scrolled to.
+    await page.locator('.ppo-card').last().scrollIntoViewIfNeeded();
+    await expect(page.locator('.ppo-card img')).toHaveCount(4);
+
+    await page
+      .locator('.ppo-card')
+      .nth(1)
+      .getByRole('button', { name: 'Select page 2' })
+      .click();
+    await expect(page.getByText('1 page selected')).toBeVisible();
+    await page.getByRole('button', { name: 'Delete selected' }).click();
+    await expect(page.locator('.ppo-card')).toHaveCount(3);
+    await expect(page.getByText('4 pages → 3 pages.')).toBeVisible();
+
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download', exact: true }).click();
+    expect((await download).suggestedFilename()).toBe('report.pdf');
+
+    // And it is all undoable, right up to the end.
+    await page.getByRole('button', { name: 'Undo' }).click();
+    await expect(page.locator('.ppo-card')).toHaveCount(4);
+  });
+
+  test('splits at the cuts and downloads a zip', async ({ page }) => {
+    await page.goto('/en/pdf-page-organizer');
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([await multiPagePdf('invoices.pdf', 4)]);
+    await expect(page.locator('.ppo-card')).toHaveCount(4);
+
+    await page
+      .getByRole('radio', { name: 'Save as separate files (zip)' })
+      .check();
+    await expect(
+      page.getByRole('button', { name: 'Download as zip' }),
+    ).toBeDisabled();
+
+    await page
+      .locator('.ppo-card')
+      .nth(2)
+      .getByRole('button', { name: 'Cut before this page' })
+      .click();
+    await expect(page.getByText('2 files (1-2 / 3-4).')).toBeVisible();
+
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download as zip' }).click();
+    expect((await download).suggestedFilename()).toBe('invoices-split.zip');
+  });
+
+  test('never sends the PDF anywhere, and asks no other host for anything', async ({
+    page,
+  }) => {
+    const offSite: string[] = [];
+    page.on('request', (request) => {
+      if (!request.url().startsWith('http://localhost:4199')) {
+        offSite.push(request.url());
+      }
+    });
+
+    await page.goto('/en/pdf-page-organizer');
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles([await multiPagePdf('contract.pdf', 3)]);
+    await page.locator('.ppo-card').last().scrollIntoViewIfNeeded();
+    await expect(page.locator('.ppo-card img')).toHaveCount(3);
+
+    // pdf.js will fetch its worker and its font data if they are not where it
+    // was told to look, and the usual default for that is a CDN. Everything
+    // this page loads has to come from us.
+    expect(offSite).toEqual([]);
   });
 });

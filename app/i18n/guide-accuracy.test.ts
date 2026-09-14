@@ -93,6 +93,21 @@ describe.each([
     }
   });
 
+  it('pdf page organizer names the controls it tells people to press', () => {
+    const text = guideText(t, 'pdfPageOrganizerGuide');
+    for (const label of [
+      t.pdfPageOrganizer.selectAll,
+      t.pdfPageOrganizer.rotateRightAll,
+      t.pdfPageOrganizer.deleteSelected,
+      t.pdfPageOrganizer.keepSelected,
+      t.pdfPageOrganizer.cutBefore,
+      t.pdfPageOrganizer.splitMode,
+      t.pdfPageOrganizer.undo,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -113,6 +128,7 @@ const ALL_GUIDES = [
   'splitBillGuide',
   'iconGeneratorGuide',
   'pdfMergerGuide',
+  'pdfPageOrganizerGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {
