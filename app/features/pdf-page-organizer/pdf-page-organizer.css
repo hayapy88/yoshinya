@@ -260,8 +260,15 @@
 }
 .ppo-card-actions {
   display: flex;
-  justify-content: space-between;
-  gap: 0.15rem;
+  gap: 0.2rem;
+}
+/* Five controls inside a card that can be 9rem wide. They take an equal share
+   of whatever room there is: holding a minimum width instead pushed the last
+   one out past the card's edge. */
+.ppo-card-actions .ppo-iconbtn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 0.15rem;
 }
 .ppo-cutbtn {
   border: 1px solid var(--border);
@@ -470,7 +477,7 @@
 
 @media (max-width: 30rem) {
   .ppo-grid {
-    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   }
   .ppo-toolbar {
     gap: 0.4rem 0.75rem;
