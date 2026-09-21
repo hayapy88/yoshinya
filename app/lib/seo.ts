@@ -231,6 +231,18 @@ export function pdfPageOrganizerJsonLd(
   );
 }
 
+export function structuredDataGeneratorJsonLd(
+  locale: Locale,
+): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja'
+      ? 'よしにゃに構造化データ作成'
+      : 'Structured Data Generator by Yoshinya',
+    '/structured-data-generator',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 //

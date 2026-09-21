@@ -476,6 +476,116 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  structuredDataGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Choose the type under *① Choose a type* — an article, your organization, a local business, an FAQ, a breadcrumb trail or a product.',
+          'Fill in what you have under *② Fill in the details*. Fields marked *Required* are what Google needs for the rich result; anything left blank is simply left out of the code.',
+          'The code under *③ Copy the code* updates as you type. Press *Copy code* and paste it into the page described under *Where to paste it*.',
+          'Check the page with the *Rich Results Test* link. If a field is reported missing, come back, fill it in, and paste again.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'You want the star rating, price or FAQ dropdown to show under your result in Google.',
+          'You built a site for a client and structured data is the last item on the handover list.',
+          'Your SEO plugin handles articles but not the shop’s address, opening hours or the product you sell.',
+          'You have copied a JSON-LD snippet from somewhere and are not sure which fields to keep.',
+          'You know what to write but not which page it goes on, or where in the HTML.',
+        ],
+      },
+      {
+        heading: 'What structured data is',
+        body: 'Structured data is a block of JSON-LD in a page that describes, in a vocabulary search engines agree on (schema.org), what the page is about: this is an article by this author on this date, this is a shop at this address open these hours. Visitors never see it. Search engines use it to understand the page and, when the type qualifies, to show a richer result — a rating, a price, a breadcrumb trail instead of a URL. It does not raise a ranking by itself; it makes the result clearer and more likely to be clicked. More recently it is also credited with helping AEO — answer engine optimization — since a page whose facts are stated in a machine-readable form is easier for AI answers to draw on and cite.',
+      },
+      {
+        heading: 'Which type to use',
+        terms: [
+          {
+            term: 'Article',
+            definition:
+              'Blog posts and news. Goes on each post with its own headline, date and author. Choose Blog post for a blog and News article for a news site.',
+          },
+          {
+            term: 'Organization',
+            definition:
+              'Who is behind the site: name, logo, contact details, and the social profiles that belong to the same organization. Once, on the homepage.',
+          },
+          {
+            term: 'Local business',
+            definition:
+              'A place people visit — a shop, restaurant, clinic, salon or hotel. The address is required; add opening hours, phone and coordinates for the map result.',
+          },
+          {
+            term: 'FAQ page',
+            definition:
+              'Questions and answers that are visible on the page. Note that since 2023 Google shows the FAQ rich result only for well-known government and health sites; the markup still helps search engines read the page, but do not expect the dropdown.',
+          },
+          {
+            term: 'Breadcrumb list',
+            definition:
+              'The Home › Section › Page trail. Google shows it in place of the URL under your result. One block per page, listing that page’s own trail.',
+          },
+          {
+            term: 'Product',
+            definition:
+              'One product with a price, currency and availability, and optionally a rating. Goes on the product page itself — not on a category page.',
+          },
+        ],
+      },
+      {
+        heading: 'Where the code goes',
+        body: 'Inside the page’s <head>, right before </head> (after the <title> and <meta> tags), is the usual place; if your platform only lets you edit the body, right before </body> works just as well. The block must be on the page it describes: an article’s data on that article, a product’s on that product, and the organization on the homepage only. The same block can sit alongside others — a product page can carry both Product and BreadcrumbList. On WordPress, look for a custom schema or header-code field in your SEO plugin (Yoast, Rank Math, All in One SEO) or add a header-insertion plugin; on Shopify, Wix, Squarespace or STUDIO, the per-page custom code or header setting.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'What you type — names, addresses, phone numbers — is turned into code inside your browser and is not sent to a server. It is remembered on this device for 30 days so a company’s details do not have to be typed again, and *Clear this form* removes it sooner. The analytics record only which type was chosen and that a copy happened, never the values.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Does structured data improve my ranking?',
+        answer:
+          'Not directly. Google has said it is not a ranking factor. What it does is make your result eligible for a richer display — a rating, a price, a breadcrumb — which tends to earn more clicks from the same position.',
+      },
+      {
+        question: 'Do I have to fill in every field?',
+        answer:
+          'No. Fill in what you have. The fields marked Required are the ones Google needs before it will show the rich result; everything else is optional, and a blank field is simply left out of the code rather than emitted empty.',
+      },
+      {
+        question: 'Where in the HTML does it go?',
+        answer:
+          'Right before </head> is the convention, and right before </body> also works if you cannot edit the head. What matters more is which page: the block must describe the page it sits on.',
+      },
+      {
+        question: 'Can I put two types on one page?',
+        answer:
+          'Yes. Generate each one separately and paste both blocks; a product page commonly carries Product and BreadcrumbList. Only Organization should stay on the homepage alone.',
+      },
+      {
+        question: 'How do I know it works?',
+        answer:
+          'Open Google’s Rich Results Test, paste the URL of the page (or the code itself), and it tells you which rich result the page qualifies for and which required fields are missing. The Schema Markup Validator checks the markup against schema.org without Google’s rules on top.',
+      },
+      {
+        question: 'Why does the FAQ type say the dropdown may not appear?',
+        answer:
+          'In 2023 Google limited the FAQ rich result to well-known government and health websites. The markup is still valid and still helps search engines understand the page, but on most sites the expandable questions will not show under the result.',
+      },
+      {
+        question: 'Is what I type sent anywhere?',
+        answer:
+          'No. The code is built in your browser, and your entries are saved only in this browser’s storage for 30 days. Nothing is uploaded, and the analytics carry only the type you chose and a count of copies.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   pdfPageOrganizerGuide: {
     heading: 'Guide',
     sections: [
@@ -1451,6 +1561,218 @@ export const en = {
       split_invalid: 'Pages per file has to be a whole number of at least 1.',
       organize_failed: 'The file could not be saved.',
     },
+  },
+  structuredDataPage: {
+    metaTitle:
+      'Generate JSON-LD from a Form - Structured Data Generator by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Fill in a form and get valid JSON-LD for Article, Organization, LocalBusiness, FAQPage, BreadcrumbList or Product — only the fields you filled in, plus where on your site to paste it. Free, no sign-up, and nothing you type leaves your browser.',
+    heading: 'Structured Data Generator by Yoshinya',
+    toolName: 'Structured Data Generator by Yoshinya',
+    toolDescription:
+      'Builds JSON-LD structured data from a form and tells you where to paste it.',
+    lead: 'Everyone says structured data is a must for SEO — but nobody says how to write it, or where on the site it goes. Sound familiar?\nStructured data is JSON-LD that tells search engines and AI what a page is — who wrote this article, where this shop is. It is what qualifies a result for rich results like ratings and prices, and lately it is credited with helping AEO too: making a page easier for AI answers to cite.\nWith Structured Data Generator by Yoshinya you do not need to know how to write it. Pick the type, fill in the fields you know, and valid JSON-LD builds as you type, with a note on which page and where to paste it. Then paste the code into your site.\nNothing you enter is sent to a server; it all stays in your browser, so a company address or phone number is safe to type here.',
+    privacyNote:
+      'Nothing you enter is sent to a server. All processing happens in your browser.',
+  },
+  structuredData: {
+    // Step 1 — type
+    typeHeading: '① Choose a type',
+    types: {
+      article: {
+        name: 'Article',
+        description: 'A blog post or news article.',
+        placement:
+          'Paste it on each article page, with that article’s own values. Not on the homepage or the list of posts.',
+      },
+      organization: {
+        name: 'Organization',
+        description: 'A company, a brand, or a site as a whole.',
+        placement:
+          'Paste it once, on the homepage only. It describes who is behind the site, so it does not need to repeat on every page.',
+      },
+      localBusiness: {
+        name: 'Local business',
+        description: 'A shop, restaurant, clinic or other place people visit.',
+        placement:
+          'Paste it on the homepage, or on the page about that location if the site covers several. One business per block.',
+      },
+      faq: {
+        name: 'FAQ page',
+        description: 'A list of questions with their answers.',
+        placement:
+          'Paste it on the page where these exact questions and answers are visible to visitors. Markup for text that is not on the page can be treated as spam.',
+      },
+      breadcrumb: {
+        name: 'Breadcrumb list',
+        description: 'The trail from the homepage to the current page.',
+        placement:
+          'Paste it on every page that shows a breadcrumb, with that page’s own trail. The last item is the current page.',
+      },
+      product: {
+        name: 'Product',
+        description: 'A product with a price and availability.',
+        placement:
+          'Paste it on each product page, with that product’s own price and stock. Not on category or search pages.',
+      },
+    },
+
+    // Step 2 — form
+    formHeading: '② Fill in the details',
+    requiredBadge: 'Required',
+    requiredHint:
+      'Google needs the fields marked “Required” for the rich result. Everything else is optional — leave blank what you don’t have, and it simply won’t appear in the code.',
+    clear: 'Clear this form',
+    addRow: 'Add another',
+    removeRow: 'Remove',
+    moveUp: 'Move up',
+    moveDown: 'Move down',
+    rowLabel: (index: number) => `#${index}`,
+    fields: {
+      articleType: 'Type of article',
+      headline: 'Headline',
+      image: 'Image URLs (one per line)',
+      datePublished: 'Published',
+      dateModified: 'Last updated',
+      authorType: 'Author is a',
+      authorName: 'Author name',
+      authorUrl: 'Author URL',
+      publisherName: 'Publisher name',
+      publisherLogo: 'Publisher logo URL',
+      description: 'Description',
+      url: 'Page URL',
+      name: 'Name',
+      logo: 'Logo URL',
+      telephone: 'Telephone',
+      email: 'Email',
+      streetAddress: 'Street address',
+      addressLocality: 'City',
+      addressRegion: 'State / region',
+      postalCode: 'Postal code',
+      addressCountry: 'Country code',
+      sameAs: 'Social and profile URLs (one per line)',
+      businessType: 'Kind of business',
+      priceRange: 'Price range',
+      latitude: 'Latitude',
+      longitude: 'Longitude',
+      openingHours: 'Opening hours (one per line)',
+      entries: 'Questions and answers',
+      question: 'Question',
+      answer: 'Answer',
+      items: 'Breadcrumb items',
+      item: 'URL',
+      sku: 'SKU',
+      brand: 'Brand',
+      price: 'Price',
+      priceCurrency: 'Currency',
+      availability: 'Availability',
+      offerUrl: 'Product page URL',
+      ratingValue: 'Average rating',
+      reviewCount: 'Number of reviews',
+    },
+    hints: {
+      image:
+        'Use full URLs starting with https://. Google prefers a 1200 px wide image in 16:9, 4:3 and 1:1.',
+      datePublished: 'Leave blank if you don’t know it; a wrong date is worse than none.',
+      addressCountry: 'Two letters, such as JP, US or AU.',
+      sameAs: 'Your X, Instagram, YouTube, LinkedIn or Wikipedia pages.',
+      priceRange: 'Something like ¥¥ or $10–30.',
+      openingHours: 'Like “Mo-Fr 09:00-18:00” or “Sa 10:00-14:00”, one line per set of days.',
+      latitude: 'Decimal degrees, as shown by Google Maps. Both fields are needed for the pin.',
+      price: 'A number only, without the currency sign.',
+      ratingValue: 'Only if reviews are shown on the page. Both rating fields are needed together.',
+      url: 'The address of the page this code is pasted on.',
+      offerUrl: 'The address of the page this code is pasted on.',
+      item: 'The full address of that page. Optional for the last item.',
+      answer: 'Exactly the text that appears on the page.',
+    },
+    // Examples shown in the empty fields. A type-specific key
+    // ("product.name") wins over the shared one ("name").
+    placeholders: {
+      headline: 'e.g. Three ways to rename files in bulk',
+      image: 'e.g. https://example.com/images/cover.jpg',
+      'product.image': 'e.g. https://example.com/products/mug.jpg',
+      authorName: 'e.g. Jane Smith',
+      authorUrl: 'e.g. https://example.com/about',
+      publisherName: 'e.g. Example Media Inc.',
+      publisherLogo: 'e.g. https://example.com/logo.png',
+      description:
+        'e.g. A beginner’s guide to renaming files in bulk without installing anything.',
+      'organization.description':
+        'e.g. Free browser-based tools, with a new one released every week.',
+      'localBusiness.description':
+        'e.g. A family-run café three minutes from Central Station.',
+      'product.description':
+        'e.g. A 330 ml ceramic mug with the Yoshinyan illustration.',
+      url: 'e.g. https://example.com/blog/123',
+      'organization.url': 'e.g. https://example.com/',
+      'localBusiness.url': 'e.g. https://example.com/',
+      name: 'e.g. Example Inc.',
+      'localBusiness.name': 'e.g. Example Café',
+      'product.name': 'e.g. Yoshinyan Mug',
+      'breadcrumb.name': 'e.g. Home',
+      logo: 'e.g. https://example.com/logo.png',
+      telephone: 'e.g. +61 2 1234 5678',
+      email: 'e.g. info@example.com',
+      postalCode: 'e.g. 2000',
+      addressRegion: 'e.g. NSW',
+      addressLocality: 'e.g. Sydney',
+      streetAddress: 'e.g. 123 George St, Level 4',
+      addressCountry: 'e.g. AU',
+      sameAs: 'e.g. https://x.com/example\nhttps://www.instagram.com/example',
+      priceRange: 'e.g. $$',
+      latitude: 'e.g. -33.8688',
+      longitude: 'e.g. 151.2093',
+      openingHours: 'e.g. Mo-Fr 09:00-18:00\nSa 10:00-14:00',
+      question: 'e.g. Do I need an account?',
+      answer: 'e.g. No. Every tool works without signing up.',
+      item: 'e.g. https://example.com/tools/',
+      sku: 'e.g. YN-MUG-001',
+      brand: 'e.g. Yoshinya',
+      price: 'e.g. 1980',
+      ratingValue: 'e.g. 4.5',
+      reviewCount: 'e.g. 128',
+    },
+    options: {
+      Article: 'Article',
+      NewsArticle: 'News article',
+      BlogPosting: 'Blog post',
+      Person: 'Person',
+      Organization: 'Organization',
+      LocalBusiness: 'General business',
+      Restaurant: 'Restaurant / café',
+      Store: 'Shop',
+      MedicalClinic: 'Clinic',
+      HairSalon: 'Hair salon',
+      Hotel: 'Hotel',
+      JPY: 'JPY (¥)',
+      USD: 'USD ($)',
+      EUR: 'EUR (€)',
+      GBP: 'GBP (£)',
+      AUD: 'AUD (A$)',
+      InStock: 'In stock',
+      OutOfStock: 'Out of stock',
+      PreOrder: 'Pre-order',
+    },
+
+    // Step 3 — code
+    codeHeading: '③ Copy the code',
+    wrapInScript: 'Include the <script> tag',
+    includeComment: 'Start with a comment saying which structured data this is',
+    commentText: (name: string, type: string) =>
+      `Structured data: ${name} (${type})`,
+    copy: 'Copy code',
+    copied: 'Copied',
+    copyFailed: 'Could not copy — select the code and copy it by hand.',
+    whereHeading: 'Where to paste it',
+    whereGeneral:
+      'Put the whole block inside the page’s <head> — right before </head>, after the <title> and <meta> tags, is the usual spot. If you cannot edit <head>, right before </body> works too. On WordPress, use the custom schema field of your SEO plugin or a header-insertion plugin; on Shopify, Wix or STUDIO, the custom code / header setting for that page.',
+    validateHeading: 'Then check it',
+    validateBody:
+      'Paste the page URL (or the code itself) into Google’s Rich Results Test to see which rich result it qualifies for, or into the Schema Markup Validator to check the markup against schema.org.',
+    richResultsTest: 'Rich Results Test',
+    schemaValidator: 'Schema Markup Validator',
+    restored: 'Your last entries have been restored. They are stored only on this device.',
   },
   imageCompressorPage: {
     metaTitle:

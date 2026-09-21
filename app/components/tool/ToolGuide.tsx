@@ -38,6 +38,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'icon-generator': 'iconGeneratorPage',
   'pdf-merger': 'pdfMergerPage',
   'pdf-page-organizer': 'pdfPageOrganizerPage',
+  'structured-data-generator': 'structuredDataPage',
 };
 
 function Section({ section }: { section: GuideSection }) {

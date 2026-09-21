@@ -108,6 +108,22 @@ describe.each([
     }
   });
 
+  it('structured data generator names the controls it tells people to press', () => {
+    const text = guideText(t, 'structuredDataGuide');
+    for (const label of [
+      t.structuredData.typeHeading,
+      t.structuredData.formHeading,
+      t.structuredData.codeHeading,
+      t.structuredData.requiredBadge,
+      t.structuredData.copy,
+      t.structuredData.whereHeading,
+      t.structuredData.richResultsTest,
+      t.structuredData.clear,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -129,6 +145,7 @@ const ALL_GUIDES = [
   'iconGeneratorGuide',
   'pdfMergerGuide',
   'pdfPageOrganizerGuide',
+  'structuredDataGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {

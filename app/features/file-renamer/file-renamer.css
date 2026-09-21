@@ -381,6 +381,13 @@ main {
   flex-wrap: wrap;
   gap: 0.25rem 1rem;
 }
+/* The radios have no margin of their own (see app.css), so the label
+   supplies the space between the dot and its text. */
+.source-choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
 
 .settings-panel input[type='text'],
 .settings-panel select,

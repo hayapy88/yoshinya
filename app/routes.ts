@@ -13,6 +13,10 @@ export default [
     route('icon-generator', 'routes/icon-generator.tsx'),
     route('pdf-merger', 'routes/pdf-merger.tsx'),
     route('pdf-page-organizer', 'routes/pdf-page-organizer.tsx'),
+    route(
+      'structured-data-generator',
+      'routes/structured-data-generator.tsx',
+    ),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -44,6 +48,9 @@ export default [
   }),
   route('pdf-page-organizer', 'routes/locale-redirect.tsx', {
     id: 'redirect-pdf-page-organizer',
+  }),
+  route('structured-data-generator', 'routes/locale-redirect.tsx', {
+    id: 'redirect-structured-data-generator',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

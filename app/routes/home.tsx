@@ -130,6 +130,11 @@ export default function Home() {
               name: t.pdfPageOrganizerPage.toolName,
               description: t.pdfPageOrganizerPage.toolDescription,
             },
+            {
+              slug: 'structured-data-generator',
+              name: t.structuredDataPage.toolName,
+              description: t.structuredDataPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

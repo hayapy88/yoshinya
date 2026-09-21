@@ -552,6 +552,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'icon-generator', heading: 'よしにゃにアイコン作成' },
     { slug: 'pdf-merger', heading: 'よしにゃにPDF結合' },
     { slug: 'pdf-page-organizer', heading: 'よしにゃにPDFページ整理' },
+    { slug: 'structured-data-generator', heading: 'よしにゃに構造化データ作成' },
   ];
 
   for (const tool of tools) {
@@ -1771,5 +1772,133 @@ test.describe('pdf page organizer workflow', () => {
     // was told to look, and the usual default for that is a CDN. Everything
     // this page loads has to come from us.
     expect(offSite).toEqual([]);
+  });
+});
+
+test.describe('structured data generator workflow', () => {
+  // Server-rendered like the others: a value typed before hydration changes
+  // nothing, so each test first proves the code block reacts.
+  const openTool = async (page: Page, locale = 'ja') => {
+    await page.goto(`/${locale}/structured-data-generator`);
+    const headline = page.getByLabel(locale === 'ja' ? /^見出し/ : /^Headline/);
+    await expect(async () => {
+      await headline.fill('probe');
+      await expect(page.locator('.sd-code')).toContainText('"probe"', {
+        timeout: 500,
+      });
+    }).toPass({ timeout: 10_000 });
+    await headline.fill('');
+  };
+
+  const code = async (page: Page) => {
+    const text = (await page.locator('.sd-code').textContent()) ?? '';
+    return JSON.parse(
+      text
+        .replace(/^<!--.*-->\n/, '')
+        .replace(/^<script[^>]*>\n/, '')
+        .replace(/\n<\/script>$/, ''),
+    );
+  };
+
+  test('builds an article from the form, leaving blanks out', async ({
+    page,
+  }) => {
+    await openTool(page);
+    await page.getByLabel(/^見出し/).fill('はじめての記事');
+    await page.getByLabel(/^著者名/).fill('よしにゃん');
+    await page.getByLabel(/^記事の種類/).selectOption('BlogPosting');
+    expect(await code(page)).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: 'はじめての記事',
+      author: { '@type': 'Person', name: 'よしにゃん' },
+    });
+  });
+
+  test('switches to a local business and types the address', async ({
+    page,
+  }) => {
+    await openTool(page);
+    await page.getByRole('radio', { name: /店舗・施設/ }).check();
+    await page.getByLabel(/^業種/).selectOption('Restaurant');
+    await page.getByLabel(/^名前/).fill('よしにゃ食堂');
+    await page.getByLabel(/^市区町村/).fill('渋谷区');
+    await page.getByLabel(/^営業時間/).fill('Mo-Fr 11:00-21:00\n\nSa 11:00-15:00');
+    expect(await code(page)).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'Restaurant',
+      name: 'よしにゃ食堂',
+      address: { '@type': 'PostalAddress', addressLocality: '渋谷区' },
+      openingHours: ['Mo-Fr 11:00-21:00', 'Sa 11:00-15:00'],
+    });
+    await expect(page.locator('.sd-placement')).toContainText('トップページ');
+  });
+
+  test('adds FAQ rows and numbers breadcrumbs', async ({ page }) => {
+    await openTool(page);
+    await page.getByRole('radio', { name: /よくある質問/ }).check();
+    await page.getByRole('button', { name: 'もう1つ追加' }).click();
+    const questions = page.getByLabel(/^質問/);
+    await expect(questions).toHaveCount(2);
+    await questions.nth(0).fill('無料ですか？');
+    await page.getByLabel(/^回答/).nth(0).fill('はい。');
+    await questions.nth(1).fill('登録は？');
+    expect((await code(page)).mainEntity).toEqual([
+      {
+        '@type': 'Question',
+        name: '無料ですか？',
+        acceptedAnswer: { '@type': 'Answer', text: 'はい。' },
+      },
+      { '@type': 'Question', name: '登録は？' },
+    ]);
+
+    await page.getByRole('radio', { name: /パンくずリスト/ }).check();
+    await page.getByRole('button', { name: 'もう1つ追加' }).click();
+    const names = page.getByLabel(/^名前/);
+    await names.nth(0).fill('ホーム');
+    await names.nth(1).fill('ツール');
+    expect((await code(page)).itemListElement).toEqual([
+      { '@type': 'ListItem', position: 1, name: 'ホーム' },
+      { '@type': 'ListItem', position: 2, name: 'ツール' },
+    ]);
+  });
+
+  test('copies the code and remembers the entries', async ({
+    page,
+    context,
+    browserName,
+  }) => {
+    test.skip(browserName !== 'chromium', 'clipboard permissions are Chromium-only');
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await openTool(page);
+    await page.getByLabel(/^見出し/).fill('コピー確認');
+    await page.getByRole('button', { name: 'コードをコピー' }).click();
+    await expect(page.getByRole('button', { name: 'コピーしました' })).toBeVisible();
+    const clipboard = await page.evaluate(() =>
+      (
+        navigator as unknown as { clipboard: { readText(): Promise<string> } }
+      ).clipboard.readText(),
+    );
+    expect(clipboard).toContain('"headline": "コピー確認"');
+    expect(clipboard).toMatch(
+      /^<!-- 構造化データ: 記事（Article） -->\n<script type="application\/ld\+json">/,
+    );
+
+    await page.reload();
+    await expect(page.getByLabel(/^見出し/)).toHaveValue('コピー確認');
+  });
+
+  test('never sends what was typed anywhere', async ({ page }) => {
+    const requests: string[] = [];
+    page.on('request', (request) => {
+      const url = new URL(request.url());
+      if (url.hostname !== 'localhost') {
+        requests.push(request.url());
+      }
+    });
+    await openTool(page);
+    await page.getByLabel(/^見出し/).fill('secret-headline');
+    await page.getByRole('button', { name: 'コードをコピー' }).click();
+    expect(requests).toEqual([]);
   });
 });
