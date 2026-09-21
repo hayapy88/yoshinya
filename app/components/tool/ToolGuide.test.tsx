@@ -24,6 +24,7 @@ const GUIDE_KEY = {
   'icon-generator': 'iconGeneratorGuide',
   'pdf-merger': 'pdfMergerGuide',
   'pdf-page-organizer': 'pdfPageOrganizerGuide',
+  'structured-data-generator': 'structuredDataGuide',
 } as const;
 
 function renderGuide(slug: keyof typeof GUIDE_KEY, locale: Locale) {

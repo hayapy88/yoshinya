@@ -13,6 +13,7 @@ const PATHS = [
   '/icon-generator',
   '/pdf-merger',
   '/pdf-page-organizer',
+  '/structured-data-generator',
   '/privacy',
   '/terms',
 ];
