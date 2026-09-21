@@ -71,7 +71,8 @@ function inputTypeFor(field: Field): string {
   }
 }
 
-/** One labelled control. The hint, when there is one, sits under the label. */
+/** One labelled control. The hint, when there is one, sits under the input,
+    so the inputs in a row line up whether or not their neighbours have one. */
 function FieldControl({
   field,
   typeId,
@@ -99,11 +100,6 @@ function FieldControl({
           <span className="sd-required">{t.requiredBadge}</span>
         )}
       </label>
-      {hint && (
-        <p id={hintId} className="sd-hint">
-          {hint}
-        </p>
-      )}
       {field.kind === 'select' ? (
         <select
           id={id}
@@ -143,6 +139,11 @@ function FieldControl({
           spellCheck={false}
           onChange={(event) => onChange(event.target.value)}
         />
+      )}
+      {hint && (
+        <p id={hintId} className="sd-hint">
+          {hint}
+        </p>
       )}
     </div>
   );
