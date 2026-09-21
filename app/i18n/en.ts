@@ -17,9 +17,9 @@ export const en = {
     switchLocaleTitle: 'このページを日本語で表示',
   },
   home: {
-    metaTitle: 'YOSHINYA | A New Handy Tool Every Week',
+    metaTitle: 'YOSHINYA (よしにゃ) | Free Browser-Based Handy Tools',
     metaDescription:
-      'A little hassle? Leave it to Yoshinya! A handy tool that solves a small everyday hassle, released every week — free, private, and processed entirely on your device.',
+      'YOSHINYA (よしにゃ) is a collection of free browser-based tools — file renaming, PDF merging, image compression and more — that solve small everyday hassles. A new tool every week. No sign-up, and your files are processed on your device, never sent to a server.',
     kicker: 'A new handy tool every week',
     primary: 'A little hassle? Leave it to Yoshinya!',
     supporting:
@@ -840,7 +840,7 @@ export const en = {
     },
   },
   splitBillPage: {
-    metaTitle: '割り勘計算・立替精算 - Split Bill by Yoshinya｜無料・登録不要',
+    metaTitle: 'Settle Shared Expenses - Split Bill by Yoshinya | Free, No Sign-up',
     metaDescription:
       'Split expenses several people paid for, with a share for each person — a full share, half, or none. See who should pay whom, copy the result, or share it as an image. Free, no sign-up, and nothing leaves your browser.',
     heading: 'Split Bill by Yoshinya',
