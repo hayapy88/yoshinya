@@ -37,7 +37,7 @@ const TOOL = 'structured-data-generator' as const;
 const RICH_RESULTS_TEST = 'https://search.google.com/test/rich-results';
 const SCHEMA_VALIDATOR = 'https://validator.schema.org/';
 
-type Strings = ReturnType<typeof useLocale>['t']['structuredData'];
+type Strings = ReturnType<typeof useLocale>['t']['structuredDataGenerator'];
 
 function fieldLabel(t: Strings, id: string): string {
   return t.fields[id as FieldId] ?? id;
@@ -234,7 +234,7 @@ function RepeatControl({
 
 export default function StructuredDataTool() {
   const { t } = useLocale();
-  const s = t.structuredData;
+  const s = t.structuredDataGenerator;
   const [state, setState] = useState<StoredState>(defaultState);
   const [wrap, setWrap] = useState(true);
   const [comment, setComment] = useState(true);
@@ -326,9 +326,9 @@ export default function StructuredDataTool() {
   return (
     <main className="sd-page">
       <ToolIntro
-        heading={t.structuredDataPage.heading}
-        lead={t.structuredDataPage.lead}
-        privacyNote={t.structuredDataPage.privacyNote}
+        heading={t.structuredDataGeneratorPage.heading}
+        lead={t.structuredDataGeneratorPage.lead}
+        privacyNote={t.structuredDataGeneratorPage.privacyNote}
       />
 
       <section className="sd-section" aria-labelledby="sd-type-heading">
@@ -481,7 +481,7 @@ export default function StructuredDataTool() {
         </div>
       </section>
 
-      <ToolGuide guide={t.structuredDataGuide} current={TOOL} />
+      <ToolGuide guide={t.structuredDataGeneratorGuide} current={TOOL} />
     </main>
   );
 }

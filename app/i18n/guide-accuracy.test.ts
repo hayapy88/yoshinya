@@ -109,16 +109,16 @@ describe.each([
   });
 
   it('structured data generator names the controls it tells people to press', () => {
-    const text = guideText(t, 'structuredDataGuide');
+    const text = guideText(t, 'structuredDataGeneratorGuide');
     for (const label of [
-      t.structuredData.typeHeading,
-      t.structuredData.formHeading,
-      t.structuredData.codeHeading,
-      t.structuredData.requiredBadge,
-      t.structuredData.copy,
-      t.structuredData.whereHeading,
-      t.structuredData.richResultsTest,
-      t.structuredData.clear,
+      t.structuredDataGenerator.typeHeading,
+      t.structuredDataGenerator.formHeading,
+      t.structuredDataGenerator.codeHeading,
+      t.structuredDataGenerator.requiredBadge,
+      t.structuredDataGenerator.copy,
+      t.structuredDataGenerator.whereHeading,
+      t.structuredDataGenerator.richResultsTest,
+      t.structuredDataGenerator.clear,
     ]) {
       expect(text).toContain(label);
     }
@@ -145,7 +145,7 @@ const ALL_GUIDES = [
   'iconGeneratorGuide',
   'pdfMergerGuide',
   'pdfPageOrganizerGuide',
-  'structuredDataGuide',
+  'structuredDataGeneratorGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {

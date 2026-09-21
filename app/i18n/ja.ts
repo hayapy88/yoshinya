@@ -475,7 +475,7 @@ export const ja: typeof en = {
     ],
     relatedHeading: '関連ツール',
   },
-  structuredDataGuide: {
+  structuredDataGeneratorGuide: {
     heading: '使い方ガイド',
     sections: [
       {
@@ -1619,7 +1619,7 @@ export const ja: typeof en = {
       organize_failed: '保存に失敗しました。',
     },
   },
-  structuredDataPage: {
+  structuredDataGeneratorPage: {
     metaTitle:
       'JSON-LDをフォームで生成 - よしにゃに構造化データ作成｜無料・登録不要',
     metaDescription:
@@ -1632,7 +1632,7 @@ export const ja: typeof en = {
     privacyNote:
       '入力内容はサーバーに送信されません。すべての処理はブラウザ内で完結します。',
   },
-  structuredData: {
+  structuredDataGenerator: {
     // Step 1 — type
     typeHeading: '① 種類を選ぶ',
     types: {

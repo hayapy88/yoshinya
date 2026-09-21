@@ -476,7 +476,7 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
-  structuredDataGuide: {
+  structuredDataGeneratorGuide: {
     heading: 'Guide',
     sections: [
       {
@@ -1562,7 +1562,7 @@ export const en = {
       organize_failed: 'The file could not be saved.',
     },
   },
-  structuredDataPage: {
+  structuredDataGeneratorPage: {
     metaTitle:
       'Generate JSON-LD from a Form - Structured Data Generator by Yoshinya | Free, No Sign-up',
     metaDescription:
@@ -1575,7 +1575,7 @@ export const en = {
     privacyNote:
       'Nothing you enter is sent to a server. All processing happens in your browser.',
   },
-  structuredData: {
+  structuredDataGenerator: {
     // Step 1 — type
     typeHeading: '① Choose a type',
     types: {
