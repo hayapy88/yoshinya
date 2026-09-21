@@ -10,6 +10,7 @@ import {
   type Field,
   type FieldId,
   type RepeatField,
+  type SchemaTypeId,
 } from './lib/schemas';
 import {
   STORAGE_KEY,
@@ -46,6 +47,15 @@ function fieldHint(t: Strings, id: string): string | undefined {
   return (t.hints as Partial<Record<string, string>>)[id];
 }
 
+function placeholder(
+  t: Strings,
+  typeId: SchemaTypeId,
+  id: string,
+): string | undefined {
+  const table = t.placeholders as Partial<Record<string, string>>;
+  return table[`${typeId}.${id}`] ?? table[id];
+}
+
 function optionLabel(t: Strings, option: string): string {
   return (t.options as Partial<Record<string, string>>)[option] ?? option;
 }
@@ -64,17 +74,20 @@ function inputTypeFor(field: Field): string {
 /** One labelled control. The hint, when there is one, sits under the label. */
 function FieldControl({
   field,
+  typeId,
   value,
   onChange,
   t,
 }: {
   field: Field;
+  typeId: SchemaTypeId;
   value: string;
   onChange: (value: string) => void;
   t: Strings;
 }) {
   const id = useId();
   const hint = fieldHint(t, field.id);
+  const example = placeholder(t, typeId, field.id);
   const hintId = hint ? `${id}-hint` : undefined;
   const multiline = field.kind === 'textarea' || field.kind === 'lines';
 
@@ -111,6 +124,7 @@ function FieldControl({
           className="sd-input"
           value={value}
           rows={field.kind === 'lines' ? 3 : 4}
+          placeholder={example}
           aria-describedby={hintId}
           spellCheck={field.kind === 'textarea'}
           onChange={(event) => onChange(event.target.value)}
@@ -124,6 +138,7 @@ function FieldControl({
           // rejects "1,200" silently and adds spinners nobody wants on a price.
           inputMode={field.kind === 'number' ? 'decimal' : undefined}
           value={value}
+          placeholder={example}
           aria-describedby={hintId}
           spellCheck={false}
           onChange={(event) => onChange(event.target.value)}
@@ -135,11 +150,13 @@ function FieldControl({
 
 function RepeatControl({
   field,
+  typeId,
   rows,
   onChange,
   t,
 }: {
   field: RepeatField;
+  typeId: SchemaTypeId;
   rows: RepeatItem[];
   onChange: (next: (values: Values) => Values) => void;
   t: Strings;
@@ -189,6 +206,7 @@ function RepeatControl({
               <FieldControl
                 key={sub.id}
                 field={sub}
+                typeId={typeId}
                 value={row[sub.id] ?? ''}
                 t={t}
                 onChange={(value) =>
@@ -359,6 +377,7 @@ export default function StructuredDataTool() {
                 <RepeatControl
                   key={`${schema.id}-${field.id}`}
                   field={field}
+                  typeId={schema.id}
                   rows={
                     Array.isArray(values[field.id])
                       ? (values[field.id] as RepeatItem[])
@@ -371,6 +390,7 @@ export default function StructuredDataTool() {
                 <FieldControl
                   key={`${schema.id}-${field.id}`}
                   field={field}
+                  typeId={schema.id}
                   value={
                     typeof values[field.id] === 'string'
                       ? (values[field.id] as string)
