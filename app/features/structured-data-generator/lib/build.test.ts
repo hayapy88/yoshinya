@@ -172,6 +172,21 @@ describe('serializeJsonLd', () => {
     );
   });
 
+  it('puts the comment above the tag, and nowhere without one', () => {
+    expect(
+      serializeJsonLd(data, { wrap: true, comment: 'Structured data: Thing' }),
+    ).toMatch(/^<!-- Structured data: Thing -->\n<script/);
+    expect(
+      serializeJsonLd(data, { wrap: false, comment: 'Structured data: Thing' }),
+    ).toMatch(/^\{/);
+  });
+
+  it('keeps a comment from closing itself early', () => {
+    expect(
+      serializeJsonLd(data, { wrap: true, comment: 'a -- b --> c' }),
+    ).toMatch(/^<!-- a - - b - -> c -->/);
+  });
+
   it('emits bare JSON otherwise', () => {
     expect(JSON.parse(serializeJsonLd(data, { wrap: false }))).toEqual(data);
   });

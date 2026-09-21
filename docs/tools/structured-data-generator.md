@@ -87,6 +87,15 @@ value containing `</script>` cannot close the tag early — the same rule this
 site's own `script:ld+json` output follows. JSON parsers read the escape back
 as `<`, so nothing is lost.
 
+## A comment names the block
+
+The output opens with `<!-- 構造化データ: 記事（BlogPosting） -->` (EN
+`<!-- Structured data: Article (BlogPosting) -->`) by default, so whoever
+opens the template months later knows what the block is without reading the
+JSON. It is an HTML comment and therefore only exists with the script tag;
+turning the tag off greys the option out rather than emitting invalid JSON.
+`--` inside the text is broken up so the comment cannot close itself early.
+
 ## Where to paste it
 
 Each type carries a `placement` string (on each article page; on the homepage

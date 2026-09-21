@@ -1814,6 +1814,9 @@ export const ja: typeof en = {
     // Step 3 — code
     codeHeading: '③ コードをコピーする',
     wrapInScript: '<script> タグで囲む',
+    includeComment: '先頭に何の構造化データかのコメントを入れる',
+    commentText: (name: string, type: string) =>
+      `構造化データ: ${name}（${type}）`,
     copy: 'コードをコピー',
     copied: 'コピーしました',
     copyFailed: 'コピーできませんでした。コードを選択して手動でコピーしてください。',

@@ -28,9 +28,11 @@ function code(): string {
   return pre.textContent ?? '';
 }
 
-// The script tag is on by default; strip it to read the JSON back.
+// The comment and the script tag are on by default; strip both to read the
+// JSON back.
 function parsed(): Record<string, unknown> {
   const text = code()
+    .replace(/^<!--.*-->\n/, '')
     .replace(/^<script[^>]*>\n/, '')
     .replace(/\n<\/script>$/, '');
   return JSON.parse(text);
@@ -101,11 +103,26 @@ describe('StructuredDataTool', () => {
     expect(parsed().headline).toBe('Kept');
   });
 
-  it('drops the script tag when asked', () => {
+  it('opens with a comment naming the block, and can drop it', () => {
     renderTool();
-    expect(code()).toMatch(/^<script type="application\/ld\+json">/);
+    expect(code()).toMatch(
+      /^<!-- Structured data: Article \(Article\) -->\n<script type="application\/ld\+json">/,
+    );
+    fireEvent.change(screen.getByLabelText(/^Type of article/), {
+      target: { value: 'BlogPosting' },
+    });
+    expect(code()).toMatch(/^<!-- Structured data: Article \(BlogPosting\) -->/);
+    fireEvent.click(screen.getByRole('checkbox', { name: /comment/ }));
+    expect(code()).toMatch(/^<script/);
+  });
+
+  it('drops the script tag, and the comment with it, when asked', () => {
+    renderTool();
+    const commentBox = screen.getByRole('checkbox', { name: /comment/ });
+    expect(commentBox).toBeEnabled();
     fireEvent.click(screen.getByRole('checkbox', { name: /script/ }));
     expect(code()).toMatch(/^\{/);
+    expect(commentBox).toBeDisabled();
   });
 
   it('copies the code to the clipboard', async () => {

@@ -235,6 +235,7 @@ export default function StructuredDataTool() {
   const s = t.structuredData;
   const [state, setState] = useState<StoredState>(defaultState);
   const [wrap, setWrap] = useState(true);
+  const [comment, setComment] = useState(true);
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const [restored, setRestored] = useState(false);
@@ -289,10 +290,15 @@ export default function StructuredDataTool() {
     }));
   };
 
-  const code = useMemo(
-    () => serializeJsonLd(buildJsonLd(schema, values), { wrap }),
-    [schema, values, wrap],
-  );
+  const code = useMemo(() => {
+    const data = buildJsonLd(schema, values);
+    return serializeJsonLd(data, {
+      wrap,
+      comment: comment
+        ? s.commentText(s.types[state.selected].name, String(data['@type']))
+        : undefined,
+    });
+  }, [schema, values, wrap, comment, s, state.selected]);
 
   const copy = async () => {
     try {
@@ -412,14 +418,27 @@ export default function StructuredDataTool() {
         <div className="sd-output">
           <div className="sd-code-panel">
             <div className="sd-code-bar">
-              <label className="sd-check">
-                <input
-                  type="checkbox"
-                  checked={wrap}
-                  onChange={(event) => setWrap(event.target.checked)}
-                />
-                {s.wrapInScript}
-              </label>
+              <div className="sd-checks">
+                <label className="sd-check">
+                  <input
+                    type="checkbox"
+                    checked={wrap}
+                    onChange={(event) => setWrap(event.target.checked)}
+                  />
+                  {s.wrapInScript}
+                </label>
+                {/* An HTML comment needs the tag around it, so the option
+                    greys out rather than silently doing nothing. */}
+                <label className="sd-check">
+                  <input
+                    type="checkbox"
+                    checked={comment}
+                    disabled={!wrap}
+                    onChange={(event) => setComment(event.target.checked)}
+                  />
+                  {s.includeComment}
+                </label>
+              </div>
               <button
                 type="button"
                 className="sd-btn sd-btn-primary"

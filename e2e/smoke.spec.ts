@@ -1793,7 +1793,10 @@ test.describe('structured data generator workflow', () => {
   const code = async (page: Page) => {
     const text = (await page.locator('.sd-code').textContent()) ?? '';
     return JSON.parse(
-      text.replace(/^<script[^>]*>\n/, '').replace(/\n<\/script>$/, ''),
+      text
+        .replace(/^<!--.*-->\n/, '')
+        .replace(/^<script[^>]*>\n/, '')
+        .replace(/\n<\/script>$/, ''),
     );
   };
 
@@ -1877,7 +1880,9 @@ test.describe('structured data generator workflow', () => {
       ).clipboard.readText(),
     );
     expect(clipboard).toContain('"headline": "コピー確認"');
-    expect(clipboard).toMatch(/^<script type="application\/ld\+json">/);
+    expect(clipboard).toMatch(
+      /^<!-- 構造化データ: 記事（Article） -->\n<script type="application\/ld\+json">/,
+    );
 
     await page.reload();
     await expect(page.getByLabel(/^見出し/)).toHaveValue('コピー確認');

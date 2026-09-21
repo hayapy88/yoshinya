@@ -1758,6 +1758,9 @@ export const en = {
     // Step 3 — code
     codeHeading: '③ Copy the code',
     wrapInScript: 'Include the <script> tag',
+    includeComment: 'Start with a comment saying which structured data this is',
+    commentText: (name: string, type: string) =>
+      `Structured data: ${name} (${type})`,
     copy: 'Copy code',
     copied: 'Copied',
     copyFailed: 'Could not copy — select the code and copy it by hand.',

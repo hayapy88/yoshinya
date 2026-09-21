@@ -166,13 +166,21 @@ export function buildJsonLd(schema: SchemaType, values: Values): JsonLd {
  * Pretty-prints the object, optionally inside the script tag it is pasted
  * as. `<` is escaped so a value containing `</script>` cannot end the tag
  * early — JSON parsers read `\u003c` back as `<`, so nothing is lost.
+ *
+ * The comment names the block for whoever opens the template later. It is an
+ * HTML comment, so it only exists with the tag: bare JSON has no comments,
+ * and a plugin's JSON field would reject one.
  */
 export function serializeJsonLd(
   data: JsonLd,
-  options: { wrap: boolean },
+  options: { wrap: boolean; comment?: string },
 ): string {
   const json = JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
-  return options.wrap
-    ? `<script type="application/ld+json">\n${json}\n</script>`
-    : json;
+  if (!options.wrap) {
+    return json;
+  }
+  const script = `<script type="application/ld+json">\n${json}\n</script>`;
+  return options.comment
+    ? `<!-- ${options.comment.replace(/--/g, '- -')} -->\n${script}`
+    : script;
 }
