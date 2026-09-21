@@ -31,7 +31,7 @@ export const en = {
     developer: {
       heading: 'About the developer',
       intro:
-        'Yoshinya is built by one full-stack engineer with a front-end focus: seven years of shipping products end to end with React, Next.js, TypeScript, and Node.js.',
+        'Yoshinya is built by one full-stack engineer with a front-end focus: seven-plus years of shipping products end to end with React, Next.js, TypeScript, and Node.js.',
       current:
         'Currently a front-end engineer at a financial company in Sydney, Australia, building and maintaining the company website, its owned media, and LINE bots and mini apps. Yoshinya is a side project that turns the small hassles of that daily work into tools.',
       linksLabel: 'Find the developer on',
