@@ -539,7 +539,7 @@ export const en = {
       },
       {
         heading: 'Where the code goes',
-        body: 'Anywhere inside the page’s <head> is the usual place, and the end of <body> works just as well if your platform only lets you edit that. The block must be on the page it describes: an article’s data on that article, a product’s on that product, and the organization on the homepage only. The same block can sit alongside others — a product page can carry both Product and BreadcrumbList. On WordPress, look for a custom schema or header-code field in your SEO plugin (Yoast, Rank Math, All in One SEO) or add a header-insertion plugin; on Shopify, Wix, Squarespace or STUDIO, the per-page custom code or header setting.',
+        body: 'Inside the page’s <head>, right before </head> (after the <title> and <meta> tags), is the usual place; if your platform only lets you edit the body, right before </body> works just as well. The block must be on the page it describes: an article’s data on that article, a product’s on that product, and the organization on the homepage only. The same block can sit alongside others — a product page can carry both Product and BreadcrumbList. On WordPress, look for a custom schema or header-code field in your SEO plugin (Yoast, Rank Math, All in One SEO) or add a header-insertion plugin; on Shopify, Wix, Squarespace or STUDIO, the per-page custom code or header setting.',
       },
       {
         heading: 'Privacy and security',
@@ -561,7 +561,7 @@ export const en = {
       {
         question: 'Where in the HTML does it go?',
         answer:
-          'Anywhere inside <head> is the convention, and the end of <body> also works. What matters more is which page: the block must describe the page it sits on.',
+          'Right before </head> is the convention, and right before </body> also works if you cannot edit the head. What matters more is which page: the block must describe the page it sits on.',
       },
       {
         question: 'Can I put two types on one page?',
@@ -1766,7 +1766,7 @@ export const en = {
     copyFailed: 'Could not copy — select the code and copy it by hand.',
     whereHeading: 'Where to paste it',
     whereGeneral:
-      'Put the whole block anywhere inside the page’s <head>, or at the end of <body> if the head is not editable. On WordPress, use the custom schema field of your SEO plugin or a header-insertion plugin; on Shopify, Wix or STUDIO, the custom code / header setting for that page.',
+      'Put the whole block inside the page’s <head> — right before </head>, after the <title> and <meta> tags, is the usual spot. If you cannot edit <head>, right before </body> works too. On WordPress, use the custom schema field of your SEO plugin or a header-insertion plugin; on Shopify, Wix or STUDIO, the custom code / header setting for that page.',
     validateHeading: 'Then check it',
     validateBody:
       'Paste the page URL (or the code itself) into Google’s Rich Results Test to see which rich result it qualifies for, or into the Schema Markup Validator to check the markup against schema.org.',
