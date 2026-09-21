@@ -500,7 +500,7 @@ export const en = {
       },
       {
         heading: 'What structured data is',
-        body: 'Structured data is a block of JSON-LD in a page that describes, in a vocabulary search engines agree on (schema.org), what the page is about: this is an article by this author on this date, this is a shop at this address open these hours. Visitors never see it. Search engines use it to understand the page and, when the type qualifies, to show a richer result — a rating, a price, a breadcrumb trail instead of a URL. It does not raise a ranking by itself; it makes the result clearer and more likely to be clicked.',
+        body: 'Structured data is a block of JSON-LD in a page that describes, in a vocabulary search engines agree on (schema.org), what the page is about: this is an article by this author on this date, this is a shop at this address open these hours. Visitors never see it. Search engines use it to understand the page and, when the type qualifies, to show a richer result — a rating, a price, a breadcrumb trail instead of a URL. It does not raise a ranking by itself; it makes the result clearer and more likely to be clicked. More recently it is also credited with helping AEO — answer engine optimization — since a page whose facts are stated in a machine-readable form is easier for AI answers to draw on and cite.',
       },
       {
         heading: 'Which type to use',
@@ -1571,7 +1571,7 @@ export const en = {
     toolName: 'Structured Data Generator by Yoshinya',
     toolDescription:
       'Builds JSON-LD structured data from a form and tells you where to paste it.',
-    lead: 'You want the rich results, so you open the schema.org docs, copy someone else’s snippet, change the values by hand, and then a missing brace or a stray field sends you back to the validator. And even once it passes, it is not obvious which page it belongs on.\nStructured Data Generator by Yoshinya turns that into a form: pick the type, fill in what you have, and the JSON-LD is built as you type — only the fields you filled in, with the nested objects typed correctly and a note on which page and where to paste it.\nNothing you enter is sent to a server; the code is generated entirely in your browser, and your entries are remembered on this device only.',
+    lead: 'You want structured data on your site, but the schema.org docs are dense, and the snippet you copied from somewhere comes back from the validator with a missing brace or a field that should not be there. And once it passes, it is still not obvious which page it belongs on.\nStructured data is a block of JSON-LD that tells search engines and AI, in a form they can read reliably, what a page is: who wrote this article, where this shop is and when it opens. It is what makes a result eligible for rich results — ratings, prices, breadcrumbs under your listing — and lately it is credited with helping not only SEO but AEO, answer engine optimization: making a page easier for AI answers to cite.\nStructured Data Generator by Yoshinya means you do not need to know how to write it. Pick the type, fill in the fields you know, and the JSON-LD builds as you type — only what you filled in, nested types added for you, and a note on which page and where to paste it. Then paste the generated code into your site.\nNothing you enter is sent to a server; it all stays in your browser, so a company address or phone number is safe to type here.',
     privacyNote:
       'Nothing you enter is sent to a server. All processing happens in your browser.',
   },
