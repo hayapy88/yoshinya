@@ -45,6 +45,8 @@ export type Field = {
   // Select values that are shorthand for a full URL, such as schema.org's
   // ItemAvailability. The option is shown, the URL is emitted.
   optionPrefix?: string;
+  // Takes the full row: for the one field whose value is a sentence.
+  wide?: boolean;
 };
 
 // A group of sub-fields repeated any number of times, such as FAQ entries.
@@ -92,7 +94,13 @@ const ARTICLE: SchemaType = {
       kind: 'select',
       options: ['Article', 'NewsArticle', 'BlogPosting'],
     },
-    { id: 'headline', path: ['headline'], kind: 'text', required: true },
+    {
+      id: 'headline',
+      path: ['headline'],
+      kind: 'text',
+      required: true,
+      wide: true,
+    },
     { id: 'image', path: ['image'], kind: 'lines' },
     { id: 'datePublished', path: ['datePublished'], kind: 'date' },
     { id: 'dateModified', path: ['dateModified'], kind: 'date' },

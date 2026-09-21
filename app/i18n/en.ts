@@ -1704,7 +1704,7 @@ export const en = {
         'e.g. A family-run café three minutes from Central Station.',
       'product.description':
         'e.g. A 330 ml ceramic mug with the Yoshinyan illustration.',
-      url: 'e.g. https://example.com/blog/rename-files',
+      url: 'e.g. https://example.com/blog/123',
       'organization.url': 'e.g. https://example.com/',
       'localBusiness.url': 'e.g. https://example.com/',
       name: 'e.g. Example Inc.',

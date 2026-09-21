@@ -91,9 +91,10 @@ function FieldControl({
   const example = placeholder(t, typeId, field.id);
   const hintId = hint ? `${id}-hint` : undefined;
   const multiline = field.kind === 'textarea' || field.kind === 'lines';
+  const wide = multiline || field.wide;
 
   return (
-    <div className={`sd-field${multiline ? ' sd-field-wide' : ''}`}>
+    <div className={`sd-field${wide ? ' sd-field-wide' : ''}`}>
       <label className="sd-label" htmlFor={id}>
         {fieldLabel(t, field.id)}
         {field.required && (

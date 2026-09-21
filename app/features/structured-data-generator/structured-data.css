@@ -72,9 +72,18 @@
   padding: 0.9rem 1rem;
   cursor: pointer;
 }
+/* The radio sits on the name's line, centred against it; the description
+   hangs under the name alone. */
 .sd-type input {
-  grid-row: 1 / span 2;
-  margin: 0.2rem 0 0;
+  grid-row: 1;
+  align-self: center;
+  margin: 0;
+}
+.sd-type-name {
+  align-self: center;
+}
+.sd-type-description {
+  grid-column: 2;
 }
 .sd-type-on {
   border-color: var(--accent);
@@ -83,6 +92,7 @@
 }
 .sd-type-name {
   font-weight: 700;
+  line-height: 1.4;
 }
 .sd-type-description {
   color: var(--muted);
@@ -148,6 +158,11 @@
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
+}
+/* One height for inputs and selects, so a row mixing the two lines up. */
+.sd-input:not(textarea) {
+  height: 2.6rem;
+  line-height: 1.4;
 }
 textarea.sd-input {
   resize: vertical;

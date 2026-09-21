@@ -1760,7 +1760,7 @@ export const ja: typeof en = {
       'localBusiness.description': '例：渋谷駅から徒歩3分の家庭的な定食屋です。',
       'product.description':
         '例：よしにゃんのイラスト入り、容量330mlの陶器マグカップ。',
-      url: '例：https://example.com/blog/rename-files',
+      url: '例：https://example.com/blog/123',
       'organization.url': '例：https://example.com/',
       'localBusiness.url': '例：https://example.com/',
       name: '例：株式会社サンプル',
