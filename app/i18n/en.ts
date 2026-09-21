@@ -17,9 +17,9 @@ export const en = {
     switchLocaleTitle: 'このページを日本語で表示',
   },
   home: {
-    metaTitle: 'YOSHINYA | A New Handy Tool Every Week',
+    metaTitle: 'YOSHINYA (よしにゃ) | Free Browser-Based Handy Tools',
     metaDescription:
-      'A little hassle? Leave it to Yoshinya! A handy tool that solves a small everyday hassle, released every week — free, private, and processed entirely on your device.',
+      'YOSHINYA (よしにゃ) is a collection of free browser-based tools — file renaming, PDF merging, image compression and more — that solve small everyday hassles. A new tool every week. No sign-up, and your files are processed on your device, never sent to a server.',
     kicker: 'A new handy tool every week',
     primary: 'A little hassle? Leave it to Yoshinya!',
     supporting:
@@ -28,6 +28,17 @@ export const en = {
     cta: 'Try it for free',
     privacyNote:
       'Every tool runs right in your browser. Files are processed on your device and never sent to an external server.',
+    developer: {
+      heading: 'About the developer',
+      intro:
+        'Yoshinya is built by one full-stack engineer with a front-end focus: seven-plus years of shipping products end to end with React, Next.js, TypeScript, and Node.js.',
+      current:
+        'Currently a front-end engineer at a financial company in Sydney, Australia, building and maintaining the company website, its owned media, and LINE bots and mini apps. Yoshinya is a side project that turns the small hassles of that daily work into tools.',
+      linksLabel: 'Find the developer on',
+      github: 'GitHub',
+      x: 'X',
+      linkedin: 'LinkedIn',
+    },
   },
   fileRenamerPage: {
     metaTitle:
@@ -840,7 +851,7 @@ export const en = {
     },
   },
   splitBillPage: {
-    metaTitle: '割り勘計算・立替精算 - Split Bill by Yoshinya｜無料・登録不要',
+    metaTitle: 'Settle Shared Expenses - Split Bill by Yoshinya | Free, No Sign-up',
     metaDescription:
       'Split expenses several people paid for, with a share for each person — a full share, half, or none. See who should pay whom, copy the result, or share it as an image. Free, no sign-up, and nothing leaves your browser.',
     heading: 'Split Bill by Yoshinya',

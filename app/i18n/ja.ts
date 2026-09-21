@@ -19,9 +19,9 @@ export const ja: typeof en = {
     switchLocaleTitle: 'View this page in English',
   },
   home: {
-    metaTitle: 'よしにゃ｜何か面倒に感じてる？それよしにゃにまかせて！',
+    metaTitle: 'よしにゃ（YOSHINYA）｜無料で使えるブラウザ便利ツール集',
     metaDescription:
-      '何か面倒に感じてる？それよしにゃにまかせて！日々のちょっとした面倒をよしなに解決する便利ツールを、毎週ひとつ公開します。無料で、ファイルは端末内で処理されます。',
+      'よしにゃ（YOSHINYA）は、ファイルリネーム・PDF結合・画像圧縮など、日々のちょっとした面倒をよしなに解決する無料のブラウザ便利ツール集。毎週ひとつ公開します。登録不要で、ファイルは端末内で処理され、サーバーには送信されません。',
     kicker: '毎週ひとつ、新しい便利を',
     primary: '何か面倒に感じてる？それよしにゃにまかせて！',
     supporting:
@@ -30,6 +30,17 @@ export const ja: typeof en = {
     cta: '無料で使う',
     privacyNote:
       'すべてのツールはブラウザ上で動作します。ファイルは端末内で処理され、外部サーバーには送信されません。',
+    developer: {
+      heading: '開発者について',
+      intro:
+        'よしにゃは、フロントエンド開発に強みを持つフルスタックエンジニアが、ひとりで開発・運営しています。得意分野は React・Next.js・TypeScript・Node.js。7年以上の開発経験をもとに、フロントエンドからバックエンドまで一貫して開発しています。',
+      current:
+        '現在はオーストラリア・シドニーの金融企業でフロントエンドエンジニアとして、自社Webサイト、オウンドメディア、LINE Bot・LINEミニアプリの開発・保守を担当しています。よしにゃは、そうした日々の中で「これ、ちょっと面倒だな」と感じたことをツールにしていく個人プロジェクトです。',
+      linksLabel: '開発者のアカウント',
+      github: 'GitHub',
+      x: 'X',
+      linkedin: 'LinkedIn',
+    },
   },
   fileRenamerPage: {
     metaTitle:

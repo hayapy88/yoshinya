@@ -7,6 +7,10 @@ export const PRODUCTION_HOSTS = ['yoshinya.com', 'www.yoshinya.com'];
 export const X_HANDLE = '@yoshinya_com';
 export const OGP_IMAGE = `${SITE_ORIGIN}/brand/ogp/ogp-default.png`;
 export const BRAND_ICON = `${SITE_ORIGIN}/brand/yoshinyan-face-512.png`;
+export const GITHUB_URL = 'https://github.com/hayapy88/yoshinya';
+// Stable node id so WebSite (and anything else) can point at the one
+// Organization instead of restating it.
+const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
 
 export function isProductionHost(host: string | undefined): boolean {
   return host !== undefined && PRODUCTION_HOSTS.includes(host);
@@ -90,6 +94,23 @@ export function pageMeta({
   ];
 }
 
+// The brand as an entity. The name is written in both scripts and tied to the
+// X and GitHub profiles through sameAs so search engines can connect the
+// brand query "よしにゃ" / "yoshinya" to this site rather than to the many
+// unrelated social handles that share the string.
+export function organizationJsonLd(locale: Locale): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': ORGANIZATION_ID,
+    name: locale === 'ja' ? 'よしにゃ' : 'YOSHINYA',
+    alternateName: locale === 'ja' ? ['YOSHINYA', 'Yoshinya'] : ['よしにゃ'],
+    url: SITE_ORIGIN,
+    logo: BRAND_ICON,
+    sameAs: [`https://x.com/${X_HANDLE.slice(1)}`, GITHUB_URL],
+  };
+}
+
 export function websiteJsonLd(locale: Locale): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
@@ -99,6 +120,7 @@ export function websiteJsonLd(locale: Locale): Record<string, unknown> {
     url: `${SITE_ORIGIN}/${locale}`,
     inLanguage: locale,
     image: BRAND_ICON,
+    publisher: { '@id': ORGANIZATION_ID },
   };
 }
 
