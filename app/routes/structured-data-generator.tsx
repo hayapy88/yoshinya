@@ -16,17 +16,17 @@ export function meta({ params, matches }: Route.MetaArgs) {
   return pageMeta({
     locale,
     path: '/structured-data-generator',
-    title: t.structuredDataPage.metaTitle,
-    description: t.structuredDataPage.metaDescription,
+    title: t.structuredDataGeneratorPage.metaTitle,
+    description: t.structuredDataGeneratorPage.metaDescription,
     noindex: !isProductionHost(rootData?.host),
     ogImageSlug: 'structured-data-generator',
     jsonLd: [
       structuredDataGeneratorJsonLd(locale),
       // Mirrors the FAQ rendered below the tool, as required for FAQPage.
-      faqJsonLd(t.structuredDataGuide.faq),
+      faqJsonLd(t.structuredDataGeneratorGuide.faq),
       breadcrumbJsonLd(locale, [
         {
-          name: t.structuredDataPage.toolName,
+          name: t.structuredDataGeneratorPage.toolName,
           path: '/structured-data-generator',
         },
       ]),

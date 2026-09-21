@@ -132,8 +132,8 @@ export default function Home() {
             },
             {
               slug: 'structured-data-generator',
-              name: t.structuredDataPage.toolName,
-              description: t.structuredDataPage.toolDescription,
+              name: t.structuredDataGeneratorPage.toolName,
+              description: t.structuredDataGeneratorPage.toolDescription,
             },
           ].map((tool) => (
             <Link
