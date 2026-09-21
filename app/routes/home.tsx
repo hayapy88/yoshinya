@@ -22,6 +22,14 @@ export function meta({ params, matches }: Route.MetaArgs) {
   });
 }
 
+// The developer's own profiles, as opposed to the Yoshinya account in
+// `t.site.xUrl`.
+const DEVELOPER_LINKS = [
+  { key: 'github', href: 'https://github.com/hayapy88' },
+  { key: 'x', href: 'https://x.com/paya1681' },
+  { key: 'linkedin', href: 'https://www.linkedin.com/in/hayatoyokoi/' },
+] as const;
+
 export default function Home() {
   const { locale, t } = useLocale();
 
@@ -132,6 +140,37 @@ export default function Home() {
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="developer-heading" className="mt-12">
+        <h2 id="developer-heading" className="text-xl font-semibold">
+          {t.home.developer.heading}
+        </h2>
+        <div className="mt-4 rounded-2xl border border-[#d9d7de] p-6 dark:border-[#3a3841]">
+          <p className="m-0 text-[color:var(--text)]">{t.home.developer.intro}</p>
+          <p className="mt-3 text-[color:var(--muted,#6f6b78)]">
+            {t.home.developer.current}
+          </p>
+          <p className="mt-5 text-sm font-semibold text-[color:var(--muted,#6f6b78)]">
+            {t.home.developer.linksLabel}
+          </p>
+          <ul className="m-0 mt-2 flex list-none flex-wrap gap-3 p-0">
+            {DEVELOPER_LINKS.map((link) => (
+              <li key={link.key}>
+                {/* rel="me" marks these as the developer's own profiles, which
+                    is the signal search engines use to tie the site to them. */}
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  className="inline-block rounded-lg border border-navy px-4 py-2 text-sm font-semibold text-navy no-underline transition-colors hover:bg-navy hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-strong dark:border-brand dark:text-brand dark:hover:bg-brand dark:hover:text-navy-strong"
+                >
+                  {t.home.developer[link.key]}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </main>

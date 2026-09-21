@@ -28,6 +28,17 @@ export const en = {
     cta: 'Try it for free',
     privacyNote:
       'Every tool runs right in your browser. Files are processed on your device and never sent to an external server.',
+    developer: {
+      heading: 'About the developer',
+      intro:
+        'Yoshinya is built by one full-stack engineer with a front-end focus: seven-plus years of shipping products end to end with React, Next.js, TypeScript, and Node.js.',
+      current:
+        'Currently a front-end engineer at a financial company in Sydney, Australia, building and maintaining the company website, its owned media, and LINE bots and mini apps. Yoshinya is a side project that turns the small hassles of that daily work into tools.',
+      linksLabel: 'Find the developer on',
+      github: 'GitHub',
+      x: 'X',
+      linkedin: 'LinkedIn',
+    },
   },
   fileRenamerPage: {
     metaTitle:

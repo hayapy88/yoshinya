@@ -30,6 +30,17 @@ export const ja: typeof en = {
     cta: '無料で使う',
     privacyNote:
       'すべてのツールはブラウザ上で動作します。ファイルは端末内で処理され、外部サーバーには送信されません。',
+    developer: {
+      heading: '開発者について',
+      intro:
+        'よしにゃは、フロントエンド開発を得意とするフルスタックエンジニアがひとりで作っています。React・Next.js・TypeScript・Node.js を中心に、フロントエンドからバックエンドまで一貫して開発してきた経験は7年以上。',
+      current:
+        '現在はオーストラリア・シドニーの金融企業でフロントエンドエンジニアとして、自社Webサイト、オウンドメディア、LINE Bot・LINEミニアプリの開発・保守を担当しています。よしにゃは、そうした日々の中で「これ、ちょっと面倒だな」と感じたことをツールにしていく個人プロジェクトです。',
+      linksLabel: '開発者のアカウント',
+      github: 'GitHub',
+      x: 'X',
+      linkedin: 'LinkedIn',
+    },
   },
   fileRenamerPage: {
     metaTitle:
