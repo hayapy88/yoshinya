@@ -34,7 +34,8 @@ export type ToolSlug =
   | 'icon-generator'
   | 'pdf-merger'
   | 'pdf-page-organizer'
-  | 'structured-data-generator';
+  | 'structured-data-generator'
+  | 'character-counter';
 
 // The published tools, in release order: what the related-tools list offers and
 // what the sitemap carries. A slug is added here when its page is complete —
@@ -50,4 +51,5 @@ export const TOOL_SLUGS: ToolSlug[] = [
   'pdf-merger',
   'pdf-page-organizer',
   'structured-data-generator',
+  'character-counter',
 ];

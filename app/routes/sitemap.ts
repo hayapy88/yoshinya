@@ -14,6 +14,7 @@ const PATHS = [
   '/pdf-merger',
   '/pdf-page-organizer',
   '/structured-data-generator',
+  '/character-counter',
   '/privacy',
   '/terms',
 ];

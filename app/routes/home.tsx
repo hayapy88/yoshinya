@@ -135,6 +135,11 @@ export default function Home() {
               name: t.structuredDataGeneratorPage.toolName,
               description: t.structuredDataGeneratorPage.toolDescription,
             },
+            {
+              slug: 'character-counter',
+              name: t.characterCounterPage.toolName,
+              description: t.characterCounterPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

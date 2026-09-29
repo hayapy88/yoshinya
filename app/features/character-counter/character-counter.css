@@ -1,0 +1,214 @@
+/* Same palette and frame as the other tools; only the tokens the layout below
+   actually uses are declared. */
+.cc-page {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --canvas: #fff;
+  --track: #e4e2e9;
+  --over: #c22f2f;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .cc-page {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --canvas: #2a2930;
+    --track: #35343c;
+    --over: #ef8080;
+  }
+}
+
+.cc-section {
+  margin-top: 2rem;
+  min-width: 0;
+}
+.cc-section h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+.cc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.cc-section-head h2 {
+  margin-bottom: 0;
+}
+.cc-hint {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* ① Input ----------------------------------------------------------------- */
+.cc-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--canvas);
+  color: inherit;
+  font: inherit;
+  line-height: 1.8;
+  padding: 1rem;
+  resize: vertical;
+  min-height: 12rem;
+}
+
+/* ② Counts ---------------------------------------------------------------- */
+.cc-tiles {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+.cc-tile {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 1rem 0.75rem;
+  min-width: 0;
+}
+.cc-tile-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  /* Digits keep their column as the number changes on every keystroke. */
+  font-variant-numeric: tabular-nums;
+}
+.cc-tile-primary .cc-tile-value {
+  font-size: 2.2rem;
+  color: var(--accent);
+}
+.cc-tile-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.cc-detail {
+  margin-top: 1rem;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 34rem;
+  font-size: 0.92rem;
+}
+.cc-detail th,
+.cc-detail td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0.25rem;
+  text-align: left;
+}
+.cc-detail th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cc-detail td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ③ Targets --------------------------------------------------------------- */
+.cc-targets {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cc-target {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 0.85rem 1rem;
+  min-width: 0;
+}
+.cc-target-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.cc-target-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.cc-target-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.cc-bar {
+  margin-top: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+.cc-bar-fill {
+  display: block;
+  block-size: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+  transition: inline-size 0.12s ease-out;
+}
+.cc-target-note {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+/* Over the limit the whole card says so, not just the number: the bar is
+   already full at that point and cannot show it on its own. */
+.cc-target-over {
+  border-color: var(--over);
+}
+.cc-target-over .cc-bar-fill {
+  background: var(--over);
+}
+.cc-target-over .cc-target-note {
+  color: var(--over);
+  font-weight: 600;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.cc-btn {
+  border-radius: 0.6rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.cc-btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+  min-width: 9rem;
+}
+.cc-btn-secondary {
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+}
+.cc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

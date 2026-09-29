@@ -124,6 +124,22 @@ describe.each([
     }
   });
 
+  it('character counter names the controls it tells people to press', () => {
+    const text = guideText(t, 'characterCounterGuide');
+    for (const label of [
+      t.characterCounter.inputHeading,
+      t.characterCounter.countsHeading,
+      t.characterCounter.targetsHeading,
+      t.characterCounter.copy,
+      t.characterCounter.clear,
+      t.characterCounter.charactersNoWhitespace,
+      t.characterCounter.weighted,
+      t.characterCounter.manuscript,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -146,6 +162,7 @@ const ALL_GUIDES = [
   'pdfMergerGuide',
   'pdfPageOrganizerGuide',
   'structuredDataGeneratorGuide',
+  'characterCounterGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {
