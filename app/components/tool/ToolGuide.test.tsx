@@ -25,6 +25,7 @@ const GUIDE_KEY = {
   'pdf-merger': 'pdfMergerGuide',
   'pdf-page-organizer': 'pdfPageOrganizerGuide',
   'structured-data-generator': 'structuredDataGeneratorGuide',
+  'character-counter': 'characterCounterGuide',
 } as const;
 
 function renderGuide(slug: keyof typeof GUIDE_KEY, locale: Locale) {

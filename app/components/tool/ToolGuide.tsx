@@ -39,6 +39,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'pdf-merger': 'pdfMergerPage',
   'pdf-page-organizer': 'pdfPageOrganizerPage',
   'structured-data-generator': 'structuredDataGeneratorPage',
+  'character-counter': 'characterCounterPage',
 };
 
 function Section({ section }: { section: GuideSection }) {

@@ -553,6 +553,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'pdf-merger', heading: 'よしにゃにPDF結合' },
     { slug: 'pdf-page-organizer', heading: 'よしにゃにPDFページ整理' },
     { slug: 'structured-data-generator', heading: 'よしにゃに構造化データ作成' },
+    { slug: 'character-counter', heading: 'よしにゃに文字数カウント' },
   ];
 
   for (const tool of tools) {
@@ -1900,5 +1901,95 @@ test.describe('structured data generator workflow', () => {
     await page.getByLabel(/^見出し/).fill('secret-headline');
     await page.getByRole('button', { name: 'コードをコピー' }).click();
     expect(requests).toEqual([]);
+  });
+});
+
+test.describe('character counter workflow', () => {
+  // Server-rendered like the others: text typed before hydration changes
+  // nothing, so each test first proves the counts react.
+  const openTool = async (page: Page) => {
+    await page.goto('/ja/character-counter');
+    const input = page.getByLabel('カウントするテキスト');
+    await expect(async () => {
+      await input.fill('あ');
+      await expect(page.locator('.cc-tile').first()).toContainText('1', {
+        timeout: 500,
+      });
+    }).toPass({ timeout: 10_000 });
+    await input.fill('');
+    return input;
+  };
+
+  const tile = (page: Page, label: string) =>
+    page.locator('.cc-tile', { hasText: label }).locator('.cc-tile-value');
+
+  const detailRow = (page: Page, heading: string) =>
+    page.locator('.cc-detail tr', { hasText: heading }).locator('td');
+
+  const targetCard = (page: Page, name: string) =>
+    page.locator('.cc-target', { hasText: name });
+
+  test('counts characters, words and lines as they are typed', async ({
+    page,
+  }) => {
+    const input = await openTool(page);
+    await input.fill('今日は いい天気\nです');
+    await expect(tile(page, '文字数（空白を除く）')).toHaveText('9');
+    await expect(tile(page, '行数')).toHaveText('2');
+    await expect(tile(page, '段落数')).toHaveText('1');
+  });
+
+  test('counts an emoji as one character', async ({ page }) => {
+    const input = await openTool(page);
+    await input.fill('👨‍👩‍👧');
+    await expect(tile(page, '文字数').first()).toHaveText('1');
+    await expect(detailRow(page, 'Xの文字数')).toHaveText('2');
+  });
+
+  test('counts manuscript rows per line, not by dividing', async ({ page }) => {
+    const input = await openTool(page);
+    await input.fill(Array.from({ length: 100 }, () => 'あ').join('\n'));
+    await expect(detailRow(page, '原稿用紙')).toHaveText('5枚（100行）');
+  });
+
+  test('flags a post that is over the X limit', async ({ page }) => {
+    const input = await openTool(page);
+    await input.fill('あ'.repeat(100));
+    const x = targetCard(page, 'Xのポスト');
+    await expect(x).toContainText('200 / 280');
+    await expect(x).toContainText('あと80');
+
+    await input.fill('あ'.repeat(150));
+    await expect(x).toContainText('20オーバー');
+    await expect(x).toHaveClass(/cc-target-over/);
+  });
+
+  test('clears the text', async ({ page }) => {
+    const input = await openTool(page);
+    await input.fill('消える文章');
+    await page.getByRole('button', { name: '入力をクリア' }).click();
+    await expect(input).toHaveValue('');
+    await expect(tile(page, '文字数').first()).toHaveText('0');
+  });
+
+  test('never sends what was typed anywhere, and keeps nothing after a reload', async ({
+    page,
+  }) => {
+    const requests: string[] = [];
+    page.on('request', (request) => {
+      if (new URL(request.url()).hostname !== 'localhost') {
+        requests.push(request.url());
+      }
+    });
+    const input = await openTool(page);
+    await input.fill('secret draft');
+    await page.getByRole('button', { name: 'カウントをコピー' }).click();
+    expect(requests).toEqual([]);
+
+    // Unlike the other tools, this one deliberately stores nothing.
+    const stored = await page.evaluate(() => JSON.stringify(localStorage));
+    expect(stored).not.toContain('secret draft');
+    await page.reload();
+    await expect(page.getByLabel('カウントするテキスト')).toHaveValue('');
   });
 });

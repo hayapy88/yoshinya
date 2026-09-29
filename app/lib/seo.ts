@@ -243,6 +243,16 @@ export function structuredDataGeneratorJsonLd(
   );
 }
 
+export function characterCounterJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja'
+      ? 'よしにゃに文字数カウント'
+      : 'Character Counter by Yoshinya',
+    '/character-counter',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 //

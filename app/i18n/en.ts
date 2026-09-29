@@ -586,6 +586,106 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  characterCounterGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Paste or type under *① Enter your text*. The counts update on every keystroke.',
+          'Read the five tiles under *② Read the counts*, and the table under them for *X weighted length*, *Manuscript pages (400 per sheet)* and byte size.',
+          'Check *③ Check against a limit* to see whether the text fits an X post, a title tag or a meta description.',
+          'Press *Copy the counts* to put the main numbers on your clipboard, or *Clear the text* to start again.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Trimming a post to fit X, where an emoji and a Japanese character do not cost the same.',
+          'Writing a page title or meta description to a length that will not be cut off.',
+          'Turning an essay or a story into manuscript pages for a submission.',
+          'Filling in an application form with a strict character limit.',
+          'Checking how long a caption is before it gets hidden behind “more”.',
+        ],
+      },
+      {
+        heading: 'What counts as one character',
+        terms: [
+          {
+            term: 'Emoji',
+            definition:
+              'One character, however it is built. A family emoji is five code points joined together and JavaScript calls it eight, but you see one symbol and this tool counts one. The same goes for skin tones, flags and letters with combining marks.',
+          },
+          {
+            term: 'Line breaks',
+            definition:
+              'One character each, and a Windows line break counts once rather than twice. *Characters (no spaces)* leaves out line breaks along with spaces, full-width spaces and tabs.',
+          },
+          {
+            term: 'Words',
+            definition:
+              'Split the way the language works: by spaces in English, and by the dictionary in Japanese, where 今日はいい天気です is several words rather than nine. Punctuation is not a word.',
+          },
+          {
+            term: 'Wide and narrow',
+            definition:
+              'Wide characters are the ones that take two columns in a Japanese font — kana, kanji, full-width punctuation and emoji. Everything else is narrow. A limit quoted in Japanese usually means wide characters, with a narrow one counting as a half.',
+          },
+        ],
+      },
+      {
+        heading: 'How the X count works',
+        body: 'X does not count characters; it counts weight. A Latin letter weighs 1, a Japanese character weighs 2, and the limit is 280 — which is why the limit is often quoted as 140 characters in Japanese and 280 in English. A whole emoji weighs 2 no matter how many code points it holds. This tool uses the same weighting X publishes, so the number here is the number in the compose box. One thing it does not do yet: X shortens every link to 23 characters, and this tool counts the URL you actually typed.',
+      },
+      {
+        heading: 'Why manuscript pages are not just a division',
+        body: 'Japanese manuscript paper is 20 columns by 20 rows, and every line break moves to a new row whether or not the row was full. A page of dialogue with short lines therefore fills more sheets than its character count suggests: 100 single-character lines are 100 characters but 100 rows — five sheets, where dividing by 400 would say one. This tool counts row by row and shows both numbers, so the sheet count matches the paper.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'What you type stays in this tab. It is never sent to a server, and — unlike the other tools here, which remember your settings — it is not saved on this device either, so nothing is left behind on a shared computer and closing the tab clears it. The analytics record only that the tool was used and that the copy button was pressed, never the text or the counts.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Why does your count differ from another counter?',
+        answer:
+          'Almost always emoji or line breaks. Many counters report the number of UTF-16 units, which makes a family emoji eight characters and a Windows line break two. This tool counts what you see: one emoji, one break.',
+      },
+      {
+        question: 'Is the X count exact?',
+        answer:
+          'Yes for text, using the weighting X publishes: 1 per Latin character, 2 per Japanese character, 2 for a whole emoji, 280 in total. The one difference is links — X shortens any URL to 23 characters and this tool counts the URL as typed, so a post with links has more room than it appears.',
+      },
+      {
+        question: 'Is a title really limited to 30 characters?',
+        answer:
+          'Not exactly. Google cuts titles off by pixel width, not by character count, so a title of narrow letters survives longer than one of wide characters. 30 full-width characters is the conventional stand-in, and that is what is checked here — treat it as a guide, not a rule.',
+      },
+      {
+        question: 'Does it count words in Japanese properly?',
+        answer:
+          'It uses the browser’s own Japanese word segmentation, so 今日はいい天気です is counted as several words rather than as nine characters or as one. Different tools draw those boundaries slightly differently, so treat the word count as an estimate in Japanese.',
+      },
+      {
+        question: 'Is my text sent anywhere or saved?',
+        answer:
+          'Neither. The counting happens in your browser, nothing is uploaded, and the text is deliberately not stored on your device — close the tab and it is gone.',
+      },
+      {
+        question: 'Is there a length it cannot handle?',
+        answer:
+          'No fixed limit. Counting is fast enough for a whole manuscript, and everything runs on your machine, so the only limit is your own browser.',
+      },
+      {
+        question: 'Why are there two character counts?',
+        answer:
+          'Because limits are quoted both ways. Application forms and social posts usually count spaces; word-count requirements for essays often do not. Both are shown so you do not have to work out which one you were given.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   pdfPageOrganizerGuide: {
     heading: 'Guide',
     sections: [
@@ -1773,6 +1873,58 @@ export const en = {
     richResultsTest: 'Rich Results Test',
     schemaValidator: 'Schema Markup Validator',
     restored: 'Your last entries have been restored. They are stored only on this device.',
+  },
+  characterCounterPage: {
+    metaTitle:
+      'Word Count and X Post Limits - Character Counter by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Paste text and see the count as a reader sees it: an emoji is one character, an X post is weighted the way X weighs it, and manuscript pages account for line breaks. Free, no sign-up, and what you type is never sent or stored.',
+    heading: 'Character Counter by Yoshinya',
+    toolName: 'Character Counter by Yoshinya',
+    toolDescription:
+      'Counts characters, words and lines as they look, and checks the text against common limits.',
+    lead: '“Keep it under 280.” “A meta description should be about 120.” Fine — but how long is it right now, and does an emoji count as one character or eight? Most counters answer with a number that does not match what you see.\nCharacter Counter by Yoshinya counts what a reader counts: a family emoji is one character, an X post is weighted exactly the way X weighs it, and manuscript pages are worked out line by line rather than by dividing by 400. The limits for X, a title tag and a meta description are checked as you type.\nWhat you type is never sent to a server, and it is not saved on this device either — a draft you paste here leaves nothing behind.',
+    privacyNote:
+      'Nothing you type is sent to a server. All processing happens in your browser.',
+  },
+  characterCounter: {
+    // Step 1 — input
+    inputHeading: '① Enter your text',
+    inputLabel: 'Text to count',
+    placeholder: 'Paste or type your text here.',
+    clear: 'Clear the text',
+
+    // Step 2 — counts
+    countsHeading: '② Read the counts',
+    copy: 'Copy the counts',
+    copied: 'Copied',
+    characters: 'Characters',
+    charactersNoWhitespace: 'Characters (no spaces)',
+    words: 'Words',
+    lines: 'Lines',
+    paragraphs: 'Paragraphs',
+    widthBreakdown: 'Wide and narrow',
+    widthValue: (full: string, half: string) =>
+      `${full} wide / ${half} narrow`,
+    weighted: 'X weighted length',
+    manuscript: 'Manuscript pages (400 per sheet)',
+    manuscriptValue: (sheets: string, rows: string) =>
+      `${sheets} sheets (${rows} rows)`,
+    utf8Bytes: 'UTF-8 bytes',
+
+    // Step 3 — targets
+    targetsHeading: '③ Check against a limit',
+    targetsHint:
+      'Guides, not rules — the tool never stops you or trims anything. Title and description limits are the conventional stand-ins for what search results cut off by pixel width.',
+    targets: {
+      x: 'X post',
+      titleTag: 'Title tag',
+      metaDescription: 'Meta description',
+      youtube: 'YouTube description',
+      instagram: 'Instagram caption',
+    },
+    remaining: (count: string) => `${count} left`,
+    overBy: (count: string) => `${count} over`,
   },
   imageCompressorPage: {
     metaTitle:

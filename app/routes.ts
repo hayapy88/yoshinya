@@ -17,6 +17,7 @@ export default [
       'structured-data-generator',
       'routes/structured-data-generator.tsx',
     ),
+    route('character-counter', 'routes/character-counter.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -51,6 +52,9 @@ export default [
   }),
   route('structured-data-generator', 'routes/locale-redirect.tsx', {
     id: 'redirect-structured-data-generator',
+  }),
+  route('character-counter', 'routes/locale-redirect.tsx', {
+    id: 'redirect-character-counter',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),
