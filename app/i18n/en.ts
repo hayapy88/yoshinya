@@ -2043,12 +2043,12 @@ export const en = {
     metaTitle:
       'WiFi, vCard and Bulk from a List - QR Code Generator by Yoshinya | Free, No Sign-up',
     metaDescription:
-      'Make QR codes that hold the address itself — no redirect to expire, no scan counted. URL, WiFi, contact card or email, saved as PNG or SVG, or a whole list at once as a ZIP. Free, no sign-up, nothing you type leaves your browser.',
+      'Make QR codes in your own colours, with your logo or a word in the middle. The address sits in the image itself, so nothing expires and no scan is counted. URL, WiFi, contact card or email, saved as PNG or SVG, or a whole list at once as a ZIP. Free, no sign-up, nothing you type leaves your browser.',
     heading: 'QR Code Generator by Yoshinya',
     toolName: 'QR Code Generator by Yoshinya',
     toolDescription:
       'Makes QR codes for a URL, WiFi, a contact card or an email, one at a time or a whole list at once.',
-    lead: 'You print a thousand flyers, and a year later the QR code on them opens nothing. Most free generators put their own short link inside the code, so when the service closes or the free plan lapses, every copy you printed dies at once — and until then, somebody else is counting who scanned it.\nQR Code Generator by Yoshinya writes the address itself into the image. There is no redirect to expire and no scan to count. Fill in a URL, WiFi details, a contact card or an email, save it as a PNG or an SVG for print, or paste a list and get every code at once in a ZIP.\nNothing you type is sent to a server, so a WiFi password or a phone number goes no further than this browser.',
+    lead: 'The code works, but it looks like nothing. A grid of black squares on your flyer, your packaging, your business card — the one element on the page that carries none of your brand. Sound familiar?\nQR Code Generator by Yoshinya puts your colours on the code and your logo, or a word, in the middle of it. The size and the error-correction level are handled for you, so branding it never costs you a code that will not scan. Make one from a URL, WiFi details, a contact card or an email, save it as a PNG or an SVG for print, or paste a list and get every code at once in a ZIP. No short link sits inside the code either, so nothing expires and nobody counts the scans.\nNothing you type is sent to a server, so a WiFi password or a phone number goes no further than this browser.',
     privacyNote:
       'Nothing you type is sent to a server. All processing happens in your browser.',
   },
