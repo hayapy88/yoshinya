@@ -1,4 +1,4 @@
-import { normalizeHex } from './color';
+import { normalizeHex } from '~/lib/color';
 import {
   BACKGROUND_SHAPES,
   DEFAULT_EXPORT,
