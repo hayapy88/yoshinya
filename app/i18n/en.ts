@@ -2048,7 +2048,7 @@ export const en = {
     toolName: 'QR Code Generator by Yoshinya',
     toolDescription:
       'Makes QR codes for a URL, WiFi, a contact card or an email, one at a time or a whole list at once.',
-    lead: 'The code works, but it looks like nothing. A grid of black squares on your flyer, your packaging, your business card — the one element on the page that carries none of your brand. Sound familiar?\nQR Code Generator by Yoshinya puts your colours on the code and your logo, or a word, in the middle of it. The size and the error-correction level are handled for you, so branding it never costs you a code that will not scan. Make one from a URL, WiFi details, a contact card or an email, save it as a PNG or an SVG for print, or paste a list and get every code at once in a ZIP. No short link sits inside the code either, so nothing expires and nobody counts the scans.\nNothing you type is sent to a server, so a WiFi password or a phone number goes no further than this browser.',
+    lead: 'The code works, but it looks like nothing. A grid of black squares on your flyer, your packaging, your business card — the one element on the page that carries none of your brand. Sound familiar?\nQR Code Generator by Yoshinya puts your colours on the code and your logo, or a word, in the middle of it. Make one from a URL, WiFi details, a contact card or an email, save it as a PNG or an SVG for print, or paste a list and get every code at once in a ZIP. No short link sits inside the code either, so nothing expires and nobody counts the scans.\nNothing you type is sent to a server, so a WiFi password or a phone number goes no further than this browser.',
     privacyNote:
       'Nothing you type is sent to a server. All processing happens in your browser.',
   },
@@ -2094,7 +2094,7 @@ export const en = {
 
     // Step 2 — how the code is drawn
     optionsHeading: '② Adjust the code',
-    errorCorrection: 'Error correction',
+    errorCorrection: 'Error correction (damage tolerance)',
     errorCorrectionHint:
       'How much damage the code survives. Higher levels rebuild more of a scratched or partly covered code, but make it denser at the same size.',
     errorCorrectionOptions: {

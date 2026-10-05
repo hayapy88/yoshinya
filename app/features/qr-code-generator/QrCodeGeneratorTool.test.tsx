@@ -126,7 +126,7 @@ describe('QR Code Generator', () => {
 
   it('remembers settings but never what was typed', () => {
     const { unmount } = renderTool();
-    fireEvent.change(screen.getByLabelText('Error correction'), {
+    fireEvent.change(screen.getByLabelText('Error correction (damage tolerance)'), {
       target: { value: 'H' },
     });
     fill('Web address', 'yoshinya.com');
@@ -136,7 +136,7 @@ describe('QR Code Generator', () => {
     unmount();
 
     renderTool();
-    expect(screen.getByLabelText('Error correction')).toHaveValue('H');
+    expect(screen.getByLabelText('Error correction (damage tolerance)')).toHaveValue('H');
     expect(screen.getByLabelText('Web address')).toHaveValue('');
   });
 
@@ -227,7 +227,7 @@ describe('QR Code Generator', () => {
     await screen.findByRole('button', { name: 'Remove the logo' });
     expect(preview()?.querySelector('image')).not.toBeNull();
     // A logo is damage the code has to survive.
-    expect(screen.getByLabelText('Error correction')).toHaveValue('H');
+    expect(screen.getByLabelText('Error correction (damage tolerance)')).toHaveValue('H');
     expect(
       screen.getByText(/Error correction switched to H/),
     ).toBeInTheDocument();
@@ -247,7 +247,7 @@ describe('QR Code Generator', () => {
     expect(text?.textContent).toBe('YOSHINYA');
     expect(text?.getAttribute('fill')).toBe('#162e64');
     // Anything over the middle needs the level that can rebuild it.
-    expect(screen.getByLabelText('Error correction')).toHaveValue('H');
+    expect(screen.getByLabelText('Error correction (damage tolerance)')).toHaveValue('H');
   });
 
   it('lets the word take its own colour, and gives the default back', () => {
