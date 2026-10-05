@@ -18,6 +18,7 @@ export default [
       'routes/structured-data-generator.tsx',
     ),
     route('character-counter', 'routes/character-counter.tsx'),
+    route('qr-code-generator', 'routes/qr-code-generator.tsx'),
     route('privacy', 'routes/privacy.tsx'),
     route('terms', 'routes/terms.tsx'),
   ]),
@@ -55,6 +56,9 @@ export default [
   }),
   route('character-counter', 'routes/locale-redirect.tsx', {
     id: 'redirect-character-counter',
+  }),
+  route('qr-code-generator', 'routes/locale-redirect.tsx', {
+    id: 'redirect-qr-code-generator',
   }),
   route('privacy', 'routes/locale-redirect.tsx', { id: 'redirect-privacy' }),
   route('terms', 'routes/locale-redirect.tsx', { id: 'redirect-terms' }),

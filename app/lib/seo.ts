@@ -243,6 +243,14 @@ export function structuredDataGeneratorJsonLd(
   );
 }
 
+export function qrCodeGeneratorJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃにQRコード作成' : 'QR Code Generator by Yoshinya',
+    '/qr-code-generator',
+  );
+}
+
 export function characterCounterJsonLd(locale: Locale): Record<string, unknown> {
   return toolJsonLd(
     locale,

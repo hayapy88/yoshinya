@@ -686,6 +686,119 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  qrCodeGeneratorGuide: {
+    heading: 'How to use this tool',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'In *① Choose what to encode*, pick what the code holds — a URL, plain text, WiFi details, a contact card or an email — and fill in the fields.',
+          'In *② Adjust the code*, set the error correction, the PNG size and the quiet zone. The defaults suit most uses.',
+          'The code appears in *③ Save it* as you type. Press *Save as PNG* for screens, or *Save as SVG* for print.',
+          'To make a batch, paste one line per code into *④ Make many at once* and press *Generate and download the ZIP*.',
+          'To brand the code, set the two colours in *② Adjust the code*, then choose what sits *In the middle*: *Nothing*, a *Logo* picked with *Choose an image*, or *Text* you type, with its own colour and size. *Back to black on white* puts the colours back, and *Remove the logo* takes a logo out again.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Putting a link on a flyer, a poster or packaging that has to still work in two years.',
+          'Letting guests onto the WiFi without reading a password out loud.',
+          'Adding a contact card to a business card or an email signature.',
+          'Making one code per seat, table, shelf or product from a list you already have.',
+          'Working with an address you would rather not hand to a third-party service.',
+        ],
+      },
+      {
+        heading: 'Why these codes never expire',
+        body: 'Many free generators do not put your address in the code at all. They put their own short link in it, which redirects to you. That is how a code can be edited after printing — and also how it dies: when the service shuts down, changes its plans, or simply decides your free link has lasted long enough, every copy you printed stops working at once. It is also how scans get counted, because every scan passes through their server first. This tool writes your address directly into the image. Nothing sits in between, so there is nothing to expire, nothing to meter, and nothing that can be taken away later. The trade-off is the honest one: a printed code cannot be repointed afterwards, because the destination is the code.',
+      },
+      {
+        heading: 'Choosing an error-correction level',
+        body: 'A QR code carries spare data so it can still be read when part of it is dirty, creased or covered. *M* recovers about 15% and suits anything on a screen or a clean page. Choose *H*, about 30%, for labels that get handled, stickers on curved surfaces, or a code printed over a background. The spare data takes room: at the same physical size, a higher level means smaller modules, so going straight to H for everything can make a small print harder to read rather than easier.',
+      },
+      {
+        heading: 'WiFi codes and the password',
+        body: 'A WiFi code holds the network name and the password as plain text. Anyone who scans it joins the network, and anyone who scans it with a reader app can read the password off their own screen. That is the right trade for a guest network printed on a card at reception, and the wrong one for the network your office files sit on. Hidden networks need *This network is hidden* ticked, otherwise some phones will not find them; leaving it ticked for a normal network causes the opposite failure.',
+      },
+      {
+        heading: 'Making many at once',
+        body: 'The bulk box takes one code per line, up to 200 at a time. A line of the form "name,value" uses the text before the first comma as the file name inside the ZIP — only the first comma is used as the separator, so a URL carrying commas of its own stays intact. Lines starting with # are ignored, which lets a pasted spreadsheet header stay for reference. Repeated names get a number so that no file silently overwrites another, and anything a file system would refuse is removed from the name.',
+      },
+      {
+        heading: 'Brand colours and a logo in the middle',
+        body: 'Both are supported, and both are limits rather than preferences. A scanner finds the code by the difference between dark modules and a light field, so the two colours need a real gap between them — the tool measures the contrast and warns when the pair is too close, which is the usual fate of a mid-weight brand colour on white. A code lighter than its background is flagged separately, because some scanners refuse an inverted code outright. The middle can hold a logo or a short word, and either one covers modules that are rebuilt from the error-correction data — which is why choosing one moves the level to *H*, why a logo stops at a quarter of the width, and why a word’s font shrinks by itself rather than cutting a stripe across the code. A panel in the background colour is painted under both, so that no fragment of a module shows through to be read as data. A word takes the code’s colour unless you give it one of its own, and a saved SVG keeps it as real text, so it appears in whatever font opens the file; a PNG keeps exactly what the screen showed. None of this guarantees a scan: test the finished code with a phone before printing a thousand of them.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'Everything happens in this tab. What you type is not sent to a server, and the codes are drawn in your browser — so a WiFi password, a phone number or an unannounced product URL goes no further than this device. Because no redirect sits inside the code, no one — including this site — can count or log the scans. Your settings for size, margin and error correction are remembered on this device so you do not set them twice; what you typed is never stored.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'What does a finished code actually look like?',
+        answer:
+          'Here is the Yoshinya home page as a code, twice: once with the logo in the middle, once with a word. Both use the brand navy on white, both were made with this tool in a couple of minutes, and both open the home page when scanned.',
+        images: [
+          {
+            src: '/examples/qr-code-yoshinya-logo-en.png',
+            alt: 'A QR code in navy with the Yoshinya cat logo in the middle',
+          },
+          {
+            src: '/examples/qr-code-yoshinya-text-en.png',
+            alt: 'A QR code in navy with the word Yoshinya across the middle',
+          },
+        ],
+      },
+      {
+        question: 'Will the code stop working after a while?',
+        answer:
+          'No. The address is inside the image itself, so there is no link of ours that could expire and no account that could lapse. As long as the page you pointed it at exists, the code works.',
+      },
+      {
+        question: 'Can I see how many people scanned it?',
+        answer:
+          'No, and neither can we. Counting scans requires a redirect through someone’s server, which is exactly what this tool avoids. If you need the numbers, point the code at a page you can measure yourself.',
+      },
+      {
+        question: 'Can I use the codes commercially?',
+        answer:
+          'Yes. The codes you generate are yours to use, including on products and printed material, with no attribution and no sign-up. QR Code is a registered trademark of DENSO WAVE INCORPORATED; the trademark covers the name, not your use of a code.',
+      },
+      {
+        question: 'My printed code will not scan. What went wrong?',
+        answer:
+          'Usually size or contrast. Keep the code at least 2 cm across for a phone at arm’s length, keep the quiet zone (the blank border) intact, and print dark on light — an inverted code is unreadable to many scanners. If it is printed on something that gets handled, generate it again at error correction *H*.',
+      },
+      {
+        question: 'PNG or SVG?',
+        answer:
+          'SVG for anything going to print, because it stays sharp at any size and the modules never land on half a pixel. PNG for screens, documents and anywhere a vector file is awkward.',
+      },
+      {
+        question: 'Does Japanese text work?',
+        answer:
+          'Yes. Text is encoded as UTF-8, so Japanese in a WiFi name, a contact card or plain text scans as what you typed rather than as mojibake.',
+      },
+      {
+        question: 'Can I use my brand colours?',
+        answer:
+          'Yes, within what a scanner can see. Paste the hex code from your brand guide straight into the field beside the swatch. The tool measures the contrast between the two colours and warns when they are too close — a mid-weight brand colour on white often is. Keep the code darker than its background, and test the result rather than trusting the screen: a pair that reads on a bright monitor can fail on paper.',
+      },
+      {
+        question: 'Will a logo or some text in the middle stop it from scanning?',
+        answer:
+          'Not at the sizes this tool allows. The modules under a logo or a word are rebuilt from the error-correction data, so choosing either switches the level to H, and the size is capped — a quarter of the width for a logo, and a font that shrinks itself for a word. That leaves the redundancy with room for the creases and thumbprints a printed code picks up. Scan it once with a phone before you commit it to print.',
+      },
+      {
+        question: 'Is what I type sent anywhere?',
+        answer:
+          'No. The code is built in your browser, nothing is uploaded, and what you type is not stored on this device either. Only your size and error-correction settings are remembered.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   pdfPageOrganizerGuide: {
     heading: 'Guide',
     sections: [
@@ -1925,6 +2038,144 @@ export const en = {
     },
     remaining: (count: string) => `${count} left`,
     overBy: (count: string) => `${count} over`,
+  },
+  qrCodeGeneratorPage: {
+    metaTitle:
+      'WiFi, vCard and Bulk from a List - QR Code Generator by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Make QR codes that hold the address itself — no redirect to expire, no scan counted. URL, WiFi, contact card or email, saved as PNG or SVG, or a whole list at once as a ZIP. Free, no sign-up, nothing you type leaves your browser.',
+    heading: 'QR Code Generator by Yoshinya',
+    toolName: 'QR Code Generator by Yoshinya',
+    toolDescription:
+      'Makes QR codes for a URL, WiFi, a contact card or an email, one at a time or a whole list at once.',
+    lead: 'You print a thousand flyers, and a year later the QR code on them opens nothing. Most free generators put their own short link inside the code, so when the service closes or the free plan lapses, every copy you printed dies at once — and until then, somebody else is counting who scanned it.\nQR Code Generator by Yoshinya writes the address itself into the image. There is no redirect to expire and no scan to count. Fill in a URL, WiFi details, a contact card or an email, save it as a PNG or an SVG for print, or paste a list and get every code at once in a ZIP.\nNothing you type is sent to a server, so a WiFi password or a phone number goes no further than this browser.',
+    privacyNote:
+      'Nothing you type is sent to a server. All processing happens in your browser.',
+  },
+  qrCodeGenerator: {
+    // Step 1 — what goes inside the code
+    inputHeading: '① Choose what to encode',
+    modes: {
+      url: 'URL',
+      text: 'Text',
+      wifi: 'WiFi',
+      vcard: 'Contact',
+      email: 'Email',
+    },
+    urlLabel: 'Web address',
+    urlPlaceholder: 'yoshinya.com/en/qr-code-generator',
+    urlHint: 'Typed without https://, it is added for you.',
+    textLabel: 'Text',
+    textPlaceholder: 'Any text you want the code to show.',
+    wifiSsid: 'Network name (SSID)',
+    wifiSsidPlaceholder: 'cafe-yoshinya',
+    wifiPassword: 'Password',
+    wifiSecurity: 'Security',
+    wifiSecurityOptions: {
+      WPA: 'WPA/WPA2/WPA3',
+      WEP: 'WEP',
+      nopass: 'No password',
+    },
+    wifiHidden: 'This network is hidden',
+    wifiNote:
+      'Anyone who scans this code joins the network, and can read the password off their own screen. Print it for guests, not for the office network.',
+    vcardLastName: 'Last name',
+    vcardFirstName: 'First name',
+    vcardOrganization: 'Company',
+    vcardTitle: 'Job title',
+    vcardPhone: 'Phone',
+    vcardEmail: 'Email',
+    vcardUrl: 'Website',
+    emailTo: 'To',
+    emailSubject: 'Subject',
+    emailBody: 'Message',
+    emailNote:
+      'Scanning opens a new message with these fields filled in. It does not send anything.',
+
+    // Step 2 — how the code is drawn
+    optionsHeading: '② Adjust the code',
+    errorCorrection: 'Error correction',
+    errorCorrectionHint:
+      'How much damage the code survives. Higher levels rebuild more of a scratched or partly covered code, but make it denser at the same size.',
+    errorCorrectionOptions: {
+      L: 'L — about 7% recoverable',
+      M: 'M — about 15% (usual)',
+      Q: 'Q — about 25%',
+      H: 'H — about 30%, for print that gets handled',
+    },
+    size: 'PNG size',
+    sizeHint: 'Pixels along one side. SVG scales to any size on its own.',
+    margin: 'Quiet zone',
+    marginHint:
+      'The blank border, counted in modules. Four is the standard; below that, scanners can miss where the code ends.',
+
+    colorsHeading: 'Colours',
+    darkColor: 'Code colour',
+    lightColor: 'Background colour',
+    colorPicker: (label: string) => `${label} picker`,
+    colorHexHint: 'Type a hex code such as #162E64, or pick from the swatch.',
+    colorHexInvalid: 'That is not a colour. Use six hex digits, like #162E64.',
+    resetColors: 'Back to black on white',
+    contrastWarning: (ratio: string) =>
+      `These two colours are only ${ratio}:1 apart. Scanners need a clear difference between the code and its background; this may read on screen and fail on paper.`,
+    invertedWarning:
+      'This code is lighter than its background. Some scanners will not read an inverted code at all — swap the two colours unless you have tested the phones that matter to you.',
+    centerHeading: 'In the middle',
+    centerNone: 'Nothing',
+    centerLogo: 'Logo',
+    centerText: 'Text',
+    textValue: 'Text to show',
+    textValuePlaceholder: 'YOSHINYA',
+    textColor: 'Text colour',
+    textMatchCode: 'Match the code colour',
+    textSize: 'Text size',
+    textSizeValue: (percent: string) => `${percent}% of the width`,
+    textNote:
+      'The modules behind the word are rebuilt from the error-correction data, so keep it short — the font shrinks by itself rather than letting a long word cut a stripe across the code. In a saved SVG the word is real text, so whoever opens it sees it in whatever font their machine has; a PNG keeps exactly what you see here.',
+    logoHeading: 'Logo image',
+    logoChoose: 'Choose an image',
+    logoRemove: 'Remove the logo',
+    logoSize: 'Logo size',
+    logoSizeValue: (percent: string) => `${percent}% of the width`,
+    logoNote:
+      'The modules behind the logo are rebuilt from the error-correction data, which is why the size is capped. Scan the finished code with a phone before you print a thousand of them.',
+    logoForcedErrorCorrection:
+      'Error correction switched to H, the level that can rebuild what sits over the middle.',
+    logoRejectedType: 'Choose a PNG, JPEG or WebP image.',
+    logoRejectedSize: 'That image is larger than 2MB. Choose a smaller one.',
+    logoAlt: 'The chosen logo',
+
+    // Step 3 — the result
+    previewHeading: '③ Save it',
+    actualSize: (size: string) => `Exported at ${size} × ${size} px`,
+    actualSizeHint:
+      'Rounded down so every module is a whole number of pixels — an uneven grid is what makes a small print fail to scan.',
+    emptyHint: 'Fill in the fields above and the code appears here.',
+    tooLong:
+      'This is too long for one QR code. Shorten the text, or choose a lower error-correction level.',
+    downloadPng: 'Save as PNG',
+    downloadSvg: 'Save as SVG',
+    svgHint: 'Choose SVG for anything going to print: it stays sharp at any size.',
+
+    // Step 4 — many at once
+    bulkHeading: '④ Make many at once',
+    bulkHint:
+      'One per line. Write "name,value" to choose the file name inside the ZIP; lines starting with # are ignored.',
+    bulkPlaceholder:
+      'seat-1,https://example.com/seat/1\nseat-2,https://example.com/seat/2\nhttps://example.com/menu',
+    bulkCount: (count: string) => `${count} codes ready`,
+    bulkLimit: (count: string) =>
+      `Only the first 200 lines are used; ${count} were left out.`,
+    bulkEmpty: 'Add at least one line to generate a ZIP.',
+    bulkGenerate: 'Generate and download the ZIP',
+    bulkWorking: 'Generating…',
+    bulkFailed: (message: string) => `Could not generate the ZIP: ${message}`,
+    bulkTooLong: (name: string) =>
+      `"${name}" is too long to fit in a QR code and was skipped.`,
+
+    restored: 'Your last settings have been restored. They are stored only on this device, and never what you typed.',
+    trademark:
+      'QR Code is a registered trademark of DENSO WAVE INCORPORATED.',
   },
   imageCompressorPage: {
     metaTitle:

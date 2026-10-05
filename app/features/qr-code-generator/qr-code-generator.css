@@ -1,0 +1,316 @@
+/* Same palette and frame as the other tools; only the tokens the layout below
+   actually uses are declared. */
+.qr-page {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --canvas: #fff;
+  --warning: #c22f2f;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .qr-page {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --canvas: #2a2930;
+    --warning: #ef8080;
+  }
+}
+
+.qr-section {
+  margin-top: 2rem;
+  min-width: 0;
+}
+.qr-section h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+.qr-hint {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* ① Mode tabs and fields -------------------------------------------------- */
+.qr-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.qr-mode {
+  border: 1px solid var(--border);
+  background: var(--canvas);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.qr-mode-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.qr-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.qr-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.9rem;
+}
+.qr-field,
+.qr-field-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.qr-field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.qr-field-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+/* Scoped to the controls a plain Field wraps, so the colour row below can lay
+   its swatch and hex box out without fighting a width of 100%. */
+.qr-field-control input,
+.qr-field-control select,
+.qr-field-control textarea,
+.qr-bulk-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--canvas);
+  color: inherit;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+  font-size: 0.95rem;
+}
+.qr-field-control textarea,
+.qr-bulk-input {
+  resize: vertical;
+  line-height: 1.6;
+}
+.qr-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.qr-note {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.5rem;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+/* ② Options --------------------------------------------------------------- */
+.qr-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.qr-restored {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* ③ Result ---------------------------------------------------------------- */
+.qr-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.qr-preview {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(16rem, 100%);
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--canvas);
+  padding: 0.75rem;
+  box-sizing: border-box;
+}
+/* The generated SVG carries its own width and height, which would otherwise
+   win over the box above on a narrow screen. */
+.qr-preview-image,
+.qr-preview-image svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.qr-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+  line-height: 1.7;
+}
+.qr-actions {
+  flex: 1 1 16rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.qr-size {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+}
+
+.qr-btn {
+  border: 1px solid var(--border);
+  background: var(--canvas);
+  color: inherit;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.qr-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+.qr-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ④ Bulk ------------------------------------------------------------------ */
+.qr-bulk-count {
+  margin: 0.6rem 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.qr-warning {
+  margin: 0.4rem 0 0;
+  color: var(--warning);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.qr-trademark {
+  margin: 2.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* Colours and logo ---------------------------------------------------------*/
+.qr-subheading {
+  font-size: 0.95rem;
+  margin: 1.5rem 0 0.75rem;
+}
+.qr-logo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+/* The file input is driven by its label, which is styled as a button. */
+.qr-logo-choose input[type='file'] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+}
+.qr-logo-choose {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.qr-logo-preview {
+  inline-size: 3rem;
+  block-size: 3rem;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--canvas);
+  padding: 0.25rem;
+  box-sizing: border-box;
+}
+
+/* An escape hatch, not a step: it sits quietly under the colour fields rather
+   than competing with the buttons that actually produce something. */
+.qr-text-btn {
+  display: inline-block;
+  margin-top: 0.6rem;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.qr-text-btn:hover {
+  color: inherit;
+}
+
+/* A swatch the size of a button, with the hex box taking the rest of the row:
+   the value is what people copy and paste, so it gets the space. */
+.qr-color-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.qr-color-picker {
+  flex: 0 0 auto;
+  inline-size: 3rem;
+  block-size: 2.6rem;
+  padding: 0.2rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--canvas);
+  cursor: pointer;
+}
+.qr-color-text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--canvas);
+  color: inherit;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+.qr-color-text[aria-invalid='true'] {
+  border-color: var(--warning);
+}

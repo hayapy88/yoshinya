@@ -12,7 +12,16 @@ export type GuideSection = {
   terms?: { term: string; definition: string }[];
 };
 
-export type FaqEntry = { question: string; answer: string };
+export type FaqEntry = {
+  question: string;
+  answer: string;
+  /**
+   * Optional illustrations shown under the answer. Deliberately not carried
+   * into the FAQ structured data: schema.org answers are text, and publishing
+   * a picture there would describe the page as something it is not.
+   */
+  images?: { src: string; alt: string }[];
+};
 
 export type ToolGuideContent = {
   heading: string;
@@ -35,7 +44,8 @@ export type ToolSlug =
   | 'pdf-merger'
   | 'pdf-page-organizer'
   | 'structured-data-generator'
-  | 'character-counter';
+  | 'character-counter'
+  | 'qr-code-generator';
 
 // The published tools, in release order: what the related-tools list offers and
 // what the sitemap carries. A slug is added here when its page is complete —
@@ -52,4 +62,5 @@ export const TOOL_SLUGS: ToolSlug[] = [
   'pdf-page-organizer',
   'structured-data-generator',
   'character-counter',
+  'qr-code-generator',
 ];

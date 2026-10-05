@@ -124,6 +124,24 @@ describe.each([
     }
   });
 
+  it('qr code generator names the controls it tells people to press', () => {
+    const text = guideText(t, 'qrCodeGeneratorGuide');
+    for (const label of [
+      t.qrCodeGenerator.inputHeading,
+      t.qrCodeGenerator.optionsHeading,
+      t.qrCodeGenerator.previewHeading,
+      t.qrCodeGenerator.bulkHeading,
+      t.qrCodeGenerator.downloadPng,
+      t.qrCodeGenerator.downloadSvg,
+      t.qrCodeGenerator.bulkGenerate,
+      t.qrCodeGenerator.wifiHidden,
+      t.qrCodeGenerator.logoRemove,
+      t.qrCodeGenerator.resetColors,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('character counter names the controls it tells people to press', () => {
     const text = guideText(t, 'characterCounterGuide');
     for (const label of [
@@ -163,6 +181,7 @@ const ALL_GUIDES = [
   'pdfPageOrganizerGuide',
   'structuredDataGeneratorGuide',
   'characterCounterGuide',
+  'qrCodeGeneratorGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {
