@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MemoryRouter } from 'react-router';
 import { LocaleProvider } from '~/i18n/LocaleContext';
+import { ja } from '~/i18n/ja';
 import { dictionaries, type Locale } from '~/i18n/locale';
 import { faqJsonLd } from '~/lib/seo';
 import { ToolGuide } from './ToolGuide';
@@ -26,6 +27,7 @@ const GUIDE_KEY = {
   'pdf-page-organizer': 'pdfPageOrganizerGuide',
   'structured-data-generator': 'structuredDataGeneratorGuide',
   'character-counter': 'characterCounterGuide',
+  'qr-code-generator': 'qrCodeGeneratorGuide',
 } as const;
 
 function renderGuide(slug: keyof typeof GUIDE_KEY, locale: Locale) {
@@ -55,6 +57,49 @@ describe.each(['en', 'ja'] as const)('%s guides', (locale) => {
       expect(JSON.stringify(jsonLd)).not.toContain('*');
     },
   );
+});
+
+describe('an FAQ answer with illustrations', () => {
+  it('shows both examples, with the alt text of each', () => {
+    renderGuide('qr-code-generator', 'ja');
+    expect(
+      screen.getByAltText(
+        'ネイビーのQRコードの中央によしにゃんのロゴが入った作成例',
+      ),
+    ).toHaveAttribute('src', '/examples/qr-code-yoshinya-logo-ja.png');
+    expect(
+      screen.getByAltText(
+        'ネイビーのQRコードの中央に「よしにゃ」の文字が入った作成例',
+      ),
+    ).toHaveAttribute('src', '/examples/qr-code-yoshinya-text-ja.png');
+  });
+
+  it('shows each locale its own examples, which link to its own pages', () => {
+    const { unmount } = renderGuide('qr-code-generator', 'en');
+    for (const image of screen.getAllByRole('img')) {
+      expect(image.getAttribute('src')).toContain('-en.png');
+    }
+    unmount();
+
+    renderGuide('qr-code-generator', 'ja');
+    for (const image of screen.getAllByRole('img')) {
+      expect(image.getAttribute('src')).toContain('-ja.png');
+    }
+  });
+
+  it('loads them lazily, below the fold as they are', () => {
+    renderGuide('qr-code-generator', 'ja');
+    for (const image of screen.getAllByRole('img')) {
+      expect(image).toHaveAttribute('loading', 'lazy');
+    }
+  });
+
+  it('keeps the pictures out of the FAQ structured data', () => {
+    // schema.org answers are text; a picture there would describe the page as
+    // something it is not.
+    const jsonLd = JSON.stringify(faqJsonLd(ja.qrCodeGeneratorGuide.faq));
+    expect(jsonLd).not.toContain('/examples/');
+  });
 });
 
 describe('emphasis rendering', () => {

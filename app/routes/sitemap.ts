@@ -15,6 +15,7 @@ const PATHS = [
   '/pdf-page-organizer',
   '/structured-data-generator',
   '/character-counter',
+  '/qr-code-generator',
   '/privacy',
   '/terms',
 ];

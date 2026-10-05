@@ -140,6 +140,11 @@ export default function Home() {
               name: t.characterCounterPage.toolName,
               description: t.characterCounterPage.toolDescription,
             },
+            {
+              slug: 'qr-code-generator',
+              name: t.qrCodeGeneratorPage.toolName,
+              description: t.qrCodeGeneratorPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

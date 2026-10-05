@@ -6,7 +6,7 @@ import { ToolIntro } from '~/components/tool/ToolIntro';
 import { ToolGuide } from '~/components/tool/ToolGuide';
 import { ICON_CATEGORIES, ICONS, type IconDefinition } from './lib/icon-data';
 import { buildSvg } from './lib/svg';
-import { normalizeHex } from './lib/color';
+import { normalizeHex } from '~/lib/color';
 import { filterIcons, type CategoryFilter, type IconLabel } from './lib/search';
 import {
   ZIP_FILE_NAME,

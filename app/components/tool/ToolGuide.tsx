@@ -40,6 +40,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'pdf-page-organizer': 'pdfPageOrganizerPage',
   'structured-data-generator': 'structuredDataGeneratorPage',
   'character-counter': 'characterCounterPage',
+  'qr-code-generator': 'qrCodeGeneratorPage',
 };
 
 function Section({ section }: { section: GuideSection }) {
@@ -117,6 +118,20 @@ export function ToolGuide({
             <dt>{entry.question}</dt>
             <dd>
               <Copy>{entry.answer}</Copy>
+              {entry.images && (
+                <div className="tool-faq-images">
+                  {entry.images.map((image) => (
+                    <img
+                      key={image.src}
+                      className="tool-faq-image"
+                      src={image.src}
+                      alt={image.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ))}
+                </div>
+              )}
             </dd>
           </div>
         ))}

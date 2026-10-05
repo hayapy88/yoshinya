@@ -1,5 +1,7 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Download, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import jsQR from 'jsqr';
+import { PNG } from 'pngjs';
 import { deflateSync, crc32 } from 'node:zlib';
 import { PDFDocument } from 'pdf-lib';
 
@@ -554,6 +556,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'pdf-page-organizer', heading: 'よしにゃにPDFページ整理' },
     { slug: 'structured-data-generator', heading: 'よしにゃに構造化データ作成' },
     { slug: 'character-counter', heading: 'よしにゃに文字数カウント' },
+    { slug: 'qr-code-generator', heading: 'よしにゃにQRコード作成' },
   ];
 
   for (const tool of tools) {
@@ -1991,5 +1994,213 @@ test.describe('character counter workflow', () => {
     expect(stored).not.toContain('secret draft');
     await page.reload();
     await expect(page.getByLabel('カウントするテキスト')).toHaveValue('');
+  });
+});
+
+test.describe('qr code generator workflow', () => {
+  // The code is drawn client-side, so each test first proves hydration has
+  // happened by watching the preview appear.
+  const openTool = async (page: Page) => {
+    await page.goto('/ja/qr-code-generator');
+    const input = page.getByLabel('URL', { exact: true });
+    await expect(async () => {
+      await input.fill('yoshinya.com');
+      await expect(page.locator('.qr-preview-image svg')).toBeVisible({
+        timeout: 500,
+      });
+    }).toPass({ timeout: 10_000 });
+    return input;
+  };
+
+  test('draws a code from a URL and names the exported size', async ({
+    page,
+  }) => {
+    await openTool(page);
+    // 25 modules plus a quiet zone of 4 each side, at a whole-pixel scale.
+    await expect(page.locator('.qr-preview-image svg')).toHaveAttribute(
+      'viewBox',
+      '0 0 33 33',
+    );
+    await expect(page.locator('.qr-size')).toContainText('495 × 495 px');
+  });
+
+  test('switches to WiFi and asks for the fields that mode needs', async ({
+    page,
+  }) => {
+    await openTool(page);
+    await page.getByRole('tab', { name: 'WiFi' }).click();
+    await expect(page.getByLabel('ネットワーク名（SSID）')).toBeVisible();
+    await page.getByLabel('ネットワーク名（SSID）').fill('cafe-yoshinya');
+    // Exact: the security <select> carries its option text, which contains
+    // "パスワードなし" and would otherwise match too.
+    await page.getByLabel('パスワード', { exact: true }).fill('guest1234');
+    await expect(page.locator('.qr-preview-image svg')).toBeVisible();
+  });
+
+  test('says so when the text cannot fit in one code', async ({ page }) => {
+    await openTool(page);
+    await page.getByRole('tab', { name: 'テキスト' }).click();
+    await page.getByLabel('テキスト', { exact: true }).fill('あ'.repeat(2000));
+    await expect(page.locator('.qr-empty')).toContainText(
+      '1つのQRコードに収まりません',
+    );
+  });
+
+  test('downloads a PNG of the single code', async ({ page }) => {
+    await openTool(page);
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'PNGで保存' }).click();
+    expect((await download).suggestedFilename()).toBe('qr-code.png');
+  });
+
+  test('builds a ZIP from a pasted list', async ({ page }) => {
+    await openTool(page);
+    await page
+      .getByRole('textbox', { name: '④ まとめて作る' })
+      .fill('# name,url\nseat-1,https://example.com/1\nseat-2,https://example.com/2');
+    await expect(page.locator('.qr-bulk-count')).toContainText('2件');
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'ZIPでまとめて保存' }).click();
+    expect((await download).suggestedFilename()).toBe('qr-codes.zip');
+  });
+
+  test('warns when the two colours are too close to read apart', async ({
+    page,
+  }) => {
+    await openTool(page);
+    await expect(page.locator('.qr-warning')).toHaveCount(0);
+    // Brand coral on white: the choice the palette invites, and unreadable.
+    // Exact: the swatch's own label ends in のカラーピッカー and would match too.
+    await page.getByLabel('コードの色', { exact: true }).fill('#fb713c');
+    await expect(page.locator('.qr-warning')).toContainText('2色の差が');
+    await page.getByRole('button', { name: '白地に黒へ戻す' }).click();
+    await expect(page.locator('.qr-warning')).toHaveCount(0);
+  });
+
+  test('embeds a logo and moves to the level that can rebuild it', async ({
+    page,
+  }) => {
+    await openTool(page);
+    await page.getByRole('radio', { name: 'ロゴ' }).click();
+    await page
+      .locator('.qr-logo input[type="file"]')
+      .setInputFiles([pngFile('logo.png', 64, 64)]);
+    await expect(page.locator('.qr-preview-image svg image')).toHaveCount(1);
+    await expect(page.getByLabel('誤り訂正レベル')).toHaveValue('H');
+    await expect(page.locator('.qr-restored')).toContainText(
+      '誤り訂正レベルをHに切り替えました',
+    );
+
+    await page.getByRole('button', { name: 'ロゴを外す' }).click();
+    await expect(page.locator('.qr-preview-image svg image')).toHaveCount(0);
+  });
+
+  // The only test here that reads a QR code rather than inspecting the markup
+  // that drew it. Everything else proves the right numbers went in; this proves
+  // a scanner gets the right string back out of the exported PNG — through the
+  // canvas, the brand colour, and the logo sitting on top of the modules.
+  const decodeDownloaded = async (download: Download) => {
+    const path = await download.path();
+    const png = PNG.sync.read(readFileSync(path));
+    const result = jsQR(
+      new Uint8ClampedArray(png.data),
+      png.width,
+      png.height,
+    );
+    return result?.data ?? null;
+  };
+
+  test('exports a PNG a scanner can actually read', async ({ page }) => {
+    await openTool(page);
+    const url = 'https://yoshinya.com/ja/qr-code-generator';
+    await page.getByLabel('URL', { exact: true }).fill(url);
+    await page.getByLabel('コードの色', { exact: true }).fill('#162e64');
+    await page.getByRole('radio', { name: 'ロゴ' }).click();
+    await page
+      .locator('.qr-logo input[type="file"]')
+      .setInputFiles([pngFile('logo.png', 64, 64)]);
+    await expect(page.locator('.qr-preview-image svg image')).toHaveCount(1);
+
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'PNGで保存' }).click();
+    expect(await decodeDownloaded(await download)).toBe(url);
+  });
+
+  test('round-trips Japanese and emoji through the exported PNG', async ({
+    page,
+  }) => {
+    await openTool(page);
+    await page.getByRole('tab', { name: 'テキスト' }).click();
+    const text = '日本語テスト🐱 かな漢字';
+    await page.getByLabel('テキスト', { exact: true }).fill(text);
+
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'PNGで保存' }).click();
+    // UTF-8 all the way out: the library's own byte encoder would return
+    // mojibake here, and the code would still have scanned.
+    expect(await decodeDownloaded(await download)).toBe(text);
+  });
+
+  test('exports a PNG that still scans with a word across the middle', async ({
+    page,
+  }) => {
+    await openTool(page);
+    const url = 'https://yoshinya.com/ja/qr-code-generator';
+    await page.getByLabel('URL', { exact: true }).fill(url);
+    await page.getByRole('radio', { name: 'テキスト' }).click();
+    await page.getByLabel('表示する文字').fill('よしにゃ');
+    await expect(page.locator('.qr-preview-image svg text')).toHaveText(
+      'よしにゃ',
+    );
+    await expect(page.getByLabel('誤り訂正レベル')).toHaveValue('H');
+
+    const download = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'PNGで保存' }).click();
+    expect(await decodeDownloaded(await download)).toBe(url);
+  });
+
+  for (const [locale, suffix] of [
+    ['ja', 'ja'],
+    ['en', 'en'],
+  ]) {
+    test(`shows the ${locale} worked examples in the FAQ`, async ({ page }) => {
+      await page.goto(`/${locale}/qr-code-generator`);
+      const examples = page.locator('.tool-faq-image');
+      await expect(examples).toHaveCount(2);
+      for (const kind of ['logo', 'text']) {
+        const src = `/examples/qr-code-yoshinya-${kind}-${suffix}.png`;
+        await expect(page.locator(`.tool-faq-image[src="${src}"]`)).toHaveCount(
+          1,
+        );
+        // Served, not just referenced: a broken example is worse than none.
+        expect((await page.request.get(src)).status()).toBe(200);
+      }
+    });
+  }
+
+  test('sends nothing anywhere, and stores settings but never the input', async ({
+    page,
+  }) => {
+    const requests: string[] = [];
+    page.on('request', (request) => {
+      if (new URL(request.url()).hostname !== 'localhost') {
+        requests.push(request.url());
+      }
+    });
+    const input = await openTool(page);
+    await input.fill('https://example.com/unannounced-product');
+    await page.getByLabel('誤り訂正レベル').selectOption('H');
+    expect(requests).toEqual([]);
+
+    const stored = await page.evaluate(() => JSON.stringify(localStorage));
+    expect(stored).not.toContain('unannounced-product');
+    const settings = await page.evaluate(() =>
+      localStorage.getItem('yoshinya:qr-code-generator:v1'),
+    );
+    expect(JSON.parse(settings ?? '{}').errorCorrection).toBe('H');
+
+    await page.reload();
+    await expect(page.getByLabel('URL', { exact: true })).toHaveValue('');
+    await expect(page.getByLabel('誤り訂正レベル')).toHaveValue('H');
   });
 });
