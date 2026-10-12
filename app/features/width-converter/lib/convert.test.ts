@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { convertText, excludedCharacters, type ConvertSettings } from './convert';
+import {
+  convertText,
+  excludedCharacters,
+  type ConvertSettings,
+} from './convert';
 import { DEFAULT_SETTINGS } from './settings';
 
 function convert(text: string, overrides: Partial<ConvertSettings> = {}) {
@@ -49,12 +53,16 @@ describe('symbols', () => {
   it('convert every printable ASCII symbol and back', () => {
     const ascii = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
     const full = convert(ascii, { symbol: 'full' }).output;
-    expect(full).toBe('！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝～');
+    expect(full).toBe(
+      '！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝～',
+    );
     expect(convert(full, { symbol: 'half' }).output).toBe(ascii);
   });
 
   it('are separate from letters', () => {
-    expect(convert('Ａ！', { alnum: 'half', symbol: 'keep' }).output).toBe('A！');
+    expect(convert('Ａ！', { alnum: 'half', symbol: 'keep' }).output).toBe(
+      'A！',
+    );
   });
 });
 
@@ -151,17 +159,17 @@ describe('addresses', () => {
   });
 
   it('converts a full-width address to half-width', () => {
-    expect(convert('ｈｔｔｐｓ：／／ｅｘａｍｐｌｅ．ｃｏｍ', ALL_HALF).output).toBe(
-      'https://example.com',
-    );
+    expect(
+      convert('ｈｔｔｐｓ：／／ｅｘａｍｐｌｅ．ｃｏｍ', ALL_HALF).output,
+    ).toBe('https://example.com');
   });
 });
 
 describe('characters to leave alone', () => {
   it('stops conversion from a listed character', () => {
-    expect(convert('（Ａ）！', { symbol: 'half', exclude: '（）' }).output).toBe(
-      '（A）!',
-    );
+    expect(
+      convert('（Ａ）！', { symbol: 'half', exclude: '（）' }).output,
+    ).toBe('（A）!');
   });
 
   it('stops conversion to a listed character', () => {
@@ -176,7 +184,9 @@ describe('characters to leave alone', () => {
 
   it('ignores whitespace in the list', () => {
     expect([...excludedCharacters(' （ \n）')]).toEqual(['（', '）']);
-    expect(convert('a　b', { space: 'half', exclude: '　' }).output).toBe('a b');
+    expect(convert('a　b', { space: 'half', exclude: '　' }).output).toBe(
+      'a b',
+    );
   });
 });
 

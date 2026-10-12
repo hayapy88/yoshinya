@@ -45,14 +45,36 @@ const HALF_HANDAKUTEN = 'ﾟ';
 // What a base katakana becomes with a voicing mark. Listed rather than
 // computed from code point offsets, because ウ, ワ and ヲ do not follow them.
 const DAKUTEN: Record<string, string> = {
-  カ: 'ガ', キ: 'ギ', ク: 'グ', ケ: 'ゲ', コ: 'ゴ',
-  サ: 'ザ', シ: 'ジ', ス: 'ズ', セ: 'ゼ', ソ: 'ゾ',
-  タ: 'ダ', チ: 'ヂ', ツ: 'ヅ', テ: 'デ', ト: 'ド',
-  ハ: 'バ', ヒ: 'ビ', フ: 'ブ', ヘ: 'ベ', ホ: 'ボ',
-  ウ: 'ヴ', ワ: 'ヷ', ヲ: 'ヺ',
+  カ: 'ガ',
+  キ: 'ギ',
+  ク: 'グ',
+  ケ: 'ゲ',
+  コ: 'ゴ',
+  サ: 'ザ',
+  シ: 'ジ',
+  ス: 'ズ',
+  セ: 'ゼ',
+  ソ: 'ゾ',
+  タ: 'ダ',
+  チ: 'ヂ',
+  ツ: 'ヅ',
+  テ: 'デ',
+  ト: 'ド',
+  ハ: 'バ',
+  ヒ: 'ビ',
+  フ: 'ブ',
+  ヘ: 'ベ',
+  ホ: 'ボ',
+  ウ: 'ヴ',
+  ワ: 'ヷ',
+  ヲ: 'ヺ',
 };
 const HANDAKUTEN: Record<string, string> = {
-  ハ: 'パ', ヒ: 'ピ', フ: 'プ', ヘ: 'ペ', ホ: 'ポ',
+  ハ: 'パ',
+  ヒ: 'ピ',
+  フ: 'プ',
+  ヘ: 'ペ',
+  ホ: 'ポ',
 };
 
 // Full-width katakana to half-width. The punctuation at the front of the table

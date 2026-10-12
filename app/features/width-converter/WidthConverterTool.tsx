@@ -219,19 +219,17 @@ export default function WidthConverterTool() {
 
         {text !== '' && (
           <p className="wc-summary" aria-live="polite">
-            {total === 0
-              ? s.noChanges
-              : s.changed(format.format(total))}
+            {total === 0 ? s.noChanges : s.changed(format.format(total))}
             {total > 0 && (
               <span className="wc-counts">
-                {CATEGORIES.filter((category) => result.counts[category] > 0).map(
-                  (category) => (
-                    <span key={category} className="wc-count">
-                      {s.categories[category]}{' '}
-                      <strong>{format.format(result.counts[category])}</strong>
-                    </span>
-                  ),
-                )}
+                {CATEGORIES.filter(
+                  (category) => result.counts[category] > 0,
+                ).map((category) => (
+                  <span key={category} className="wc-count">
+                    {s.categories[category]}{' '}
+                    <strong>{format.format(result.counts[category])}</strong>
+                  </span>
+                ))}
               </span>
             )}
           </p>

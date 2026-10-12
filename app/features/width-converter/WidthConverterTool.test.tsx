@@ -90,16 +90,17 @@ describe('WidthConverterTool', () => {
   });
 
   it('restores stored rules after mount and resets them', () => {
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ kana: 'half' }),
-    );
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ kana: 'half' }));
     renderTool();
     type('カナ');
     expect(output()).toHaveTextContent('ｶﾅ');
-    expect(screen.getByText(/Your last rules have been restored/)).toBeVisible();
+    expect(
+      screen.getByText(/Your last rules have been restored/),
+    ).toBeVisible();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Reset to the defaults' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Reset to the defaults' }),
+    );
     expect(output()).toHaveTextContent('カナ');
     expect(
       screen.getByRole('button', { name: 'Reset to the defaults' }),
