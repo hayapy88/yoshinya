@@ -45,7 +45,8 @@ export type ToolSlug =
   | 'pdf-page-organizer'
   | 'structured-data-generator'
   | 'character-counter'
-  | 'qr-code-generator';
+  | 'qr-code-generator'
+  | 'width-converter';
 
 // The published tools, in release order: what the related-tools list offers and
 // what the sitemap carries. A slug is added here when its page is complete —
@@ -63,4 +64,5 @@ export const TOOL_SLUGS: ToolSlug[] = [
   'structured-data-generator',
   'character-counter',
   'qr-code-generator',
+  'width-converter',
 ];

@@ -586,6 +586,97 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  widthConverterGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Paste your text under *① Paste your text*. The result updates as you type.',
+          'Under *② Choose the rules*, pick a direction for each kind of character. The defaults — half-width letters and digits, full-width katakana — are the usual house style for Japanese web copy.',
+          'Type anything that should stay as it is into *Characters to leave as they are* — for example （）！？ when the other symbols are going half-width.',
+          'Check the highlighted changes under *③ Check and copy the result*, then press *Copy the result*.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'Reusing an old website’s copy in a redesign, where ＡＢＣ and ABC, or ｶﾀｶﾅ and カタカナ, have crept in over the years.',
+          'Tidying a product list, a staff directory or a CSV column before importing it.',
+          'Cleaning up text pasted from PDFs, emails and spreadsheets that each used different widths.',
+          'Filling in a form that only accepts half-width digits or full-width katakana.',
+          'Checking a manuscript against a style guide before it goes to the client.',
+        ],
+      },
+      {
+        heading: 'What each kind covers',
+        terms: [
+          {
+            term: 'Letters and digits',
+            definition:
+              'A–Z, a–z and 0–9, and their full-width forms ＡＢＣ…１２３.',
+          },
+          {
+            term: 'Katakana',
+            definition:
+              'Half-width katakana such as ｶﾀｶﾅ, along with the half-width ｡｢｣､･ and ｰ. A voicing mark is joined onto the kana before it, so ｶﾞ becomes the single character ガ; going the other way splits it again.',
+          },
+          {
+            term: 'Symbols',
+            definition:
+              'Every other printable ASCII character — ! ? ( ) @ # & - / ~ and the rest — and its full-width form.',
+          },
+          {
+            term: 'Spaces',
+            definition:
+              'The ordinary space and the full-width space. Tabs and line breaks are never touched.',
+          },
+        ],
+      },
+      {
+        heading: 'What is never changed',
+        body: 'Hiragana, kanji, emoji and line breaks pass through untouched. URLs and email addresses are kept whole, so turning everything full-width cannot break a link. When katakana goes half-width, 。「」、・ stay full-width because they are ordinary Japanese punctuation, and ー only changes after katakana — the ー in らーめん stays as it is.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'The text you paste stays in this tab. It is never sent to a server and it is not saved on this device either, so closing the tab clears it. Only the rules you chose are remembered on this device, so the next visit starts where you left off. The analytics record only that the tool was used and that the copy button was pressed, never the text.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Why not one button that makes everything half-width?',
+        answer:
+          'Because Japanese copy rarely wants that. Half-width katakana is hard to read and breaks in some systems, while full-width letters and digits look out of place on a modern page. Choosing a direction for each kind gets the usual house style — half-width letters and digits, full-width katakana — in one pass.',
+      },
+      {
+        question: 'Will it break URLs or email addresses?',
+        answer:
+          'No. An address written in half-width is left exactly as it is, even when everything around it goes full-width. A full-width address such as ｈｔｔｐｓ：／／… is converted to half-width when letters and symbols are set to half-width, which is what makes it work again.',
+      },
+      {
+        question: 'How do I keep （） and ！？ full-width while other symbols go half-width?',
+        answer:
+          'Set Symbols to half-width and type （）！？ into *Characters to leave as they are*. A character listed there is left alone in both directions.',
+      },
+      {
+        question: 'Does it unify spellings, like サーバ and サーバー?',
+        answer:
+          'Not yet. This tool changes character widths only. Unifying words and spellings is a different job, planned as a separate tool.',
+      },
+      {
+        question: 'Is my text sent anywhere or saved?',
+        answer:
+          'Neither. The conversion runs in your browser, nothing is uploaded, and the text is not stored — only the rules you chose are remembered on this device.',
+      },
+      {
+        question: 'Is there a length limit?',
+        answer:
+          'No fixed limit. Everything runs on your machine, so a whole site’s worth of copy converts in a moment.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   characterCounterGuide: {
     heading: 'Guide',
     sections: [
@@ -1986,6 +2077,64 @@ export const en = {
     richResultsTest: 'Rich Results Test',
     schemaValidator: 'Schema Markup Validator',
     restored: 'Your last entries have been restored. They are stored only on this device.',
+  },
+  widthConverterPage: {
+    metaTitle:
+      'Unify Zenkaku and Hankaku Text - Full/Half-Width Converter by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Paste Japanese text and unify its character widths in one pass: half-width letters and digits, full-width katakana, and symbols and spaces your way. Every change is highlighted, URLs stay intact, and ｶﾞ becomes ガ. Free, no sign-up, and nothing you paste is sent to a server.',
+    heading: 'Full/Half-Width Converter by Yoshinya',
+    toolName: 'Full/Half-Width Converter by Yoshinya',
+    toolDescription:
+      'Unifies full-width and half-width letters, digits, katakana, symbols and spaces, one kind at a time.',
+    lead: 'Reusing the copy from an existing site, only to find ＡＢＣ next to ABC, １２３ next to 123 and ｶﾀｶﾅ next to カタカナ? Hunting them down page by page, by eye, is nobody’s idea of a good afternoon.\nFull/Half-Width Converter by Yoshinya unifies them in one pass. Choose a direction for letters and digits, katakana, symbols and spaces separately — half-width letters and full-width katakana are already set — and every change is highlighted, so you can check it before you copy.\nThe text you paste is never sent to a server, so unpublished copy and client material stay on your machine.',
+    privacyNote:
+      'Nothing you paste is sent to a server. All processing happens in your browser.',
+  },
+  widthConverter: {
+    // Step 1 — input
+    inputHeading: '① Paste your text',
+    inputLabel: 'Text to convert',
+    placeholder: 'Paste or type your text here.',
+    clear: 'Clear the text',
+
+    // Step 2 — rules
+    rulesHeading: '② Choose the rules',
+    resetRules: 'Reset to the defaults',
+    restored:
+      'Your last rules have been restored. Only the rules are stored on this device — never the text.',
+    categories: {
+      alnum: 'Letters and digits',
+      kana: 'Katakana',
+      symbol: 'Symbols',
+      space: 'Spaces',
+    },
+    examples: {
+      alnum: 'ＡＢＣ１２３ ⇔ ABC123',
+      kana: 'ｶﾀｶﾅ ⇔ カタカナ',
+      symbol: '（！？＆） ⇔ (!?&)',
+      space: 'Full-width space ⇔ space',
+    },
+    directions: {
+      half: 'Half-width',
+      full: 'Full-width',
+      keep: 'Leave as is',
+    },
+    excludeLabel: 'Characters to leave as they are',
+    excludePlaceholder: 'e.g. （）！？',
+    excludeHint:
+      'Characters typed here are not converted in either direction — useful for keeping （） or ！？ full-width while the other symbols go half-width.',
+
+    // Step 3 — result
+    resultHeading: '③ Check and copy the result',
+    copy: 'Copy the result',
+    copied: 'Copied',
+    resultLabel: 'Converted text',
+    empty: 'The converted text appears here.',
+    changed: (count: string) =>
+      `${count} ${count === '1' ? 'character' : 'characters'} converted`,
+    noChanges: 'Nothing to convert — the text already follows these rules.',
+    highlightHint: 'Highlighted characters are the ones that changed.',
   },
   characterCounterPage: {
     metaTitle:

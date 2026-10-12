@@ -1,0 +1,230 @@
+/* Same palette and frame as the other tools; only the tokens the layout below
+   actually uses are declared. */
+.wc-page {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --canvas: #fff;
+  --mark: #fdf2d0;
+  --mark-edge: #fb713c;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .wc-page {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --canvas: #2a2930;
+    --mark: #5a3a1c;
+    --mark-edge: #fb713c;
+  }
+}
+
+.wc-section {
+  margin-top: 2rem;
+  min-width: 0;
+}
+.wc-section h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+.wc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.wc-hint {
+  margin: 0.5rem 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* ① Input and ③ output share one box, so the result lines up with what was
+   pasted. ---------------------------------------------------------------- */
+.wc-text {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--canvas);
+  color: inherit;
+  font: inherit;
+  line-height: 1.8;
+  padding: 1rem;
+  min-height: 12rem;
+}
+textarea.wc-text {
+  resize: vertical;
+}
+.wc-output {
+  /* Line breaks and runs of spaces are part of the result being checked. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 32rem;
+  overflow: auto;
+}
+.wc-empty {
+  color: var(--muted);
+}
+/* Cream with an orange underline rather than the browser's yellow: visible in
+   both themes, and a changed space still shows as a highlighted gap. */
+.wc-mark {
+  background: var(--mark);
+  color: inherit;
+  border-bottom: 2px solid var(--mark-edge);
+  border-radius: 0.15rem;
+}
+
+/* ② Rules ----------------------------------------------------------------- */
+.wc-rules {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+.wc-rule {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 0.75rem 1rem 0.9rem;
+  min-width: 0;
+}
+/* Floated so the legend sits inside the card instead of cutting through its
+   top border, which is where browsers draw a legend by default. */
+.wc-rule-legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+.wc-choices {
+  clear: both;
+}
+.wc-rule-name {
+  display: block;
+  font-weight: 700;
+}
+.wc-rule-example {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.wc-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.wc-choice {
+  position: relative;
+  cursor: pointer;
+}
+/* The radio stays in the accessibility tree and keyboard order; only its
+   circle is replaced by the pill. */
+.wc-choice input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.wc-choice span {
+  display: inline-block;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--canvas);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.wc-choice input:checked + span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+.wc-choice input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.wc-exclude {
+  margin-top: 1rem;
+  max-width: 34rem;
+}
+.wc-exclude-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.35rem;
+}
+.wc-exclude-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--canvas);
+  color: inherit;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+
+/* ③ Result ---------------------------------------------------------------- */
+.wc-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+}
+.wc-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.wc-count {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  padding: 0.15rem 0.65rem;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.wc-btn {
+  border-radius: 0.6rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.wc-btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+  min-width: 9rem;
+}
+.wc-btn-secondary {
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+}
+.wc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

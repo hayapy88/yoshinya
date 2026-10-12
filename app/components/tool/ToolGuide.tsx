@@ -41,6 +41,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'structured-data-generator': 'structuredDataGeneratorPage',
   'character-counter': 'characterCounterPage',
   'qr-code-generator': 'qrCodeGeneratorPage',
+  'width-converter': 'widthConverterPage',
 };
 
 function Section({ section }: { section: GuideSection }) {
