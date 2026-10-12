@@ -158,6 +158,19 @@ describe.each([
     }
   });
 
+  it('width converter names the controls it tells people to press', () => {
+    const text = guideText(t, 'widthConverterGuide');
+    for (const label of [
+      t.widthConverter.inputHeading,
+      t.widthConverter.rulesHeading,
+      t.widthConverter.resultHeading,
+      t.widthConverter.excludeLabel,
+      t.widthConverter.copy,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -182,6 +195,7 @@ const ALL_GUIDES = [
   'structuredDataGeneratorGuide',
   'characterCounterGuide',
   'qrCodeGeneratorGuide',
+  'widthConverterGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {

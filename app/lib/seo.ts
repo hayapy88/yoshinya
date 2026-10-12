@@ -261,6 +261,16 @@ export function characterCounterJsonLd(locale: Locale): Record<string, unknown> 
   );
 }
 
+export function widthConverterJsonLd(locale: Locale): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja'
+      ? 'よしにゃに全角半角変換'
+      : 'Full/Half-Width Converter by Yoshinya',
+    '/width-converter',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 //

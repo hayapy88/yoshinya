@@ -28,6 +28,7 @@ const GUIDE_KEY = {
   'structured-data-generator': 'structuredDataGeneratorGuide',
   'character-counter': 'characterCounterGuide',
   'qr-code-generator': 'qrCodeGeneratorGuide',
+  'width-converter': 'widthConverterGuide',
 } as const;
 
 function renderGuide(slug: keyof typeof GUIDE_KEY, locale: Locale) {

@@ -557,6 +557,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'structured-data-generator', heading: 'よしにゃに構造化データ作成' },
     { slug: 'character-counter', heading: 'よしにゃに文字数カウント' },
     { slug: 'qr-code-generator', heading: 'よしにゃにQRコード作成' },
+    { slug: 'width-converter', heading: 'よしにゃに全角半角変換' },
   ];
 
   for (const tool of tools) {
@@ -2202,5 +2203,74 @@ test.describe('qr code generator workflow', () => {
     await page.reload();
     await expect(page.getByLabel('URL', { exact: true })).toHaveValue('');
     await expect(page.getByLabel('誤り訂正レベル')).toHaveValue('H');
+  });
+});
+
+test.describe('width converter workflow', () => {
+  // Server-rendered like the others: text typed before hydration converts
+  // nothing, so each test first proves the result reacts.
+  const openTool = async (page: Page) => {
+    await page.goto('/ja/width-converter');
+    const input = page.getByLabel('変換する文章');
+    const output = page.getByRole('region', { name: '変換結果' });
+    await expect(async () => {
+      await input.fill('Ａ');
+      await expect(output).toHaveText('A', { timeout: 500 });
+    }).toPass({ timeout: 10_000 });
+    await input.fill('');
+    return { input, output };
+  };
+
+  test('unifies widths with the default rules and highlights the changes', async ({
+    page,
+  }) => {
+    const { input, output } = await openTool(page);
+    await input.fill('ＡＢＣ１２３とｶﾞｲﾄﾞ');
+    await expect(output).toHaveText('ABC123とガイド');
+    await expect(output.locator('mark')).toHaveText(['ABC123', 'ガイド']);
+    await expect(page.getByText('9文字を変換しました')).toBeVisible();
+  });
+
+  test('keeps a URL intact when everything goes full-width', async ({
+    page,
+  }) => {
+    const { input, output } = await openTool(page);
+    for (const group of ['英数字', '記号', 'スペース']) {
+      await page
+        .getByRole('group', { name: new RegExp(group) })
+        .getByRole('radio', { name: '全角に' })
+        .check();
+    }
+    await input.fill('詳細は https://example.com へ');
+    await expect(output).toHaveText('詳細は　https://example.com　へ');
+  });
+
+  test('sends nothing anywhere, and stores the rules but never the text', async ({
+    page,
+  }) => {
+    const requests: string[] = [];
+    page.on('request', (request) => {
+      if (new URL(request.url()).hostname !== 'localhost') {
+        requests.push(request.url());
+      }
+    });
+    const { input } = await openTool(page);
+    await input.fill('ｼｰｸﾚｯﾄ原稿');
+    await page
+      .getByRole('group', { name: /スペース/ })
+      .getByRole('radio', { name: '半角に' })
+      .check();
+    await page.getByRole('button', { name: '結果をコピー' }).click();
+    expect(requests).toEqual([]);
+
+    const stored = await page.evaluate(() => JSON.stringify(localStorage));
+    expect(stored).not.toContain('原稿');
+    await page.reload();
+    await expect(page.getByLabel('変換する文章')).toHaveValue('');
+    await expect(
+      page
+        .getByRole('group', { name: /スペース/ })
+        .getByRole('radio', { name: '半角に' }),
+    ).toBeChecked();
   });
 });

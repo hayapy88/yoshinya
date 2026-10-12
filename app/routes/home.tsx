@@ -145,6 +145,11 @@ export default function Home() {
               name: t.qrCodeGeneratorPage.toolName,
               description: t.qrCodeGeneratorPage.toolDescription,
             },
+            {
+              slug: 'width-converter',
+              name: t.widthConverterPage.toolName,
+              description: t.widthConverterPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

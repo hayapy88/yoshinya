@@ -16,6 +16,7 @@ const PATHS = [
   '/structured-data-generator',
   '/character-counter',
   '/qr-code-generator',
+  '/width-converter',
   '/privacy',
   '/terms',
 ];
