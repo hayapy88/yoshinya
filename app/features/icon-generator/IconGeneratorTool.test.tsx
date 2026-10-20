@@ -33,6 +33,22 @@ function cards(): HTMLElement[] {
   return Array.from(grid().querySelectorAll('.ig-card'));
 }
 
+// Role queries resolve the role and accessible name of every element they
+// search, and the grid holds 129 cards of SVG markup and buttons. Run over the
+// whole page, one query took close to a second in jsdom, which pushed a test
+// past the 5 s timeout whenever the full suite ran in parallel. Controls are
+// therefore looked up inside the part of the page that holds them.
+function region(selector: string) {
+  const element = document.querySelector(selector);
+  if (!(element instanceof HTMLElement)) {
+    throw new Error(`${selector} not found`);
+  }
+  return within(element);
+}
+const filters = () => region('.ig-filters');
+const listHead = () => region('.ig-list-head');
+const exportSection = () => region('.ig-section:has(.ig-export)');
+
 beforeEach(() => {
   localStorage.clear();
 });
@@ -47,7 +63,6 @@ describe('IconGeneratorTool', () => {
   it('narrows the grid by search and puts it back', () => {
     renderTool();
     const search = screen.getByRole('searchbox');
-
 
     // The two folders, plus the briefcase, which Lucide tags as one.
     fireEvent.change(search, { target: { value: 'folder' } });
@@ -81,7 +96,7 @@ describe('IconGeneratorTool', () => {
 
   it('narrows the grid by category', () => {
     renderTool();
-    fireEvent.click(screen.getByRole('button', { name: 'Arrows' }));
+    fireEvent.click(filters().getByRole('button', { name: 'Arrows' }));
     expect(cards()).toHaveLength(
       ICONS.filter((icon) => icon.category === 'arrow').length,
     );
@@ -120,7 +135,7 @@ describe('IconGeneratorTool', () => {
   it('counts what will be exported as icons are selected', () => {
     renderTool();
     expect(
-      screen.getByRole('button', { name: 'Download as a ZIP' }),
+      exportSection().getByRole('button', { name: 'Download as a ZIP' }),
     ).toBeDisabled();
     expect(screen.getByText('Tick at least one icon above.')).toBeVisible();
 
@@ -130,41 +145,47 @@ describe('IconGeneratorTool', () => {
 
     expect(screen.getByText('2 icons selected')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Download 2 files as a ZIP' }),
+      exportSection().getByRole('button', {
+        name: 'Download 2 files as a ZIP',
+      }),
     ).toBeEnabled();
   });
 
   it('multiplies the file count by the PNG sizes', () => {
     renderTool();
     fireEvent.click(within(cards()[0]).getByRole('checkbox'));
-    fireEvent.click(screen.getByRole('checkbox', { name: 'PNG' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: '32' }));
+    fireEvent.click(exportSection().getByRole('checkbox', { name: 'PNG' }));
+    fireEvent.click(exportSection().getByRole('checkbox', { name: '32' }));
 
     // One SVG plus two PNG sizes.
     expect(
-      screen.getByRole('button', { name: 'Download 3 files as a ZIP' }),
+      exportSection().getByRole('button', {
+        name: 'Download 3 files as a ZIP',
+      }),
     ).toBeInTheDocument();
   });
 
   it('blocks the export when neither format is ticked', () => {
     renderTool();
     fireEvent.click(within(cards()[0]).getByRole('checkbox'));
-    fireEvent.click(screen.getByRole('checkbox', { name: 'SVG' }));
+    fireEvent.click(exportSection().getByRole('checkbox', { name: 'SVG' }));
 
     expect(
-      screen.getByRole('button', { name: 'Download as a ZIP' }),
+      exportSection().getByRole('button', { name: 'Download as a ZIP' }),
     ).toBeDisabled();
     expect(screen.getByText('Choose SVG, PNG, or both.')).toBeVisible();
   });
 
   it('selects and clears the whole grid', () => {
     renderTool();
-    fireEvent.click(screen.getByRole('button', { name: 'Select all' }));
+    fireEvent.click(listHead().getByRole('button', { name: 'Select all' }));
     expect(
       screen.getByText(`${ICONS.length} icons selected`),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Clear the selection' }));
+    fireEvent.click(
+      listHead().getByRole('button', { name: 'Clear the selection' }),
+    );
     expect(screen.queryByText(/icons selected/)).not.toBeInTheDocument();
   });
 
