@@ -171,6 +171,26 @@ describe.each([
     }
   });
 
+  it('background remover names the controls it tells people to press', () => {
+    const text = guideText(t, 'backgroundRemoverGuide');
+    for (const label of [
+      t.backgroundRemover.addHeading,
+      t.backgroundRemover.settingsHeading,
+      t.backgroundRemover.resultHeading,
+      t.backgroundRemover.toleranceLabel,
+      t.backgroundRemover.smoothEdges,
+      t.backgroundRemover.modes.connected,
+      t.backgroundRemover.modes.global,
+      t.backgroundRemover.undoPoint,
+      t.backgroundRemover.backdrops.black,
+      t.backgroundRemover.backdrops.white,
+      t.backgroundRemover.download,
+      t.backgroundRemover.downloadZip,
+    ]) {
+      expect(text).toContain(label);
+    }
+  });
+
   it('icon generator names the controls it tells people to press', () => {
     const text = guideText(t, 'iconGeneratorGuide');
     for (const label of [
@@ -196,6 +216,7 @@ const ALL_GUIDES = [
   'characterCounterGuide',
   'qrCodeGeneratorGuide',
   'widthConverterGuide',
+  'backgroundRemoverGuide',
 ] as const;
 
 describe('every guide has the same shape in both locales', () => {

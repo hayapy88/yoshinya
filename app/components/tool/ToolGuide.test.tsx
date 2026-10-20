@@ -29,6 +29,7 @@ const GUIDE_KEY = {
   'character-counter': 'characterCounterGuide',
   'qr-code-generator': 'qrCodeGeneratorGuide',
   'width-converter': 'widthConverterGuide',
+  'background-remover': 'backgroundRemoverGuide',
 } as const;
 
 function renderGuide(slug: keyof typeof GUIDE_KEY, locale: Locale) {

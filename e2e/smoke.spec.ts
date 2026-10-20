@@ -558,6 +558,7 @@ test.describe('shared tool page structure', () => {
     { slug: 'character-counter', heading: 'よしにゃに文字数カウント' },
     { slug: 'qr-code-generator', heading: 'よしにゃにQRコード作成' },
     { slug: 'width-converter', heading: 'よしにゃに全角半角変換' },
+    { slug: 'background-remover', heading: 'よしにゃに背景透過' },
   ];
 
   for (const tool of tools) {
@@ -2271,6 +2272,98 @@ test.describe('width converter workflow', () => {
       page
         .getByRole('group', { name: /スペース/ })
         .getByRole('radio', { name: '半角に' }),
+    ).toBeChecked();
+  });
+});
+
+test.describe('background remover workflow', () => {
+  // A black ring on white: a logo-like "O" whose inside is not connected to
+  // the background around it.
+  const ringLogo = (name: string) => {
+    const png = new PNG({ width: 60, height: 40 });
+    for (let y = 0; y < 40; y++) {
+      for (let x = 0; x < 60; x++) {
+        const outer = x >= 10 && x < 50 && y >= 8 && y < 32;
+        const inner = x >= 20 && x < 40 && y >= 16 && y < 24;
+        const value = outer && !inner ? 0 : 255;
+        const o = (y * 60 + x) * 4;
+        png.data[o] = value;
+        png.data[o + 1] = value;
+        png.data[o + 2] = value;
+        png.data[o + 3] = 255;
+      }
+    }
+    return { name, mimeType: 'image/png', buffer: PNG.sync.write(png) };
+  };
+
+  const alphaAt = (png: PNG, x: number, y: number) =>
+    png.data[(y * png.width + x) * 4 + 3];
+
+  const saveAndRead = async (page: Page) => {
+    const downloadEvent = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'この画像を保存' }).click();
+    const download = await downloadEvent;
+    expect(download.suggestedFilename()).toBe('logo.png');
+    return PNG.sync.read(readFileSync((await download.path())!));
+  };
+
+  // Server-rendered like the others: a file chosen before hydration goes
+  // nowhere, so the upload is retried until the preview reacts.
+  const openWithLogo = async (page: Page) => {
+    await page.goto('/ja/background-remover');
+    await expect(async () => {
+      await page
+        .locator('input[type="file"]')
+        .setInputFiles([ringLogo('logo.png')]);
+      await expect(page.getByText(/を透明にしました/)).toBeVisible({
+        timeout: 1000,
+      });
+    }).toPass({ timeout: 10_000 });
+  };
+
+  test('clears the outside, then the enclosed inside once it is clicked', async ({
+    page,
+  }) => {
+    await openWithLogo(page);
+    await expect(page.getByText('#ffffff')).toBeVisible();
+
+    const first = await saveAndRead(page);
+    expect(alphaAt(first, 0, 0)).toBe(0);
+    expect(alphaAt(first, 12, 20)).toBe(255);
+    expect(alphaAt(first, 30, 20)).toBe(255);
+
+    const canvas = page.locator('canvas.br-canvas');
+    const box = (await canvas.boundingBox())!;
+    await canvas.click({
+      position: { x: box.width * (30 / 60), y: box.height * (20 / 40) },
+    });
+    await expect(page.getByText('クリックで1か所を追加')).toBeVisible();
+
+    const second = await saveAndRead(page);
+    expect(alphaAt(second, 30, 20)).toBe(0);
+    expect(alphaAt(second, 12, 20)).toBe(255);
+  });
+
+  test('sends nothing anywhere, and stores the settings but never the image', async ({
+    page,
+  }) => {
+    const requests: string[] = [];
+    page.on('request', (request) => {
+      const url = new URL(request.url());
+      if (url.hostname !== 'localhost' && url.protocol !== 'blob:') {
+        requests.push(request.url());
+      }
+    });
+    await openWithLogo(page);
+    await page.getByRole('radio', { name: /画像全体から同じ色/ }).check();
+    await saveAndRead(page);
+    expect(requests).toEqual([]);
+
+    const stored = await page.evaluate(() => JSON.stringify(localStorage));
+    expect(stored).not.toContain('logo');
+    await page.reload();
+    await expect(
+      page.getByRole('radio', { name: /画像全体から同じ色/ }),
     ).toBeChecked();
   });
 });

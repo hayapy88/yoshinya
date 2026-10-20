@@ -46,7 +46,8 @@ export type ToolSlug =
   | 'structured-data-generator'
   | 'character-counter'
   | 'qr-code-generator'
-  | 'width-converter';
+  | 'width-converter'
+  | 'background-remover';
 
 // The published tools, in release order: what the related-tools list offers and
 // what the sitemap carries. A slug is added here when its page is complete —
@@ -65,4 +66,5 @@ export const TOOL_SLUGS: ToolSlug[] = [
   'character-counter',
   'qr-code-generator',
   'width-converter',
+  'background-remover',
 ];

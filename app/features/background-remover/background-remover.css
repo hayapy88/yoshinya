@@ -1,0 +1,443 @@
+/* Same palette and frame as the other tools; only the tokens the layout below
+   actually uses are declared. */
+.br-page {
+  --border: #d9d7de;
+  --panel: #f5f4f7;
+  --accent: #162e64;
+  --accent-contrast: #fff;
+  --muted: #6f6b78;
+  --canvas: #fff;
+  --warn: #9a3412;
+  --check-a: #ffffff;
+  --check-b: #e4e2e8;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .br-page {
+    --border: #3a3841;
+    --panel: #201f24;
+    --accent: #fb713c;
+    --accent-contrast: #041b55;
+    --muted: #a09caa;
+    --canvas: #2a2930;
+    --warn: #fdba74;
+    --check-a: #3a3841;
+    --check-b: #2a2930;
+  }
+}
+
+.br-section {
+  margin-top: 2rem;
+  min-width: 0;
+}
+.br-section h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+.br-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.br-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.br-hint {
+  margin: 0.5rem 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.br-muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+.br-warn,
+.br-notice {
+  margin: 0.5rem 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.br-warn {
+  color: var(--warn);
+}
+.br-name {
+  overflow-wrap: anywhere;
+}
+
+/* ① Input ----------------------------------------------------------------- */
+.br-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 2px dashed var(--border);
+  border-radius: 1rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--panel);
+}
+.br-dropzone .br-hint {
+  margin: 0;
+}
+.br-dropzone.br-compact {
+  padding: 0.45rem 0.9rem;
+  border-width: 1px;
+  border-radius: 0.6rem;
+  font-size: 0.88rem;
+}
+.br-dropzone:hover,
+.br-dropzone.br-over {
+  border-color: var(--accent);
+}
+.br-dropzone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.br-dropzone-label {
+  font-weight: 600;
+}
+.br-rejected {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+}
+.br-rejected-title {
+  margin: 0;
+  font-weight: 700;
+}
+.br-rejected ul {
+  margin: 0.5rem 0;
+  padding-left: 1.2rem;
+}
+
+/* ② Settings -------------------------------------------------------------- */
+.br-settings {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+.br-card {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 0.75rem 1rem 0.9rem;
+  min-width: 0;
+}
+/* Floated so the legend sits inside the card instead of cutting through its
+   top border, which is where browsers draw a legend by default. */
+fieldset.br-card > .br-card-legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+.br-card-legend {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.br-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-weight: 600;
+}
+.br-modes {
+  clear: both;
+  display: grid;
+  gap: 0.5rem;
+}
+.br-mode {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--canvas);
+  padding: 0.55rem 0.75rem;
+}
+.br-mode:has(input:checked) {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.br-mode input {
+  margin: 0.25rem 0 0;
+  accent-color: var(--accent);
+}
+.br-mode span {
+  display: grid;
+  gap: 0.15rem;
+}
+.br-mode small {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.br-range {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.br-check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.br-check input {
+  accent-color: var(--accent);
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.br-check + .br-hint {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+/* ③ Result ---------------------------------------------------------------- */
+.br-workspace {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) 16rem;
+  align-items: start;
+}
+@media (max-width: 52rem) {
+  .br-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.br-toolbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.br-backdrops {
+  display: flex;
+  gap: 0.35rem;
+}
+.br-pill {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--canvas);
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+}
+.br-pill[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+.br-pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* The backdrop is what makes transparency visible, so it is drawn behind the
+   canvas rather than into it — the saved PNG never contains it. */
+.br-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 16rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  overflow: hidden;
+}
+.br-checker,
+.br-stage.br-checker {
+  background-color: var(--check-a);
+  background-image:
+    linear-gradient(45deg, var(--check-b) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--check-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--check-b) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--check-b) 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0;
+}
+.br-stage.br-white {
+  background: #fff;
+}
+.br-stage.br-black {
+  background: #000;
+}
+.br-stage.br-black .br-hint {
+  color: #c9c6d0;
+}
+/* Both dimensions auto under max limits, so the canvas scales down without
+   losing its aspect ratio and the click maths can map straight onto it. */
+.br-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 65vh;
+  width: auto;
+  height: auto;
+  cursor: crosshair;
+  image-rendering: auto;
+}
+.br-canvas[hidden] {
+  display: none;
+}
+.br-error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  background: var(--canvas);
+  color: var(--warn);
+}
+.br-empty {
+  height: 12rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+}
+.br-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.br-fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  padding: 0.15rem 0.7rem;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+.br-swatch {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+}
+.br-points {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Image list -------------------------------------------------------------- */
+.br-list {
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  padding: 0.75rem;
+}
+.br-list-head {
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.br-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  max-height: 32rem;
+  overflow: auto;
+}
+.br-thumb {
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+}
+.br-thumb-current {
+  border-color: var(--accent);
+  background: var(--canvas);
+}
+.br-thumb-select {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  padding: 0.3rem;
+  cursor: pointer;
+}
+.br-thumb-select img {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  flex: none;
+  border-radius: 0.3rem;
+  background: var(--canvas);
+}
+.br-thumb-select .br-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.br-thumb-remove {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.1rem;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.br-btn {
+  border-radius: 0.6rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.br-btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+.br-btn-outline {
+  background: var(--canvas);
+  color: inherit;
+  border-color: var(--accent);
+}
+.br-btn-secondary {
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+}
+.br-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
