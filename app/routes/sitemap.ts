@@ -17,6 +17,7 @@ const PATHS = [
   '/character-counter',
   '/qr-code-generator',
   '/width-converter',
+  '/background-remover',
   '/privacy',
   '/terms',
 ];

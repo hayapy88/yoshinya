@@ -271,6 +271,16 @@ export function widthConverterJsonLd(locale: Locale): Record<string, unknown> {
   );
 }
 
+export function backgroundRemoverJsonLd(
+  locale: Locale,
+): Record<string, unknown> {
+  return toolJsonLd(
+    locale,
+    locale === 'ja' ? 'よしにゃに背景透過' : 'Background Remover by Yoshinya',
+    '/background-remover',
+  );
+}
+
 // Only ever call this with questions and answers that are also rendered on the
 // page — structured data that is not visible is a manual-action risk.
 //

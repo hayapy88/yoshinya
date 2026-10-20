@@ -150,6 +150,11 @@ export default function Home() {
               name: t.widthConverterPage.toolName,
               description: t.widthConverterPage.toolDescription,
             },
+            {
+              slug: 'background-remover',
+              name: t.backgroundRemoverPage.toolName,
+              description: t.backgroundRemoverPage.toolDescription,
+            },
           ].map((tool) => (
             <Link
               key={tool.slug}

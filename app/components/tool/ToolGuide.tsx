@@ -42,6 +42,7 @@ const PAGE_KEY: Record<ToolSlug, keyof Dictionary> = {
   'character-counter': 'characterCounterPage',
   'qr-code-generator': 'qrCodeGeneratorPage',
   'width-converter': 'widthConverterPage',
+  'background-remover': 'backgroundRemoverPage',
 };
 
 function Section({ section }: { section: GuideSection }) {

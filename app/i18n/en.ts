@@ -677,6 +677,103 @@ export const en = {
     ],
     relatedHeading: 'Related tools',
   },
+  backgroundRemoverGuide: {
+    heading: 'Guide',
+    sections: [
+      {
+        heading: 'How to use the tool',
+        steps: [
+          'Drop your images onto *① Add images*, or click it to choose them. JPEG, PNG and WebP all work, and you can add many at once.',
+          'The background colour is found from the edges of each image and removed straight away. Check the result under *③ Check and save* — switching the preview to *Black* or *White* shows any fringe left around the edges.',
+          'If part of the background is left behind, such as the inside of an O, click it in the preview and it goes too. Clicked the wrong spot? Press *Undo the last click*.',
+          'If too little or too much disappears, adjust *Tolerance* under *② Adjust what gets removed*.',
+          'Press *Save this image* for the one on screen, or *Save all as ZIP* for every image. Everything is saved as PNG.',
+        ],
+      },
+      {
+        heading: 'When is it useful?',
+        items: [
+          'A client sent their logo on a white or coloured background, and the website puts it on a different colour.',
+          'Placing a logo or an icon on a slide or a flyer without a box around it.',
+          'Turning a scanned signature or a seal into an image you can lay over a document.',
+          'Cutting out illustrations, stamps and stickers drawn on a plain background.',
+          'Preparing product images shot on a solid-colour backdrop for an online shop.',
+        ],
+      },
+      {
+        heading: 'What each setting does',
+        terms: [
+          {
+            term: 'Only the background around the edges',
+            definition:
+              'Removes the background colour only where it connects to the edges of the image. A white logo on a white background keeps its white. Enclosed areas, such as the inside of an O, stay until you click them.',
+          },
+          {
+            term: 'That colour everywhere in the image',
+            definition:
+              'Removes every pixel close to the background colour, wherever it is — enclosed areas included. Any part of the subject in the same colour goes too.',
+          },
+          {
+            term: 'Tolerance',
+            definition:
+              'How different a colour may be from the background and still count as background. Raise it when specks or a faint shadow are left behind; lower it when the edges of the subject start to disappear.',
+          },
+          {
+            term: 'Smooth the edges',
+            definition:
+              'Edge pixels are usually a blend of the subject and the background. This makes them partly transparent and takes the background’s colour out of them, so no white line shows on a dark page. Turn it off for pixel art, where every edge should stay sharp.',
+          },
+        ],
+      },
+      {
+        heading: 'Images it suits, and images it does not',
+        body: 'It works on any image whose background is one flat colour — not only white. Logos, illustrations, icons, stamps, scanned signatures and seals, and products shot on a solid backdrop all come out cleanly. A photo with an uneven background — a gradient, a shadow, a room — is a different job: there is no single colour to remove, and it needs a tool that recognises the subject itself.',
+      },
+      {
+        heading: 'Privacy and security',
+        body: 'Your images are read, processed and saved as PNG inside this tab. They are never sent to a server and nothing is kept on this device, so closing the tab clears them. Only the three settings are remembered here, so the next visit starts where you left off. The analytics record only how many images were added and saved, never the images, their names or their colours.',
+      },
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      {
+        question: 'Does it only work on white backgrounds?',
+        answer:
+          'No. Any background that is a single colour works — black, navy, a brand colour or a green screen. The colour is found from the edges of each image, so a batch with different background colours needs no setting changes.',
+      },
+      {
+        question: 'Why is the inside of letters like O and A still filled in?',
+        answer:
+          'Because it is not connected to the background around the edges. Click it in the preview to remove it as well, or choose *That colour everywhere in the image*.',
+      },
+      {
+        question: 'Part of my logo disappeared as well. What do I do?',
+        answer:
+          'The logo shares a colour with the background. Lower *Tolerance*, and if *That colour everywhere in the image* is selected, switch back to *Only the background around the edges*.',
+      },
+      {
+        question: 'There is a thin light line around the edges.',
+        answer:
+          'Check that *Smooth the edges* is on, then raise *Tolerance* a little. Switching the preview to *Black* makes a light fringe easy to see.',
+      },
+      {
+        question: 'Can it cut a person out of a photo?',
+        answer:
+          'Not this tool. It removes a single background colour, so a photo with an uneven background will not come out cleanly. A cut-out that recognises the subject itself is planned as a separate feature.',
+      },
+      {
+        question: 'Why PNG?',
+        answer:
+          'JPEG cannot store transparency, and PNG opens everywhere — in browsers, Office, Canva and design tools alike. The file keeps its name with a .png extension.',
+      },
+      {
+        question: 'Are my images uploaded anywhere?',
+        answer:
+          'No. Reading, removing the background and saving all happen in your browser, and nothing is sent to a server — unreleased logos and client material are safe to use.',
+      },
+    ],
+    relatedHeading: 'Related tools',
+  },
   characterCounterGuide: {
     heading: 'Guide',
     sections: [
@@ -2135,6 +2232,96 @@ export const en = {
       `${count} ${count === '1' ? 'character' : 'characters'} converted`,
     noChanges: 'Nothing to convert — the text already follows these rules.',
     highlightHint: 'Highlighted characters are the ones that changed.',
+  },
+  backgroundRemoverPage: {
+    metaTitle:
+      'Transparent PNG Maker for Logos - Background Remover by Yoshinya | Free, No Sign-up',
+    metaDescription:
+      'Make the background of logos, illustrations and scanned signatures transparent in bulk. The background colour is found automatically — white or any other single colour — and the edges are smoothed so no fringe is left. Saved as PNG. Free, no sign-up, and your images are never sent to a server.',
+    heading: 'Background Remover by Yoshinya',
+    toolName: 'Background Remover by Yoshinya',
+    toolDescription:
+      'Makes a single-colour background transparent, with smooth edges, for many images at once.',
+    lead: 'A client sends their logo, but it comes on a white or coloured background — and the new site puts it on a different colour, where it sits in an obvious box. Opening an image editor to cut it out, one file at a time, is nobody’s idea of fun.\nBackground Remover by Yoshinya finds the background colour from the edges of each image and makes it transparent the moment you drop it in. The edges are smoothed, so no light fringe shows on a coloured page, and a whole batch saves as PNG in one go.\nYour images are never sent to a server, so unreleased logos and client material stay on your machine.',
+    privacyNote:
+      'Your images are not sent to a server. All processing happens in your browser.',
+  },
+  backgroundRemover: {
+    // Step 1 — input
+    addHeading: '① Add images',
+    dropzone: 'Drop images here, or click to choose',
+    supportedFormats:
+      'JPEG, PNG and WebP. Best for a background that is one flat colour.',
+    addMore: '+ Add images',
+    rejectedHeading: 'These files could not be added',
+    errors: {
+      unsupported_type: 'Not a JPEG, PNG or WebP image.',
+      empty_file: 'The file is empty.',
+      file_too_large: 'Larger than 30 MB.',
+      too_many_files: 'More than 200 images at once.',
+      total_too_large: 'Over 500 MB in total.',
+      too_many_pixels: 'Over 40 megapixels — too large to process here.',
+      decode_failed: 'This image could not be read.',
+    },
+    dismiss: 'Dismiss',
+
+    // Step 2 — settings
+    settingsHeading: '② Adjust what gets removed',
+    resetSettings: 'Reset to the defaults',
+    restored:
+      'Your last settings have been restored. Only the settings are stored on this device — never your images.',
+    modeLabel: 'What to remove',
+    modes: {
+      connected: 'Only the background around the edges',
+      global: 'That colour everywhere in the image',
+    },
+    modeHints: {
+      connected: 'Keeps enclosed areas such as the inside of an O.',
+      global: 'Enclosed areas go too, along with any part of the subject in that colour.',
+    },
+    toleranceLabel: 'Tolerance',
+    toleranceHint:
+      'Raise it if specks are left behind; lower it if the subject starts to disappear.',
+    smoothEdges: 'Smooth the edges',
+    smoothEdgesHint:
+      'Removes the light fringe around the edges. Turn it off for pixel art.',
+    detected: 'Background colour',
+    detectedNone: 'The edges of this image are already transparent.',
+    lowCoverage:
+      'The edges are not all one colour, so some background may be left. Click what remains, or raise the tolerance.',
+
+    // Step 3 — result
+    resultHeading: '③ Check and save',
+    previewLabel: 'Preview. Click a spot to make it transparent too.',
+    clickHint:
+      'Background left somewhere, such as the inside of an O? Click it in the preview to remove it too.',
+    points: (count: number) =>
+      `${count} ${count === 1 ? 'spot' : 'spots'} added by clicking`,
+    undoPoint: 'Undo the last click',
+    clearPoints: 'Clear all clicks',
+    backdropLabel: 'Preview background',
+    backdrops: {
+      checker: 'Checkerboard',
+      white: 'White',
+      black: 'Black',
+    },
+    showOriginal: 'Show the original',
+    processing: 'Processing…',
+    removedShare: (percent: string) => `${percent} made transparent`,
+    pixelSize: (width: number, height: number) => `${width} × ${height} px`,
+    imagesLabel: 'Images',
+    imageCount: (count: number) =>
+      `${count} ${count === 1 ? 'image' : 'images'}`,
+    select: (name: string) => `Show ${name}`,
+    remove: (name: string) => `Remove ${name}`,
+    removeAll: 'Remove all',
+    removeAllConfirm: 'Remove every image from the list?',
+    download: 'Save this image',
+    downloadZip: 'Save all as ZIP',
+    zipping: (done: number, total: number) => `Saving… ${done} / ${total}`,
+    zipSkipped: (count: number) =>
+      `${count} ${count === 1 ? 'image' : 'images'} could not be processed and ${count === 1 ? 'was' : 'were'} left out of the ZIP.`,
+    zipFailed: 'The ZIP could not be created. Please try again.',
   },
   characterCounterPage: {
     metaTitle:
