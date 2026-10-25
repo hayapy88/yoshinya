@@ -17,6 +17,11 @@ export type ShareImageInput = {
   settlements: { from: string; to: string; amount: string }[];
   nothingToSettle: string;
   /**
+   * A line under the transfers saying how they were chosen, or null. Not
+   * drawn when there is nothing to settle.
+   */
+  settlementsNote: string | null;
+  /**
    * The table of shares and payments, or null for the short version.
    *
    * Two images are wanted for two moments. The short one is what goes into the
@@ -28,6 +33,8 @@ export type ShareImageInput = {
     heading: string;
     columns: string[];
     rows: string[][];
+    /** How the shares turn into transfers, drawn under the table. */
+    note: string;
   } | null;
   /**
    * Each person's itemised statement, or null when it is not wanted.
@@ -38,10 +45,22 @@ export type ShareImageInput = {
    */
   statements: {
     heading: string;
+    /** Headers for the two right-hand columns, drawn once above everyone. */
+    columns: { share: string; amount: string };
     people: {
       name: string;
       total: string;
-      items: { label: string; amount: string; carried: boolean }[];
+      /**
+       * `share` is the person's weight on the line — "1", "0.4" — and null on
+       * lines they carry nothing of. A bare number under a 負担割合 header
+       * reads faster than "6人で負担" or "全体 4 のうち 2" did.
+       */
+      items: {
+        label: string;
+        share: string | null;
+        amount: string;
+        carried: boolean;
+      }[];
     }[];
   } | null;
   /**
@@ -54,6 +73,12 @@ export type ShareImageInput = {
     rows: { payer: string; label: string; amount: string }[];
   } | null;
   footer: string;
+  /**
+   * Each person's colour, by name — the same one their name has on the page,
+   * so a name can be followed through the image too. Names are unique, which
+   * the form enforces. A name missing here is drawn in the text colour.
+   */
+  nameColours: Record<string, string>;
 };
 
 export const IMAGE_WIDTH = 1080;
@@ -77,6 +102,14 @@ export class ImageTooLongError extends Error {
 }
 
 const PAD = 64;
+/**
+ * Centre of the 負担割合 column in the itemised statements. Kept close to the
+ * amount column — a weight is a few characters, and the space goes to the
+ * line's name instead, which is what gets cut short.
+ */
+const STATEMENT_SHARE_X = IMAGE_WIDTH - PAD - 230;
+/** Room for a line's name: up to just short of the 負担割合 header. */
+const STATEMENT_LABEL_WIDTH = STATEMENT_SHARE_X - 64 - (PAD + 24);
 const COLOURS = {
   background: '#fdfbf7',
   text: '#1c1b1f',
@@ -114,16 +147,34 @@ export function layoutShareImage(input: ShareImageInput) {
   const settlementHeight = 96;
   y += rowCount * (settlementHeight + 16);
 
+  const noteLines =
+    input.settlements.length > 0 && input.settlementsNote
+      ? wrapText(input.settlementsNote, IMAGE_WIDTH - PAD * 2, NOTE_SIZE)
+      : [];
+  const noteY = y + NOTE_SIZE;
+  y += noteLines.length * NOTE_LINE_HEIGHT + (noteLines.length > 0 ? 8 : 0);
+
   const headerHeight = 56;
   const rowHeight = 64;
   let breakdownHeadingY = 0;
   let tableY = 0;
+  let breakdownNoteLines: string[] = [];
+  let breakdownNoteY = 0;
   if (input.breakdown) {
     y += 40;
     breakdownHeadingY = y + 34;
     y += 34 + 24;
     tableY = y;
     y += headerHeight + input.breakdown.rows.length * rowHeight;
+    breakdownNoteLines = wrapText(
+      input.breakdown.note,
+      IMAGE_WIDTH - PAD * 2,
+      NOTE_SIZE,
+    );
+    if (breakdownNoteLines.length > 0) {
+      breakdownNoteY = y + 16 + NOTE_SIZE;
+      y += 16 + breakdownNoteLines.length * NOTE_LINE_HEIGHT;
+    }
   }
 
   const expenseRowHeight = 46;
@@ -138,6 +189,7 @@ export function layoutShareImage(input: ShareImageInput) {
   }
 
   const statementHeadingHeight = 34 + 24;
+  const statementColumnsHeight = 40;
   const statementNameHeight = 48;
   const statementItemHeight = 44;
   const statementGap = 28;
@@ -150,6 +202,7 @@ export function layoutShareImage(input: ShareImageInput) {
     statementsY = y;
     for (const person of input.statements.people) {
       y +=
+        statementColumnsHeight +
         statementNameHeight +
         person.items.length * statementItemHeight +
         statementGap;
@@ -170,8 +223,12 @@ export function layoutShareImage(input: ShareImageInput) {
     settlementsHeadingY,
     settlementsY,
     settlementHeight,
+    noteLines,
+    noteY,
     breakdownHeadingY,
     tableY,
+    breakdownNoteLines,
+    breakdownNoteY,
     headerHeight,
     rowHeight,
     expensesHeadingY,
@@ -179,6 +236,7 @@ export function layoutShareImage(input: ShareImageInput) {
     expenseRowHeight,
     statementsHeadingY,
     statementsY,
+    statementColumnsHeight,
     statementNameHeight,
     statementItemHeight,
     statementGap,
@@ -217,6 +275,78 @@ export function distributeColumns(
   }
   const scale = room / numericTotal;
   return { numeric: needed.map((width) => width * scale), name };
+}
+
+const NOTE_SIZE = 24;
+const NOTE_LINE_HEIGHT = 38;
+
+/** Kana, kanji and full-width forms: one em each. */
+const WIDE = /[\u3000-\u30ff\u3400-\u9fff\uf900-\ufaff\uff00-\uffef]/;
+/** Characters a Japanese line must not start with. */
+const NO_LINE_START = /^[、。，．）」』！？・ー]/;
+
+/**
+ * Breaks text into lines no wider than `maxWidth`.
+ *
+ * Widths are estimated — one em for a wide character, a little over half for
+ * anything else — rather than measured, so the layout can be worked out (and
+ * tested) without a canvas, and the drawing uses exactly the lines the height
+ * was reserved for. The estimate errs wide, so a line never runs off the edge.
+ * Japanese breaks between any two characters, English only at spaces, and a
+ * line break in the text always starts a new line.
+ */
+export function wrapText(
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+): string[] {
+  // A line break in the text is kept, and each line wraps on its own.
+  if (text.includes('\n')) {
+    return text
+      .split('\n')
+      .flatMap((line) => wrapText(line, maxWidth, fontSize));
+  }
+  const width = (token: string) =>
+    [...token].reduce(
+      (sum, char) => sum + (WIDE.test(char) ? fontSize : fontSize * 0.6),
+      0,
+    );
+  const tokens = text.match(/\s+|[^\s]/gu) ?? [];
+  // Latin letters and digits travel together as words.
+  const words: string[] = [];
+  for (const token of tokens) {
+    const last = words[words.length - 1];
+    if (
+      last !== undefined &&
+      !/\s/.test(token) &&
+      !WIDE.test(token) &&
+      !/\s/.test(last) &&
+      !WIDE.test(last.slice(-1))
+    ) {
+      words[words.length - 1] = last + token;
+    } else {
+      words.push(token);
+    }
+  }
+
+  const lines: string[] = [];
+  let line = '';
+  for (const word of words) {
+    if (
+      line !== '' &&
+      width(line + word) > maxWidth &&
+      !NO_LINE_START.test(word)
+    ) {
+      lines.push(line.trimEnd());
+      line = /\s/.test(word) ? '' : word;
+    } else {
+      line += word;
+    }
+  }
+  if (line.trim() !== '') {
+    lines.push(line.trimEnd());
+  }
+  return lines;
 }
 
 /** Cuts a string to fit, ending in an ellipsis rather than mid-character. */
@@ -287,6 +417,8 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
   ctx.fillRect(0, 0, layout.width, layout.height);
 
   const measure = (text: string) => ctx.measureText(text).width;
+  const colourOf = (name: string, fallback: string) =>
+    Object.hasOwn(input.nameColours, name) ? input.nameColours[name] : fallback;
   const right = layout.width - PAD;
 
   ctx.textBaseline = 'alphabetic';
@@ -322,6 +454,12 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
     ctx.font = `30px ${FONT}`;
     ctx.fillText(input.nothingToSettle, PAD, layout.settlementsY + 56);
   } else {
+    ctx.fillStyle = COLOURS.muted;
+    ctx.font = `${NOTE_SIZE}px ${FONT}`;
+    ctx.textAlign = 'left';
+    layout.noteLines.forEach((line, index) => {
+      ctx.fillText(line, PAD, layout.noteY + index * NOTE_LINE_HEIGHT);
+    });
     input.settlements.forEach((settlement, index) => {
       const y = layout.settlementsY + index * (layout.settlementHeight + 16);
       ctx.fillStyle = COLOURS.card;
@@ -352,14 +490,29 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
       ctx.textAlign = 'right';
       ctx.fillText(settlement.amount, right - 28, y + 60);
 
+      // Drawn in three pieces so each name can carry its own colour. When
+      // the whole does not fit, the two names share what the arrow leaves.
       ctx.textAlign = 'left';
-      ctx.font = `34px ${FONT}`;
-      const names = `${settlement.from}  →  ${settlement.to}`;
-      ctx.fillText(
-        fitText(measure, names, layout.width - PAD * 2 - amountWidth - 90),
-        PAD + 28,
-        y + 60,
-      );
+      ctx.font = `bold 34px ${FONT}`;
+      const arrow = '  →  ';
+      const room = layout.width - PAD * 2 - amountWidth - 90;
+      const fits =
+        measure(settlement.from) + measure(arrow) + measure(settlement.to) <=
+        room;
+      const half = (room - measure(arrow)) / 2;
+      const from = fits
+        ? settlement.from
+        : fitText(measure, settlement.from, half);
+      const to = fits ? settlement.to : fitText(measure, settlement.to, half);
+      let x = PAD + 28;
+      ctx.fillStyle = colourOf(settlement.from, COLOURS.text);
+      ctx.fillText(from, x, y + 60);
+      x += measure(from);
+      ctx.fillStyle = COLOURS.muted;
+      ctx.fillText(arrow, x, y + 60);
+      x += measure(arrow);
+      ctx.fillStyle = colourOf(settlement.to, COLOURS.text);
+      ctx.fillText(to, x, y + 60);
     });
   }
 
@@ -417,12 +570,20 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
       ctx.stroke();
 
       row.forEach((cell, index) => {
-        ctx.fillStyle = index === 0 ? COLOURS.text : COLOURS.muted;
+        ctx.fillStyle =
+          index === 0 ? colourOf(cell, COLOURS.text) : COLOURS.muted;
         ctx.font = index === 0 ? `bold 28px ${FONT}` : `28px ${FONT}`;
         ctx.textAlign = index === 0 ? 'left' : 'right';
         const maxWidth = index === 0 ? nameWidth - 24 : widths[index - 1] - 16;
         ctx.fillText(fitText(measure, cell, maxWidth), columnX(index), y + 42);
       });
+    });
+
+    ctx.fillStyle = COLOURS.muted;
+    ctx.font = `${NOTE_SIZE}px ${FONT}`;
+    ctx.textAlign = 'left';
+    layout.breakdownNoteLines.forEach((line, index) => {
+      ctx.fillText(line, PAD, layout.breakdownNoteY + index * NOTE_LINE_HEIGHT);
     });
   }
 
@@ -434,10 +595,11 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
 
     input.expenses.rows.forEach((row, index) => {
       const y = layout.expensesY + index * layout.expenseRowHeight;
-      ctx.fillStyle = COLOURS.muted;
-      ctx.font = `26px ${FONT}`;
+      ctx.fillStyle = colourOf(row.payer, COLOURS.muted);
+      ctx.font = `bold 26px ${FONT}`;
       ctx.textAlign = 'left';
       ctx.fillText(fitText(measure, row.payer, 240), PAD, y + 30);
+      ctx.font = `26px ${FONT}`;
       ctx.fillStyle = COLOURS.text;
       ctx.fillText(fitText(measure, row.label, 480), PAD + 260, y + 30);
       ctx.textAlign = 'right';
@@ -453,12 +615,23 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
 
     let y = layout.statementsY;
     for (const person of input.statements.people) {
-      ctx.fillStyle = COLOURS.text;
+      // Same small muted header as the breakdown table above, repeated on
+      // every block: the image is long, and a block halfway down should not
+      // need scrolling back up to say what its columns are.
+      ctx.fillStyle = COLOURS.muted;
+      ctx.font = `22px ${FONT}`;
+      ctx.textAlign = 'center';
+      ctx.fillText(input.statements.columns.share, STATEMENT_SHARE_X, y + 28);
+      ctx.textAlign = 'right';
+      ctx.fillText(input.statements.columns.amount, right, y + 28);
+      y += layout.statementColumnsHeight;
+
+      ctx.fillStyle = colourOf(person.name, COLOURS.text);
       ctx.font = `bold 30px ${FONT}`;
       ctx.textAlign = 'left';
       ctx.fillText(fitText(measure, person.name, 600), PAD, y + 32);
       ctx.textAlign = 'right';
-      ctx.font = `28px ${FONT}`;
+      ctx.font = `bold 28px ${FONT}`;
       ctx.fillText(person.total, right, y + 32);
       y += layout.statementNameHeight;
 
@@ -468,7 +641,15 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
         ctx.fillStyle = item.carried ? COLOURS.text : COLOURS.muted;
         ctx.font = item.carried ? `26px ${FONT}` : `italic 26px ${FONT}`;
         ctx.textAlign = 'left';
-        ctx.fillText(fitText(measure, item.label, 620), PAD + 24, y + 30);
+        ctx.fillText(
+          fitText(measure, item.label, STATEMENT_LABEL_WIDTH),
+          PAD + 24,
+          y + 30,
+        );
+        if (item.share) {
+          ctx.textAlign = 'center';
+          ctx.fillText(item.share, STATEMENT_SHARE_X, y + 30);
+        }
         ctx.textAlign = 'right';
         ctx.fillText(item.amount, right, y + 30);
         y += layout.statementItemHeight;

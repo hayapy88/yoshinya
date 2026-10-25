@@ -584,3 +584,7 @@
   border: 1px solid var(--border);
   border-radius: 0.6rem;
 }
+/* Between an edit and the redraw that follows it. */
+.sb-image-stale {
+  opacity: 0.4;
+}

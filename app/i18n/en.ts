@@ -1435,6 +1435,13 @@ export const en = {
     participantCount: (n: number) => `${n} people`,
     expenseCount: (n: number) => `${n} payments`,
     settlementsHeading: 'Who pays whom',
+    // Under the table in the image: what a share is, and which way the
+    // difference goes. Line breaks are kept as drawn.
+    settlementsImageNote:
+      "* Each person's share is the sum of their portion of every cost, split by weight.\nShare less than paid → receives\nShare more than paid → pays",
+    // Under the transfers in every version of the image.
+    settlementsImageNoteShort:
+      '* Transfers are paired so that as few as possible are needed.',
     nothingToSettle: 'Nothing left to settle.',
     breakdownHeading: 'Shares and payments',
     colName: 'Name',
@@ -1483,6 +1490,12 @@ export const en = {
     // equal thirds and the amount would not follow from it.
     statementWeighted: (weight: number, total: number) =>
       `${weight} of ${total} shares`,
+    // Column header over each line's weight in the itemised image.
+    statementShareColumn: 'Share',
+    // The image's per-person total. Just 合計 there: it sits on the name
+    // line above a 負担額 column, so it can only be that person's share. The
+    // page keeps the longer label, which stands next to 立替額 and 差額.
+    statementImageTotal: 'Total',
     statementBurdenTotal: 'Owes in total',
     statementPaidTotal: 'Paid',
     detailsHeading: 'Every payment',

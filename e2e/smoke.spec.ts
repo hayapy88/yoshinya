@@ -1546,6 +1546,26 @@ test.describe('split bill workflow', () => {
       .toBeGreaterThan(detailed.h);
   });
 
+  // The figures on screen follow every edit; the image must too, or the old
+  // one gets sent.
+  test('redraws the image after an edit', async ({ page }) => {
+    await page.goto('/ja/split-bill');
+    await addPeople(page, ['A', 'B']);
+    await addExpenses(page, [{ payer: 'A', what: 'ワイン', amount: '2000' }]);
+    await page.getByRole('button', { name: '割り勘を計算' }).click();
+    await page.getByRole('button', { name: '画像を作成' }).click();
+    const image = page.locator('img.sb-image');
+    await expect(image).toHaveAttribute('src', /^blob:/);
+    const before = await image.getAttribute('src');
+
+    await page.locator('input[id^="sb-amount-"]').first().fill('3000');
+    await expect(image).not.toHaveAttribute('src', before ?? '');
+    await expect(image).not.toHaveClass(/sb-image-stale/);
+    await expect(
+      page.getByRole('button', { name: '画像をダウンロード' }),
+    ).toBeEnabled();
+  });
+
   test('downloads the image', async ({ page }) => {
     await page.goto('/ja/split-bill');
     await addPeople(page, ['A', 'B']);

@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import {
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { useLocale } from '~/i18n/locale';
 import { track } from '~/lib/analytics';
 import { ToolIntro } from '~/components/tool/ToolIntro';
@@ -59,6 +66,13 @@ function SplitBillTool() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageVariant, setImageVariant] = useState<ImageVariant>('simple');
   const [imageBusy, setImageBusy] = useState(false);
+  // The input the image on screen was drawn from. Anything else means the
+  // image is out of date: it is dimmed and cannot be saved until it has been
+  // redrawn, so nobody sends a picture of figures that have since changed.
+  const [imageSource, setImageSource] = useState<typeof state | null>(null);
+  // Bumped on every draw and on close, so a draw that finishes after a newer
+  // one — or after the preview was closed — is thrown away.
+  const imageRun = useRef(0);
   // Answered with the real file once there is one, because a browser can offer
   // sharing and still refuse files.
   const [canShare, setCanShare] = useState(false);
@@ -251,7 +265,9 @@ function SplitBillTool() {
     }
   };
 
-  const makeImage = async (variant: ImageVariant) => {
+  const makeImage = async (variant: ImageVariant, auto = false) => {
+    const run = ++imageRun.current;
+    const source = state;
     setImageBusy(true);
     setImageVariant(variant);
     try {
@@ -267,6 +283,9 @@ function SplitBillTool() {
           amount: money(settlement.amountMinor),
         })),
         nothingToSettle: s.nothingToSettle,
+        // Every version says how the transfers were chosen, under them; the
+        // ones with a table also explain the shares, under the table.
+        settlementsNote: s.settlementsImageNoteShort,
         // The expense list is deliberately absent from both: the image is for
         // paying the right person, not for auditing the receipts.
         // Travels with the itemised version: the person checking what is
@@ -286,6 +305,10 @@ function SplitBillTool() {
           variant === 'items'
             ? {
                 heading: s.statementsHeading,
+                columns: {
+                  share: s.statementShareColumn,
+                  amount: s.colBurden,
+                },
                 people: state.participants.flatMap((participant) => {
                   const r = result.participantResults.find(
                     (x) => x.participantId === participant.id,
@@ -294,16 +317,16 @@ function SplitBillTool() {
                     ? [
                         {
                           name: participant.name,
-                          total: `${s.statementBurdenTotal} ${money(r.burdenMinor)}`,
+                          total: `${s.statementImageTotal} ${money(r.burdenMinor)}`,
                           items: statementFor(breakdowns, participant.id).map(
                             (item) => ({
-                              // The weight travels into the image too: it is
-                              // set on the form and would otherwise appear
-                              // nowhere in what gets shared.
-                              label:
-                                item.amountMinor !== null && !item.evenlyShared
-                                  ? `${item.expense.description || s.amount}（${s.statementWeighted(item.weight ?? 0, item.totalWeight)}）`
-                                  : item.expense.description || s.amount,
+                              label: item.expense.description || s.amount,
+                              // The weight set on the form, as a bare number
+                              // under a 負担割合 header.
+                              share:
+                                item.weight === null
+                                  ? null
+                                  : String(item.weight),
                               amount:
                                 item.amountMinor === null
                                   ? s.statementNotShared
@@ -322,6 +345,7 @@ function SplitBillTool() {
             ? null
             : {
                 heading: s.breakdownHeading,
+                note: s.settlementsImageNote,
                 columns: [
                   s.colName,
                   s.colWeight,
@@ -351,28 +375,86 @@ function SplitBillTool() {
                 }),
               },
         footer: s.footer,
+        // The light-theme colour from the page: the image is always light.
+        nameColours: Object.fromEntries(
+          state.participants.map((participant) => [
+            participant.name,
+            `hsl(${hueOf(participant.id)} 60% 32%)`,
+          ]),
+        ),
       });
+      if (run !== imageRun.current) {
+        return;
+      }
       imageBlob.current = blob;
       setCanShare(canShareFile(toShareFile(blob)));
+      setImageSource(source);
       setImageUrl((previous) => {
         if (previous) {
           URL.revokeObjectURL(previous);
         }
         return URL.createObjectURL(blob);
       });
-      track('batch_action' as never, {
-        tool: TOOL,
-        action: 'create_image',
-        mode: variant,
-      });
+      // Redraws after an edit are not someone asking for an image.
+      if (!auto) {
+        track('batch_action' as never, {
+          tool: TOOL,
+          action: 'create_image',
+          mode: variant,
+        });
+      }
     } catch (error) {
+      if (run !== imageRun.current) {
+        return;
+      }
       setNotice(
         error instanceof ImageTooLongError ? s.imageTooLong : s.imageFailed,
       );
+      // An edit that makes the image impossible must not leave the previous
+      // one up looking current.
+      if (auto) {
+        closeImage();
+      }
     } finally {
-      setImageBusy(false);
+      if (run === imageRun.current) {
+        setImageBusy(false);
+      }
     }
   };
+
+  const closeImage = () => {
+    imageRun.current += 1;
+    setImageBusy(false);
+    setImageUrl((previous) => {
+      if (previous) {
+        URL.revokeObjectURL(previous);
+      }
+      return null;
+    });
+    setImageSource(null);
+    imageBlob.current = null;
+  };
+
+  const imageStale = imageUrl !== null && imageSource !== state;
+
+  // The figures on screen follow every edit, so the image does too — otherwise
+  // it is easy to change a payment, see the new result, and send the old
+  // picture. Debounced so typing an amount draws once, not per keystroke.
+  // While the input has errors the result (and the image with it) is hidden;
+  // the redraw waits until it is valid again.
+  const refreshImage = useEffectEvent(() => {
+    if (imageSource === state || problems.length > 0) {
+      return;
+    }
+    void makeImage(imageVariant, true);
+  });
+  useEffect(() => {
+    if (!imageUrl) {
+      return;
+    }
+    const id = window.setTimeout(refreshImage, 500);
+    return () => window.clearTimeout(id);
+  }, [state, imageUrl]);
 
   const shareImage = async () => {
     if (!imageBlob.current) {
@@ -1193,7 +1275,11 @@ function SplitBillTool() {
                   {s.imageVariantItems}
                 </button>
               </div>
-              <img src={imageUrl} alt="" className="sb-image" />
+              <img
+                src={imageUrl}
+                alt=""
+                className={`sb-image${imageStale ? ' sb-image-stale' : ''}`}
+              />
               <div className="sb-actions">
                 {/* Offered only where it will work. Elsewhere the download is
                     the whole answer, and a button that explains itself only
@@ -1202,6 +1288,7 @@ function SplitBillTool() {
                   <button
                     type="button"
                     className="sb-btn sb-btn-primary"
+                    disabled={imageStale}
                     onClick={() => void shareImage()}
                   >
                     {s.shareImage}
@@ -1210,6 +1297,7 @@ function SplitBillTool() {
                 <button
                   type="button"
                   className={`sb-btn ${canShare ? 'sb-btn-secondary' : 'sb-btn-primary'}`}
+                  disabled={imageStale}
                   onClick={downloadImage}
                 >
                   {s.downloadImage}
@@ -1217,15 +1305,7 @@ function SplitBillTool() {
                 <button
                   type="button"
                   className="sb-btn sb-btn-secondary"
-                  onClick={() => {
-                    setImageUrl((previous) => {
-                      if (previous) {
-                        URL.revokeObjectURL(previous);
-                      }
-                      return null;
-                    });
-                    imageBlob.current = null;
-                  }}
+                  onClick={closeImage}
                 >
                   {s.close}
                 </button>
