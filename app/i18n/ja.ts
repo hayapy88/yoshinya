@@ -1421,6 +1421,13 @@ export const ja: typeof en = {
     participantCount: (n: number) => `${n}人`,
     expenseCount: (n: number) => `立替${n}件`,
     settlementsHeading: '精算方法',
+    // Under the table in the image: what a share is, and which way the
+    // difference goes. Line breaks are kept as drawn.
+    settlementsImageNote:
+      '※負担額は、各費用を負担割合に応じて割った金額の合計です。\n負担額＜立替額 → 受取が発生\n負担額＞立替額 → 支払が発生',
+    // Under the transfers in every version of the image.
+    settlementsImageNoteShort:
+      '※送金の回数ができるだけ少なくなる組み合わせになっています。',
     nothingToSettle: '追加の精算は必要ありません。',
     breakdownHeading: '負担・立替内訳',
     colName: '名前',
@@ -1470,6 +1477,12 @@ export const ja: typeof en = {
     // rather than informative unless it says whose total it is.
     statementWeighted: (weight: number, total: number) =>
       `全体 ${total} のうち ${weight}`,
+    // Column header over each line's weight in the itemised image.
+    statementShareColumn: '負担割合',
+    // The image's per-person total. Just 合計 there: it sits on the name
+    // line above a 負担額 column, so it can only be that person's share. The
+    // page keeps the longer label, which stands next to 立替額 and 差額.
+    statementImageTotal: '合計',
     statementBurdenTotal: '負担額の合計',
     statementPaidTotal: '立替額',
     detailsHeading: '立替明細',

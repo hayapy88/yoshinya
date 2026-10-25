@@ -5,6 +5,7 @@ import {
   IMAGE_WIDTH,
   layoutShareImage,
   MAX_IMAGE_HEIGHT,
+  wrapText,
 } from './share-image';
 
 const base = {
@@ -15,25 +16,35 @@ const base = {
   settlementsHeading: '精算方法',
   settlements: [{ from: 'D', to: 'A', amount: '￥5,000' }],
   nothingToSettle: '追加の精算は必要ありません。',
+  settlementsNote:
+    '※送金の回数ができるだけ少なくなるように組み合わせています。',
   breakdown: {
     heading: '負担・立替内訳',
     columns: ['名前', '割合', '負担額', '立替額', '差額'],
     rows: [['A', '1', '￥10,000', '￥15,000', '受取 ￥5,000']],
+    note: '※負担額は、各費用を負担割合に応じて分けた金額の合計です。',
   },
   statements: null,
   expenses: null,
   footer: 'よしにゃに割り勘｜yoshinya.com',
+  nameColours: {},
 };
 
 const statementsBlock = {
   heading: '各自の内訳',
+  columns: { share: '負担割合', amount: '負担額' },
   people: [
     {
       name: 'A',
       total: '￥10,000',
       items: [
-        { label: 'ワイン', amount: '￥5,000', carried: true },
-        { label: '食事', amount: '負担なし', carried: false },
+        {
+          label: 'ワイン',
+          share: '1',
+          amount: '￥5,000',
+          carried: true,
+        },
+        { label: '食事', share: null, amount: '負担なし', carried: false },
       ],
     },
   ],
@@ -79,6 +90,85 @@ describe('layoutShareImage', () => {
   it('puts the footer inside the image', () => {
     const layout = layoutShareImage(base);
     expect(layout.footerY).toBeLessThan(layout.height);
+  });
+});
+
+describe('the note under the transfers', () => {
+  it('sits below the last transfer', () => {
+    const layout = layoutShareImage(base);
+    expect(layout.noteLines.length).toBeGreaterThan(0);
+    expect(layout.noteY).toBeGreaterThan(
+      layout.settlementsY + layout.settlementHeight,
+    );
+  });
+
+  it('takes more room the longer it is', () => {
+    const long = layoutShareImage({
+      ...base,
+      settlementsNote: base.settlementsNote.repeat(4),
+    });
+    expect(long.noteLines.length).toBeGreaterThan(1);
+    expect(long.height).toBeGreaterThan(layoutShareImage(base).height);
+  });
+
+  it('is left out when there is nothing to settle', () => {
+    expect(layoutShareImage({ ...base, settlements: [] }).noteLines).toEqual(
+      [],
+    );
+  });
+
+  it('is left out when there is none', () => {
+    expect(
+      layoutShareImage({ ...base, settlementsNote: null }).noteLines,
+    ).toEqual([]);
+  });
+});
+
+describe('the note under the table', () => {
+  it('sits below the last row', () => {
+    const layout = layoutShareImage(base);
+    expect(layout.breakdownNoteLines.length).toBeGreaterThan(0);
+    expect(layout.breakdownNoteY).toBeGreaterThan(
+      layout.tableY + layout.headerHeight + layout.rowHeight,
+    );
+  });
+
+  it('adds its own height', () => {
+    expect(layoutShareImage(base).height).toBeGreaterThan(
+      layoutShareImage({ ...base, breakdown: { ...base.breakdown, note: '' } })
+        .height,
+    );
+  });
+});
+
+describe('wrapText', () => {
+  it('leaves a short line alone', () => {
+    expect(wrapText('あいう', 100, 10)).toEqual(['あいう']);
+  });
+
+  it('breaks Japanese between characters', () => {
+    expect(wrapText('あいうえお', 30, 10)).toEqual(['あいう', 'えお']);
+  });
+
+  it('keeps punctuation off the start of a line', () => {
+    expect(wrapText('あいう。えお', 30, 10)).toEqual(['あいう。', 'えお']);
+  });
+
+  it('breaks English only between words', () => {
+    // 6 units per Latin character at size 10.
+    expect(wrapText('one two three', 30, 10)).toEqual(['one', 'two', 'three']);
+  });
+
+  it('starts a new line at every line break', () => {
+    expect(wrapText('あい\nうえおかき', 30, 10)).toEqual([
+      'あい',
+      'うえお',
+      'かき',
+    ]);
+  });
+
+  it('never returns an empty line', () => {
+    expect(wrapText('', 100, 10)).toEqual([]);
   });
 });
 
@@ -156,6 +246,7 @@ describe('the itemised version', () => {
             ...statementsBlock.people[0],
             items: Array.from({ length: 20 }, () => ({
               label: 'x',
+              share: null,
               amount: '￥1',
               carried: true,
             })),
@@ -173,11 +264,13 @@ describe('the itemised version', () => {
       ...base,
       statements: {
         heading: '各自の内訳',
+        columns: { share: '負担割合', amount: '負担額' },
         people: Array.from({ length: 20 }, () => ({
           name: 'X',
           total: '￥1',
           items: Array.from({ length: 100 }, () => ({
             label: 'x',
+            share: null,
             amount: '￥1',
             carried: true,
           })),
@@ -192,11 +285,13 @@ describe('the itemised version', () => {
       ...base,
       statements: {
         heading: '各自の内訳',
+        columns: { share: '負担割合', amount: '負担額' },
         people: Array.from({ length: 8 }, () => ({
           name: 'X',
           total: '￥1',
           items: Array.from({ length: 12 }, () => ({
             label: 'x',
+            share: null,
             amount: '￥1',
             carried: true,
           })),

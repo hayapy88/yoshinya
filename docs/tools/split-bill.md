@@ -154,6 +154,30 @@ column off the canvas entirely. Widths are now measured from the text they hold,
 which also fixed English — "Receives JPY 3,386" needs far more room than "受取
 ￥3,386" and was being truncated in exactly the same way.
 
+What the images say beyond the figures:
+
+- **Names in each person's colour** — the same hue as on the page (the light
+  theme's, since the image is always light), on the transfer cards, the table,
+  the payer column and each statement.
+- **Notes.** Under the transfers, on every version: they are paired so that as
+  few as possible are needed. It says "as few as possible", not "the fewest":
+  largest debt against largest credit is not guaranteed to be the minimum.
+  Under the table, on the two longer versions: what a share is, and which way
+  the difference goes. The short version has no shares or payments on it, so
+  that note would explain words it never uses. Notes keep their line breaks and
+  wrap with estimated widths, so the layout is still computable without a
+  canvas.
+- **Itemised statements** have 負担割合 and 負担額 headers on every person's
+  block, the weight as a bare number ("0.4", not "全体 4 のうち 2", which read
+  worse), and 合計 in bold on the name line. The weight column sits next to the
+  amount so the line's name gets the room.
+
+The preview redraws itself 500 ms after any edit, in the version on screen. The
+figures on the page follow every change, so an image that did not would be
+sent with the old numbers by someone who saw the new ones. Between the edit and
+the redraw the image is dimmed and cannot be saved or shared; redraws are not
+counted as `create_image`.
+
 There is a ceiling on the height. Canvases are limited by area in Safari, and
 past it the browser returns a blank image rather than an error, so a request
 that would exceed it is refused with an explanation instead.
